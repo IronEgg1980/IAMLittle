@@ -11,8 +11,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import org.litepal.LitePal;
@@ -47,7 +49,7 @@ public class PersonManageFragment extends Fragment {
         adapter = new PersonManageAdapter(list);
         adapter.setItemClickListener(new IItemClickListener() {
             @Override
-            public void onClick(int position) {
+            public void onClick(View view, final int position) {
                 if(position == list.size() -1){
                     // 新增一人
                     Person p = new Person();
@@ -59,24 +61,41 @@ public class PersonManageFragment extends Fragment {
                     adapter.notifyItemRangeChanged(position,2);
                 }else{
                     ItemEntityPerson person = (ItemEntityPerson)list.get(position) ;
-                    Person p = person.getPerson();
-                    DialogFragment dialogFragment = new MyDialogFragment();
-                    ((MyDialogFragment) dialogFragment).setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                    final Person p = person.getPerson();
+                    PopupMenu menu = new PopupMenu(getContext(),view);
+                    menu.inflate(R.menu.person_manage_popmenu);
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
-                        public void onDissmiss(boolean flag) {
-                            if (flag){
-                                Toast.makeText(getContext(),"点击了确定",Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(getContext(),"点击了取消",Toast.LENGTH_SHORT).show();
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int i = item.getItemId();
+                            switch (i){
+                                case R.id.popmenu_dele_person:
+                                    MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除"+p.getName(),"取消","删除",Color.BLACK,Color.RED);
+                                    ((MyDialogFragment) dialogFragment).setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                                        @Override
+                                        public void onDissmiss(boolean flag) {
+                                            if (flag){
+                                                LitePal.deleteAll(Person.class,"Name = ?",p.getName());
+                                                list.remove(position);
+                                                adapter.notifyItemRemoved(position);
+                                                adapter.notifyItemRangeChanged(position,adapter.getItemCount() - position);
+                                            }else{
+                                                Toast.makeText(getContext(),"取消操作",Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                    dialogFragment.show(getFragmentManager(),"dialog");
+                                    break;
                             }
+                            return true;
                         }
                     });
-                    dialogFragment.show(getFragmentManager(),"dialog");
+                    menu.show();
                 }
             }
 
             @Override
-            public void onClick(int x, int y) {
+            public void onClick(View view, int x, int y) {
 
             }
         });

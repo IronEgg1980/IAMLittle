@@ -54,7 +54,7 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
                 ((RecyclerViewAddButtonViewHolder) viewHolder).getButton().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        itemClickListener.onClick(i);
+                        itemClickListener.onClick(v,i);
                     }
                 });
                 break;
@@ -69,7 +69,7 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onClick(View v) {
                         v.setTag(p);
-                        itemClickListener.onClick(i);
+                        itemClickListener.onClick(v,i);
                     }
                 });
                 break;

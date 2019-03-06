@@ -9,4 +9,8 @@
     <string name="ratio">系数</string>
     <string name="edit">修改</string>
     <string name="add">增加</string>
+    <string name="editPerson">修改信息</string>
+    <string name="editRatio">调整系数</string>
+    <string name="delePerson">删除人员</string>
+    <string name="setPersonLeave">出科</string>
 </resources>

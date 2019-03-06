@@ -13,69 +13,79 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.zip.CheckedOutputStream;
+
 public class MyDialogFragment extends DialogFragment {
     private TextView cancel,confirm;
     private TextView info;
     private boolean flag;
-    private View view;
+    private String mInfo,mCancelText,mConfirmText;
+    private int mCancelColor,mConfirmColor,flag1;
 
     public void setOnDialogFragmentDismiss(OnDialogFragmentDismiss onDialogFragmentDismiss) {
         this.onDialogFragmentDismiss = onDialogFragmentDismiss;
     }
-
     private OnDialogFragmentDismiss onDialogFragmentDismiss;
-    public void setInfoText(String text){
-        info.setText(text);
-    }
-    public void setInfoColor(int color){
-        info.setTextColor(color);
-    }
-    public void setCancelButtonText(String text){
-        cancel.setText(text);
-    }
-    public void setCancelButtonColor(int color){
-        cancel.setTextColor(color);
-    }
-    public void setConfirmButtonText(String text){
-        confirm.setText(text);
-    }
-    public void setConfirmButtonColor(int color){
-        confirm.setTextColor(color);
-    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        flag =false;
+        flag = false;
+        mInfo = "";
+        mCancelText = "";
+        mConfirmText = "";
+        flag1 = 1;
+        mCancelColor = Color.BLACK;
+        mConfirmColor = Color.BLACK;
+        if(getArguments()!=null){
+            flag1 = getArguments().getInt("Flag");
+            mInfo = getArguments().getString("Info");
+            mCancelText = getArguments().getString("CancelText");
+            mConfirmText = getArguments().getString("ConfirmText");
+            if(flag1 == 2){
+                mConfirmColor = getArguments().getInt("ConfirmColor");
+                mCancelColor = getArguments().getInt("CancelColor");
+            }
+        }
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment,null);
-        final Dialog dialog = new AlertDialog.Builder(getContext()).
-                setView(view).create();
+        return super.onCreateDialog(savedInstanceState);
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment,container,false);
         info = view.findViewById(R.id.dialog_info_textView);
+        info.setText(mInfo);
         cancel = view.findViewById(R.id.dialog_cancel_button);
+        cancel.setText(mCancelText);
+        cancel.setTextColor(mCancelColor);
         confirm = view.findViewById(R.id.dialog_confirm_button);
+        confirm.setText(mConfirmText);
+        confirm.setTextColor(mConfirmColor);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 flag = false;
-                dialog.dismiss();
+                dismiss();
             }
         });
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 flag = true;
-                dialog.dismiss();
+                dismiss();
             }
         });
-        return dialog;
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        return view;
     }
 
     @Override
@@ -84,21 +94,36 @@ public class MyDialogFragment extends DialogFragment {
         Dialog dialog = getDialog();
         if (dialog != null) {
             DisplayMetrics dm = new DisplayMetrics();
-            //设置弹框的占屏宽        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.5), ViewGroup.LayoutParams.WRAP_CONTENT);
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         onDialogFragmentDismiss.onDissmiss(flag);
+    }
+    public static MyDialogFragment newInstant(String info,String cancelText,String confirmText){
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("Info",info);
+        bundle.putString("CancelText",cancelText);
+        bundle.putString("ConfirmText",confirmText);
+        bundle.putInt("Flag",1);
+        myDialogFragment.setArguments(bundle);
+        return myDialogFragment;
+    }
+    public static MyDialogFragment newInstant(String info,String cancelText,String confirmText,int cancelColor,int confirmColor){
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("Info",info);
+        bundle.putString("CancelText",cancelText);
+        bundle.putString("ConfirmText",confirmText);
+        bundle.putInt("CancelColor",cancelColor);
+        bundle.putInt("ConfirmColor",confirmColor);
+        bundle.putInt("Flag",2);
+        myDialogFragment.setArguments(bundle);
+        return myDialogFragment;
     }
 }
