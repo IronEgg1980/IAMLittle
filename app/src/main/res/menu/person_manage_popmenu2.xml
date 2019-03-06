@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/popmenu_edit_person"
+        android:title="@string/editPerson"/>
+    <item android:id="@+id/popmenu_set_ratio"
+        android:title="@string/editRatio"/>
+    <item android:id="@+id/popmenu_set_person_onduty"
+        android:title="@string/callBack"/>
+    <item android:id="@+id/popmenu_dele_person"
+        android:title="@string/delePerson"/>
+</menu>

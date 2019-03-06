@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">我是一个小小的助手</string>
     <string name="person_manage">人员管理</string>
+    <string name="shift_manage">班次设置</string>
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="delete">删除</string>
@@ -13,4 +14,5 @@
     <string name="editRatio">调整系数</string>
     <string name="delePerson">删除人员</string>
     <string name="setPersonLeave">出科</string>
+    <string name="callBack">入科</string>
 </resources>

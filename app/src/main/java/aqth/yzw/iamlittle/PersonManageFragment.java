@@ -35,7 +35,7 @@ public class PersonManageFragment extends Fragment {
         if(list == null)
             list = new ArrayList<>();
         list.clear();
-        List<Person> people = LitePal.findAll(Person.class);
+        List<Person> people = LitePal.order("id").find(Person.class);
         for (Person p : people){
             list.add(new ItemEntityPerson(p));
         }
@@ -52,18 +52,35 @@ public class PersonManageFragment extends Fragment {
             public void onClick(View view, final int position) {
                 if(position == list.size() -1){
                     // 新增一人
-                    Person p = new Person();
-                    p.setName("张三"+position);
-                    p.setRatio(1.2);
-                    p.save();
-                    list.add(position,new ItemEntityPerson(p));
-                    adapter.notifyItemInserted(position);
-                    adapter.notifyItemRangeChanged(position,2);
+                    InputEditPersonInfoFragment fragment = new InputEditPersonInfoFragment();
+                    fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                        @Override
+                        public void onDissmiss(boolean flag) {
+                            if(flag){
+                                final Person p = LitePal.order("id").findLast(Person.class);
+                                if (p != null) {
+                                    list.add(position,new ItemEntityPerson(p));
+                                    adapter.notifyItemInserted(position);
+                                    adapter.notifyItemRangeChanged(position, 2);
+                                    recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
+                                }
+                            }
+                        }
+                    });
+                    fragment.show(getFragmentManager(),"AddPerson");
                 }else{
+
                     ItemEntityPerson person = (ItemEntityPerson)list.get(position) ;
                     final Person p = person.getPerson();
+                    if (view.getTag() != null || "Call".equals((String) view.getTag())) {
+                        Toast.makeText(getContext(),"打电话给："+p.getName(),Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     PopupMenu menu = new PopupMenu(getContext(),view);
-                    menu.inflate(R.menu.person_manage_popmenu);
+                    if(p.getStatus() == MyTool.PERSON_STATUS_ONDUTY)
+                        menu.inflate(R.menu.person_manage_popmenu);
+                    else
+                        menu.inflate(R.menu.person_manage_popmenu2);
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
@@ -86,6 +103,43 @@ public class PersonManageFragment extends Fragment {
                                     });
                                     dialogFragment.show(getFragmentManager(),"dialog");
                                     break;
+                                case R.id.popmenu_edit_person:
+                                    InputEditPersonInfoFragment fragment = InputEditPersonInfoFragment.newInstant(p);
+                                    fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                                        @Override
+                                        public void onDissmiss(boolean flag) {
+                                            if(flag){
+                                                updateList();
+                                                adapter.notifyItemChanged(position);
+                                            }
+                                        }
+                                    });
+                                    fragment.show(getFragmentManager(),"EditPerson");
+                                    break;
+                                case R.id.popmenu_set_person_leave:
+                                    p.setStatus(MyTool.PERSON_STATUS_LEAVE);
+                                    p.update(p.getId());
+                                    adapter.notifyItemChanged(position);
+                                    break;
+                                case R.id.popmenu_set_ratio:
+                                    EditPersonRatioFragment fragment1 = EditPersonRatioFragment.newInstant(p);
+                                    fragment1.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                                        @Override
+                                        public void onDissmiss(boolean flag) {
+                                            if(flag){
+                                                updateList();
+                                                adapter.notifyItemChanged(position);
+                                            }
+                                        }
+                                    });
+                                    fragment1.show(getFragmentManager(),"EditRatio");
+                                    break;
+                                case R.id.popmenu_set_person_onduty:
+                                    p.setStatus(MyTool.PERSON_STATUS_ONDUTY);
+                                    p.update(p.getId());
+                                    adapter.notifyItemChanged(position);
+                                    break;
+
                             }
                             return true;
                         }

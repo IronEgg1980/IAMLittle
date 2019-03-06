@@ -2,4 +2,6 @@
 <resources>
     <dimen name="toolbar_height">48dp</dimen>
     <dimen name="dialogButtonRadius">24dp</dimen>
+    <dimen name="genderCheckboxRadius">12dp</dimen>
+    <dimen name="normalButtonRadius">10dp</dimen>
 </resources>

@@ -1,5 +1,6 @@
 package aqth.yzw.iamlittle.Adapters;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import aqth.yzw.iamlittle.EntityClass.ItemEntityPerson;
 import aqth.yzw.iamlittle.EntityClass.Person;
 import aqth.yzw.iamlittle.IItemClickListener;
 import aqth.yzw.iamlittle.ItemType;
+import aqth.yzw.iamlittle.MyTool;
 import aqth.yzw.iamlittle.R;
 
 public class PersonManageAdapter extends RecyclerView.Adapter {
@@ -63,12 +65,59 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
                 ItemEntityPerson itemEntityPerson = (ItemEntityPerson)itemEntity;
                 final Person p = itemEntityPerson.getPerson();
                 personViewHolder.nameTextView.setText(p.getName());
-                personViewHolder.ratioTextView.setText(p.getRatio()+"");
-                personViewHolder.view.setClickable(true);
-                personViewHolder.view.setOnClickListener(new View.OnClickListener() {
+                personViewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        v.setTag(p);
+                        itemClickListener.onClick(v,i);
+                    }
+                });
+                personViewHolder.ratioTextView.setText(p.getRatio()+"");
+                personViewHolder.ratioTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClickListener.onClick(v,i);
+                    }
+                });
+                String gender = p.getGender()?"男":"女";
+                personViewHolder.genderTextView.setText(gender);
+                personViewHolder.genderTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClickListener.onClick(v,i);
+                    }
+                });
+                personViewHolder.ageTextView.setText(p.getAge()+"岁");
+                personViewHolder.ageTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClickListener.onClick(v,i);
+                    }
+                });
+                personViewHolder.phoneTextVeiw.setText("Tel:"+p.getPhone());
+                personViewHolder.phoneTextVeiw.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        v.setTag("Call");
+                        itemClickListener.onClick(v,i);
+                    }
+                });
+                personViewHolder.noteTextView.setText(p.getNote());
+                personViewHolder.noteTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClickListener.onClick(v,i);
+                    }
+                });
+                if(p.getStatus() == MyTool.PERSON_STATUS_ONDUTY){
+                    personViewHolder.statusColrView.setBackgroundColor(Color.GREEN);
+                    personViewHolder.statusTextView.setText("状态：在岗");
+                }else{
+                    personViewHolder.statusColrView.setBackgroundColor(Color.RED);
+                    personViewHolder.statusTextView.setText("状态：出科");
+                }
+                personViewHolder.statusTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         itemClickListener.onClick(v,i);
                     }
                 });
@@ -88,13 +137,18 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
             return NORMAL_TYPE;
     }
     protected class PersonViewHolder extends RecyclerView.ViewHolder{
-        private TextView nameTextView,ratioTextView;
-        private LinearLayout view;
+        private TextView nameTextView,ratioTextView,ageTextView,genderTextView,statusTextView,
+                statusColrView,phoneTextVeiw,noteTextView;
         public PersonViewHolder(@NonNull View itemView) {
             super(itemView);
-            view = itemView.findViewById(R.id.recyclerview_item_rootview);
             nameTextView = itemView.findViewById(R.id.recyclerview_item_person_name);
             ratioTextView = itemView.findViewById(R.id.recyclerview_item_person_ratio);
+            ageTextView = itemView.findViewById(R.id.recyclerview_item_person_age);
+            genderTextView= itemView.findViewById(R.id.recyclerview_item_person_gender);
+            statusTextView = itemView.findViewById(R.id.person_status_text_textview);
+            statusColrView = itemView.findViewById(R.id.person_status_color_textview);
+            phoneTextVeiw = itemView.findViewById(R.id.recyclerview_item_person_phone);
+            noteTextView =itemView.findViewById(R.id.recyclerview_item_person_note);
         }
     }
 }

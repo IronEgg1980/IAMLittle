@@ -40,10 +40,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/person_manage"
                 android:text="@string/person_manage"
+                android:background="@drawable/button_normal_selector"
+                />
+            <Button
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/shift_manage"
+                android:text="@string/shift_manage"
+                android:background="@drawable/button_normal_selector"
                 />
             <TextView
                 android:layout_width="match_parent"

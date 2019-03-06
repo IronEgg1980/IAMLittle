@@ -22,7 +22,9 @@ public final class MyTool {
     public final static int JXGZ_AVERAGE = 2;
     public final static int JXGZ_DEDUCE = 3;
     public final static int JXGZ_ADD = 4;
-
+    // 性别
+    public final static boolean GENDER_MAN = true;
+    public final static boolean GENDER_WOMAN = false;
     // 常用方法
     // 取得随机字符串
     public static String getRandomString(int length) {
