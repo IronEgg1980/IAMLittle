@@ -28,6 +28,18 @@ public class MainActivity extends AppCompatActivity {
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_launcher_foreground);
+        findViewById(R.id.shift_manage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,ShiftManageActivity.class));
+            }
+        });
+        findViewById(R.id.schedule_activity).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,ScheduleActivity.class));
+            }
+        });
     }
 
     @Override

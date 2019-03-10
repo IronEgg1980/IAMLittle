@@ -15,4 +15,5 @@
     <string name="delePerson">删除人员</string>
     <string name="setPersonLeave">出科</string>
     <string name="callBack">入科</string>
+    <string name="schedule">排班表</string>
 </resources>

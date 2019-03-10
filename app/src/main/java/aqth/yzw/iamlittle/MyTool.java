@@ -1,5 +1,8 @@
 package aqth.yzw.iamlittle;
 
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -14,9 +17,9 @@ public final class MyTool {
     public final static int PERSON_STATUS_ONDUTY = 1;
     public final static int PERSON_STATUS_LEAVE = 2;
     // 班次种类
-    public final static int SHIFT_NORMAL = 0;
-    public final static int SHIFT_LEAVEOFF = 1;
-    public final static int SHIFT_NEEDCOUNT = 2;
+    public final static int SHIFT_NORMAL = 1;
+    public final static int SHIFT_LEAVEOFF = 2;
+    public final static int SHIFT_NEEDCOUNT = 3;
     // 绩效工资种类
     public final static int JXGZ_RATIO = 1;
     public final static int JXGZ_AVERAGE = 2;
@@ -145,69 +148,57 @@ public final class MyTool {
     }
 
     public static Date getMonday(Date date) {
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = new GregorianCalendar(Locale.CHINA);
         calendar.setTime(date);
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        Log.d("殷宗旺", "getMonday: "+day);
+        int i = (day +5) % 7;
+        calendar.add(Calendar.DAY_OF_MONTH,-i);
         return calendar.getTime();
     }
+    public static Date[] getAWeekDates(Date date){
+        Date[] dates = new Date[7];
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(getMonday(date));
+        for (int k = 0;k<7;k++){
+            if(k >0){
+                calendar.add(Calendar.DAY_OF_MONTH,1);
+            }
+            dates[k] = calendar.getTime();
+        }
+        return dates;
+    }
 // 以下为获取农历所需代码
-    final private static long[] lunarInfo = new long[]{0x04bd8, 0x04ae0,
-            0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0,
-            0x055d2, 0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540,
-            0x0d6a0, 0x0ada2, 0x095b0, 0x14977, 0x04970, 0x0a4b0, 0x0b4b5,
-            0x06a50, 0x06d40, 0x1ab54, 0x02b60, 0x09570, 0x052f2, 0x04970,
-            0x06566, 0x0d4a0, 0x0ea50, 0x06e95, 0x05ad0, 0x02b60, 0x186e3,
-            0x092e0, 0x1c8d7, 0x0c950, 0x0d4a0, 0x1d8a6, 0x0b550, 0x056a0,
-            0x1a5b4, 0x025d0, 0x092d0, 0x0d2b2, 0x0a950, 0x0b557, 0x06ca0,
-            0x0b550, 0x15355, 0x04da0, 0x0a5d0, 0x14573, 0x052d0, 0x0a9a8,
-            0x0e950, 0x06aa0, 0x0aea6, 0x0ab50, 0x04b60, 0x0aae4, 0x0a570,
-            0x05260, 0x0f263, 0x0d950, 0x05b57, 0x056a0, 0x096d0, 0x04dd5,
-            0x04ad0, 0x0a4d0, 0x0d4d4, 0x0d250, 0x0d558, 0x0b540, 0x0b5a0,
-            0x195a6, 0x095b0, 0x049b0, 0x0a974, 0x0a4b0, 0x0b27a, 0x06a50,
-            0x06d40, 0x0af46, 0x0ab60, 0x09570, 0x04af5, 0x04970, 0x064b0,
-            0x074a3, 0x0ea50, 0x06b58, 0x055c0, 0x0ab60, 0x096d5, 0x092e0,
-            0x0c960, 0x0d954, 0x0d4a0, 0x0da50, 0x07552, 0x056a0, 0x0abb7,
-            0x025d0, 0x092d0, 0x0cab5, 0x0a950, 0x0b4a0, 0x0baa4, 0x0ad50,
-            0x055d9, 0x04ba0, 0x0a5b0, 0x15176, 0x052b0, 0x0a930, 0x07954,
-            0x06aa0, 0x0ad50, 0x05b52, 0x04b60, 0x0a6e6, 0x0a4e0, 0x0d260,
-            0x0ea65, 0x0d530, 0x05aa0, 0x076a3, 0x096d0, 0x04bd7, 0x04ad0,
-            0x0a4d0, 0x1d0b6, 0x0d250, 0x0d520, 0x0dd45, 0x0b5a0, 0x056d0,
-            0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20,
-            0x0ada0};
-    final private static int[] year20 = new int[]{1, 4, 1, 2, 1, 2, 1, 1, 2,
-            1, 2, 1};
-    final private static int[] year19 = new int[]{0, 3, 0, 1, 0, 1, 0, 0, 1,
-            0, 1, 0};
-    final private static int[] year2000 = new int[]{0, 3, 1, 2, 1, 2, 1, 1,
-            2, 1, 2, 1};
-    public final static String[] nStr1 = new String[]{"", "正", "二", "三", "四",
-            "五", "六", "七", "八", "九", "十", "冬月", "腊月"};
-    private final static String[] Gan = new String[]{"甲", "乙", "丙", "丁", "戊",
-            "己", "庚", "辛", "壬", "癸"};
-    private final static String[] Zhi = new String[]{"子", "丑", "寅", "卯", "辰",
-            "巳", "午", "未", "申", "酉", "戌", "亥"};
-    private final static String[] Animals = new String[]{"鼠", "牛", "虎", "兔",
-            "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"};
+final private static long[] lunarInfo = new long[] { 0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554,
+        0x056a0, 0x09ad0, 0x055d2, 0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2, 0x095b0,
+        0x14977, 0x04970, 0x0a4b0, 0x0b4b5, 0x06a50, 0x06d40, 0x1ab54, 0x02b60, 0x09570, 0x052f2, 0x04970, 0x06566,
+        0x0d4a0, 0x0ea50, 0x06e95, 0x05ad0, 0x02b60, 0x186e3, 0x092e0, 0x1c8d7, 0x0c950, 0x0d4a0, 0x1d8a6, 0x0b550,
+        0x056a0, 0x1a5b4, 0x025d0, 0x092d0, 0x0d2b2, 0x0a950, 0x0b557, 0x06ca0, 0x0b550, 0x15355, 0x04da0, 0x0a5d0,
+        0x14573, 0x052d0, 0x0a9a8, 0x0e950, 0x06aa0, 0x0aea6, 0x0ab50, 0x04b60, 0x0aae4, 0x0a570, 0x05260, 0x0f263,
+        0x0d950, 0x05b57, 0x056a0, 0x096d0, 0x04dd5, 0x04ad0, 0x0a4d0, 0x0d4d4, 0x0d250, 0x0d558, 0x0b540, 0x0b5a0,
+        0x195a6, 0x095b0, 0x049b0, 0x0a974, 0x0a4b0, 0x0b27a, 0x06a50, 0x06d40, 0x0af46, 0x0ab60, 0x09570, 0x04af5,
+        0x04970, 0x064b0, 0x074a3, 0x0ea50, 0x06b58, 0x055c0, 0x0ab60, 0x096d5, 0x092e0, 0x0c960, 0x0d954, 0x0d4a0,
+        0x0da50, 0x07552, 0x056a0, 0x0abb7, 0x025d0, 0x092d0, 0x0cab5, 0x0a950, 0x0b4a0, 0x0baa4, 0x0ad50, 0x055d9,
+        0x04ba0, 0x0a5b0, 0x15176, 0x052b0, 0x0a930, 0x07954, 0x06aa0, 0x0ad50, 0x05b52, 0x04b60, 0x0a6e6, 0x0a4e0,
+        0x0d260, 0x0ea65, 0x0d530, 0x05aa0, 0x076a3, 0x096d0, 0x04bd7, 0x04ad0, 0x0a4d0, 0x1d0b6, 0x0d250, 0x0d520,
+        0x0dd45, 0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0 };
 
-//        private final static String[] solarTerm = new String[] { "小寒", "大寒", "立春",
-//                "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑",
-//                "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "冬至" };
-//        private final static String[] sFtv = new String[] { "0101*元旦", "0214 情人节",
-//                "0308 妇女节", "0312 植树节", "0315 消费者权益日", "0401 愚人节", "0501 劳动节",
-//                "0504 青年节", "0512 护士节", "0601 儿童节", "0701 建党节", "0801 建军节",
-//                "0808 父亲节", "0909 mzd逝世纪念", "0910 教师节", "0928 孔子诞辰", "1001*国庆节",
-//                "1006 老人节", "1024 联合国日", "1112 孙中山诞辰", "1220 澳门回归", "1225 圣诞节",
-//                "1226 mzd诞辰" };
-//        private final static String[] lFtv = new String[] { "0101*农历春节",
-//                "0115 元宵节", "0505 端午节", "0707 七夕情人节", "0815 中秋节", "0909 重阳节",
-//                "1208 腊八节", "1224 小年", "0100*除夕" };
+    final private static int[] year20 = new int[] { 1, 4, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1 };
 
-    /**
-     * 传回农历 y年的总天数
-     *
-     * @param y
-     * @return
-     */
+    final private static int[] year19 = new int[] { 0, 3, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0 };
+
+    final private static int[] year2000 = new int[] { 0, 3, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1 };
+
+    public final static String[] nStr1 = new String[] { "", "正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "冬",
+            "腊" };
+
+    private final static String[] Gan = new String[] { "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸" };
+
+    private final static String[] Zhi = new String[] { "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥" };
+
+    private final static String[] Animals = new String[] { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
+
+    // 传回农历 y年的总天数
     final private static int lYearDays(int y) {
         int i, sum = 348;
         for (i = 0x8000; i > 0x8; i >>= 1) {
@@ -217,12 +208,8 @@ public final class MyTool {
         return (sum + leapDays(y));
     }
 
-    /**
-     * 传回农历 y年闰月的天数
-     *
-     * @param y
-     * @return
-     */
+    // 传回农历 y年闰月的天数
+
     final private static int leapDays(int y) {
         if (leapMonth(y) != 0) {
             if ((lunarInfo[y - 1900] & 0x10000) != 0)
@@ -233,23 +220,16 @@ public final class MyTool {
             return 0;
     }
 
-    /**
-     * 传回农历 y年闰哪个月 1-12 , 没闰传回 0
-     *
-     * @param y
-     * @return
-     */
+
+    // 传回农历 y年闰哪个月 1-12 , 没闰传回 0
+
     final private static int leapMonth(int y) {
         return (int) (lunarInfo[y - 1900] & 0xf);
     }
 
-    /**
-     * 传回农历 y年m月的总天数
-     *
-     * @param y
-     * @param m
-     * @return
-     */
+
+    //传回农历 y年m月的总天数
+
     final private static int monthDays(int y, int m) {
         if ((lunarInfo[y - 1900] & (0x10000 >> m)) == 0)
             return 29;
@@ -257,44 +237,29 @@ public final class MyTool {
             return 30;
     }
 
-    /**
-     * 传回农历 y年的生肖
-     *
-     * @param y
-     * @return
-     */
+    // 传回农历 y年的生肖
+
     final public static String AnimalsYear(int y) {
         return Animals[(y - 4) % 12];
     }
 
-    /**
-     * 传入 月日的offset 传回干支,0=甲子
-     *
-     * @param num
-     * @return
-     */
+
+    //传入 月日的offset 传回干支,0=甲子
+
     final private static String cyclicalm(int num) {
         return (Gan[num % 10] + Zhi[num % 12]);
     }
 
-    /**
-     * 传入 offset 传回干支, 0=甲子
-     *
-     * @param y
-     * @return
-     */
+
+    // 传入 offset 传回干支, 0=甲子
+
     final public static String cyclical(int y) {
         int num = y - 1900 + 36;
         return (cyclicalm(num));
     }
 
-    /**
-     * 传出农历.year0 .month1 .day2 .yearCyl3 .monCyl4 .dayCyl5 .isLeap6
-     *
-     * @param y
-     * @param m
-     * @return
-     */
+    // 传出农历.year0 .month1 .day2 .yearCyl3 .monCyl4 .dayCyl5 .isLeap6
+
     final private long[] Lunar(int y, int m) {
         long[] nongDate = new long[7];
         int i = 0, temp = 0, leap = 0;
@@ -309,6 +274,7 @@ public final class MyTool {
             offset += year2000[m - 1];
         nongDate[5] = offset + 40;
         nongDate[4] = 14;
+
         for (i = 1900; i < 2050 && offset > 0; i++) {
             temp = lYearDays(i);
             offset -= temp;
@@ -323,6 +289,7 @@ public final class MyTool {
         nongDate[3] = i - 1864;
         leap = leapMonth(i); // 闰哪个月
         nongDate[6] = 0;
+
         for (i = 1; i < 13 && offset > 0; i++) {
             // 闰月
             if (leap > 0 && i == (leap + 1) && nongDate[6] == 0) {
@@ -332,6 +299,7 @@ public final class MyTool {
             } else {
                 temp = monthDays((int) nongDate[0], i);
             }
+
             // 解除闰月
             if (nongDate[6] == 1 && i == (leap + 1))
                 nongDate[6] = 0;
@@ -339,6 +307,7 @@ public final class MyTool {
             if (nongDate[6] == 0)
                 nongDate[4]++;
         }
+
         if (offset == 0 && leap > 0 && i == leap + 1) {
             if (nongDate[6] == 1) {
                 nongDate[6] = 0;
@@ -358,14 +327,9 @@ public final class MyTool {
         return nongDate;
     }
 
-    /**
-     * 传出y年m月d日对应的农历.year0 .month1 .day2 .yearCyl3 .monCyl4 .dayCyl5 .isLeap6
-     *
-     * @param y
-     * @param m
-     * @param d
-     * @return
-     */
+
+    // 传出y年m月d日对应的农历.year0 .month1 .day2 .yearCyl3 .monCyl4 .dayCyl5 .isLeap6
+
     final public static long[] calElement(int y, int m, int d) {
         long[] nongDate = new long[7];
         int i = 0, temp = 0, leap = 0;
@@ -374,6 +338,7 @@ public final class MyTool {
         long offset = (objDate.getTime() - baseDate.getTime()) / 86400000L;
         nongDate[5] = offset + 40;
         nongDate[4] = 14;
+
         for (i = 1900; i < 2050 && offset > 0; i++) {
             temp = lYearDays(i);
             offset -= temp;
@@ -388,6 +353,7 @@ public final class MyTool {
         nongDate[3] = i - 1864;
         leap = leapMonth(i); // 闰哪个月
         nongDate[6] = 0;
+
         for (i = 1; i < 13 && offset > 0; i++) {
             // 闰月
             if (leap > 0 && i == (leap + 1) && nongDate[6] == 0) {
@@ -397,6 +363,7 @@ public final class MyTool {
             } else {
                 temp = monthDays((int) nongDate[0], i);
             }
+
             // 解除闰月
             if (nongDate[6] == 1 && i == (leap + 1))
                 nongDate[6] = 0;
@@ -404,6 +371,7 @@ public final class MyTool {
             if (nongDate[6] == 0)
                 nongDate[4]++;
         }
+
         if (offset == 0 && leap > 0 && i == leap + 1) {
             if (nongDate[6] == 1) {
                 nongDate[6] = 0;
@@ -481,12 +449,17 @@ public final class MyTool {
         long[] l = calElement(year, month, date);
         StringBuffer sToday = new StringBuffer();
         try {
-//                sToday.append(sdf.format(today.getTime()));
-            sToday.append(" 农历");
+            sToday.append(sdf.format(today.getTime()));
+            sToday.append(" \n");
+            sToday.append(" \n");
+            sToday.append(" \n");
+            sToday.append("   农历");
             sToday.append(cyclical(year));
             sToday.append('(');
             sToday.append(AnimalsYear(year));
             sToday.append(")年");
+            sToday.append(" \n");
+            sToday.append("     ");
             sToday.append(nStr1[(int) l[1]]);
             sToday.append("月");
             sToday.append(getChinaDate((int) (l[2])));
@@ -495,17 +468,16 @@ public final class MyTool {
             sToday = null;
         }
     }
-
-    public static String oneDay(int year, int month, int day) {
+    public static String getNongLi(int year,int month,int day) {
         long[] l = calElement(year, month, day);
         StringBuffer sToday = new StringBuffer();
         try {
-//                sToday.append(sdf.format(today.getTime()));
-            sToday.append(" 农历");
             sToday.append(cyclical(year));
             sToday.append('(');
             sToday.append(AnimalsYear(year));
             sToday.append(")年");
+            sToday.append(" \n");
+            sToday.append("     ");
             sToday.append(nStr1[(int) l[1]]);
             sToday.append("月");
             sToday.append(getChinaDate((int) (l[2])));
@@ -514,16 +486,34 @@ public final class MyTool {
             sToday = null;
         }
     }
-
-    public static String onDay(Date date) {
-        Calendar c = new GregorianCalendar();
-        c.setTime(date);
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        return oneDay(year, month, day);
+    public static String getNongLi(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DATE);
+        return getNongLi(year,month,day);
     }
+    public static String getNongLiNoYear(int year,int month,int day) {
+        long[] l = calElement(year, month, day);
+        StringBuffer sToday = new StringBuffer();
+        try {
+            sToday.append(nStr1[(int) l[1]]);
+            sToday.append("月");
+            sToday.append(getChinaDate((int) (l[2])));
+            return sToday.toString();
+        } finally {
+            sToday = null;
+        }
+    }
+    public static String getNongLiNoYear(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DATE);
+        return getNongLiNoYear(year,month,day);
+    }
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日 EEEEE");
 
-//        private static SimpleDateFormat sdf = new SimpleDateFormat(
-//                "yyyy年M月d日 EEEEE");
 }

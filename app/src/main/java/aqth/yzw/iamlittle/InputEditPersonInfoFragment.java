@@ -35,6 +35,11 @@ public class InputEditPersonInfoFragment extends DialogFragment {
     private boolean flag;
     private EditText nameET,ageET,ratioET,phoneET,noteET;
     private RadioButton man,woman;
+    private Person person;
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
 
     public void setOnDialogFragmentDismiss(OnDialogFragmentDismiss onDialogFragmentDismiss) {
         this.onDialogFragmentDismiss = onDialogFragmentDismiss;
@@ -43,6 +48,7 @@ public class InputEditPersonInfoFragment extends DialogFragment {
     private OnDialogFragmentDismiss onDialogFragmentDismiss;
     public static InputEditPersonInfoFragment newInstant(Person p){
         InputEditPersonInfoFragment fragment= new InputEditPersonInfoFragment();
+        fragment.setPerson(p);
         Bundle bundle = new Bundle();
         bundle.putString("Name",p.getName());
         bundle.putInt("Age",p.getAge());
@@ -92,29 +98,9 @@ public class InputEditPersonInfoFragment extends DialogFragment {
         return true;
     }
     protected boolean exist(String _name){
-        Person person = LitePal.where("name = ?",_name).findFirst(Person.class);
-        return person != null;
+        Person p = LitePal.where("name = ?",_name).findFirst(Person.class);
+        return p != null;
     }
-//    protected void initialInput(){
-//        flag = false;
-//        name = "";
-//        phone = "";
-//        note = "";
-//        gender = MyTool.GENDER_MAN;
-//        age = 0;
-//        ratio = 0.00;
-//        nameET.setText(name);
-//        man.setChecked(gender);
-//        woman.setChecked(!gender);
-//        if(age > 0){
-//            ageET.setText(age +"");
-//        }
-//        if(ratio > 0){
-//            ratioET.setText(ratio+"");
-//        }
-//        phoneET.setText(phone);
-//        noteET.setText(note);
-//    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,18 +191,19 @@ public class InputEditPersonInfoFragment extends DialogFragment {
                     ratio = Double.valueOf(ratioET.getText().toString().trim());
                     phone = phoneET.getText().toString().trim();
                     note = noteET.getText().toString().trim();
-                    Person p = new Person();
-                    p.setName(name);
-                    p.setGender(gender);
-                    p.setAge(age);
-                    p.setRatio(ratio);
-                    p.setStatus(MyTool.PERSON_STATUS_ONDUTY);
-                    p.setPhone(phone);
-                    p.setNote(note);
+                    if(person == null)
+                        person = new Person();
+                    person.setName(name);
+                    person.setGender(gender);
+                    person.setAge(age);
+                    person.setRatio(ratio);
+                    person.setStatus(MyTool.PERSON_STATUS_ONDUTY);
+                    person.setPhone(phone);
+                    person.setNote(note);
                     if (mode == 1) {
-                        p.save();
+                        person.save();
                     } else {
-                        p.update(personID);
+                        person.update(personID);
                     }
                     flag = true;
                     dismiss();

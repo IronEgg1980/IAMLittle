@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScheduleActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways|snap">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="48dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/schedule_activity_preWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="上一周" />
+
+                <Button
+                    android:id="@+id/schedule_activity_thisWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="本周" />
+                <Button
+                    android:id="@+id/schedule_activity_nextWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="下一周" />
+                <Button
+                    android:id="@+id/schedule_activity_addschedule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="开始排班" />
+
+                <Button
+                    android:id="@+id/schedule_activity_editschedule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="调整排班" />
+                <Button
+                    android:id="@+id/schedule_activity_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="返回" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal"
+                app:layout_collapseMode="pin">
+
+                <TextView
+                    android:id="@+id/schedule_item_title_nameTV"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="2"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:text="人员姓名" />
+
+                <LinearLayout
+                    android:paddingBottom="2dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textSize="12sp"
+                        android:id="@+id/schedule_item_title_date1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="星期一" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingBottom="2dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textSize="12sp"
+                        android:id="@+id/schedule_item_title_date2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="星期二" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingBottom="2dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textSize="12sp"
+                        android:id="@+id/schedule_item_title_date3"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="星期三" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingBottom="2dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textSize="12sp"
+                        android:id="@+id/schedule_item_title_date4"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="星期四" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingBottom="2dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textSize="12sp"
+                        android:id="@+id/schedule_item_title_date5"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="星期五" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingBottom="2dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textSize="12sp"
+                        android:id="@+id/schedule_item_title_date6"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:text="星期六" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingBottom="2dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textSize="12sp"
+                        android:id="@+id/schedule_item_title_date7"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@android:color/holo_red_light"
+                        android:text="星期日" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/schedule_item_title_noteTV"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:text="备注" />
+            </LinearLayout>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/schedule_show_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</android.support.design.widget.CoordinatorLayout>

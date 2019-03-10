@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -52,7 +53,7 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
         switch (itemType){
             case EMPTY:
                 RecyclerViewAddButtonViewHolder recyclerViewAddButtonViewHolder = (RecyclerViewAddButtonViewHolder)viewHolder;
-                ((RecyclerViewAddButtonViewHolder) viewHolder).getButton().setText("增加一人");
+                ((RecyclerViewAddButtonViewHolder) viewHolder).getButton().setText("新增人员");
                 ((RecyclerViewAddButtonViewHolder) viewHolder).getButton().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -64,6 +65,13 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
                 PersonViewHolder personViewHolder = (PersonViewHolder)viewHolder;
                 ItemEntityPerson itemEntityPerson = (ItemEntityPerson)itemEntity;
                 final Person p = itemEntityPerson.getPerson();
+                personViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        v.setTag("Call");
+                        itemClickListener.onClick(v,i);
+                    }
+                });
                 personViewHolder.nameTextView.setText(p.getName());
                 personViewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -93,11 +101,10 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
                         itemClickListener.onClick(v,i);
                     }
                 });
-                personViewHolder.phoneTextVeiw.setText("Tel:"+p.getPhone());
+                personViewHolder.phoneTextVeiw.setText(p.getPhone());
                 personViewHolder.phoneTextVeiw.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        v.setTag("Call");
                         itemClickListener.onClick(v,i);
                     }
                 });
@@ -121,6 +128,12 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
                         itemClickListener.onClick(v,i);
                     }
                 });
+                personViewHolder.JXXS.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClickListener.onClick(v,i);
+                    }
+                });
                 break;
         }
     }
@@ -138,9 +151,12 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
     }
     protected class PersonViewHolder extends RecyclerView.ViewHolder{
         private TextView nameTextView,ratioTextView,ageTextView,genderTextView,statusTextView,
-                statusColrView,phoneTextVeiw,noteTextView;
+                statusColrView,phoneTextVeiw,noteTextView,JXXS;
+        private ImageView imageView;
         public PersonViewHolder(@NonNull View itemView) {
             super(itemView);
+            JXXS = itemView.findViewById(R.id.recyclerview_item_person_JXXS);
+            imageView = itemView.findViewById(R.id.recyclerview_item_person_image);
             nameTextView = itemView.findViewById(R.id.recyclerview_item_person_name);
             ratioTextView = itemView.findViewById(R.id.recyclerview_item_person_ratio);
             ageTextView = itemView.findViewById(R.id.recyclerview_item_person_age);

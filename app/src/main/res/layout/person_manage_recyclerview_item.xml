@@ -20,8 +20,8 @@
             <TextView
                 android:layout_margin="16dp"
                 android:id="@+id/person_status_color_textview"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
                 android:layout_gravity="center"
                 android:background="@android:color/holo_green_light" />
 
@@ -34,21 +34,22 @@
                 android:gravity="bottom"
                 android:text="姓名"/>
             <TextView
+                android:paddingRight="24dp"
                 android:textSize="10sp"
                 android:text="状态：在岗"
                 android:gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginRight="60dp"
                 android:paddingBottom="4dp"
                 android:id="@+id/person_status_text_textview"/>
             <TextView
+                android:id="@+id/recyclerview_item_person_JXXS"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textSize="12sp"
                 android:gravity="bottom"
                 android:paddingBottom="4dp"
-                android:text="绩效系数"/>
+                android:text="绩效系数："/>
 
             <TextView
                 android:id="@+id/recyclerview_item_person_ratio"
@@ -64,52 +65,60 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:orientation="horizontal">
+            android:orientation="vertical">
             <LinearLayout
-                android:layout_marginLeft="48dp"
-                android:layout_marginBottom="8dp"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="16dp"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:orientation="horizontal">
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/recyclerview_item_person_gender"
                     android:textSize="14sp"
-                    android:gravity="bottom"
+                    android:gravity="center_vertical"
                     android:text="男"/>
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical|right"
+                    android:text="1234567890"
+                    android:id="@+id/recyclerview_item_person_phone"/>
+                <ImageView
+                    android:id="@+id/recyclerview_item_person_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/ic_phone_green_800_48dp"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="16dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/recyclerview_item_person_age"
                     android:textSize="14sp"
                     android:gravity="bottom"
                     android:text="30岁"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="16dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:gravity="bottom"
-                    android:text="1234567890"
-                    android:id="@+id/recyclerview_item_person_phone"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
                     android:textSize="11sp"
                     android:gravity="bottom"
+                    android:paddingLeft="20dp"
                     android:text="测试文字"
                     android:id="@+id/recyclerview_item_person_note"/>
             </LinearLayout>

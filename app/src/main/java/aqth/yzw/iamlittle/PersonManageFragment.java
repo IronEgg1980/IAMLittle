@@ -1,15 +1,15 @@
 package aqth.yzw.iamlittle;
 
-import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +18,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import org.litepal.LitePal;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,14 +67,40 @@ public class PersonManageFragment extends Fragment {
                                 }
                             }
                         }
+                        @Override
+                        public void onDissmiss(boolean flag, Object o) {
+
+                        }
                     });
                     fragment.show(getFragmentManager(),"AddPerson");
                 }else{
 
                     ItemEntityPerson person = (ItemEntityPerson)list.get(position) ;
                     final Person p = person.getPerson();
+                    final String phoneNumber = p.getPhone();
                     if (view.getTag() != null || "Call".equals((String) view.getTag())) {
-                        Toast.makeText(getContext(),"打电话给："+p.getName(),Toast.LENGTH_SHORT).show();
+                        if(!TextUtils.isEmpty(phoneNumber)) {
+                            MyDialogFragment fragment = MyDialogFragment.newInstant("是否需要联系"+p.getName()+"？","关闭","是的");
+                            fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                                @Override
+                                public void onDissmiss(boolean flag) {
+                                    if (flag){
+                                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phoneNumber));
+                                        startActivity(intent);
+                                    }
+                                }
+
+                                @Override
+                                public void onDissmiss(boolean flag,Object o) {
+
+                                }
+                            });
+                            fragment.show(getFragmentManager(),"CallPerson");
+                        }else{
+                            Toast toast = Toast.makeText(getContext(),"没有找到"+p.getName()+"的号码，请修改电话号码后再试一次！",Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER,0,0);
+                            toast.show();
+                        }
                         return;
                     }
                     PopupMenu menu = new PopupMenu(getContext(),view);
@@ -100,6 +127,11 @@ public class PersonManageFragment extends Fragment {
                                                 Toast.makeText(getContext(),"取消操作",Toast.LENGTH_SHORT).show();
                                             }
                                         }
+
+                                        @Override
+                                        public void onDissmiss(boolean flag, Object o) {
+
+                                        }
                                     });
                                     dialogFragment.show(getFragmentManager(),"dialog");
                                     break;
@@ -109,9 +141,14 @@ public class PersonManageFragment extends Fragment {
                                         @Override
                                         public void onDissmiss(boolean flag) {
                                             if(flag){
-                                                updateList();
+                                                //updateList();
                                                 adapter.notifyItemChanged(position);
                                             }
+                                        }
+
+                                        @Override
+                                        public void onDissmiss(boolean flag, Object o) {
+
                                         }
                                     });
                                     fragment.show(getFragmentManager(),"EditPerson");
@@ -126,8 +163,15 @@ public class PersonManageFragment extends Fragment {
                                     fragment1.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
                                         @Override
                                         public void onDissmiss(boolean flag) {
+
+                                        }
+
+                                        @Override
+                                        public void onDissmiss(boolean flag, Object o) {
                                             if(flag){
-                                                updateList();
+                                                //updateList();
+                                                double newValue = (double)o;
+                                                p.setRatio(newValue);
                                                 adapter.notifyItemChanged(position);
                                             }
                                         }

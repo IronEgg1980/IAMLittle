@@ -17,7 +17,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PersonManageActivity"></activity>
+        <activity
+            android:name=".PersonManageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ShiftManageActivity" />
+        <activity android:name=".ScheduleActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

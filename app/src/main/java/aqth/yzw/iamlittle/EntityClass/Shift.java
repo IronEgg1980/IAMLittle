@@ -3,6 +3,11 @@ package aqth.yzw.iamlittle.EntityClass;
 import org.litepal.crud.LitePalSupport;
 
 public class Shift extends LitePalSupport {
+    public long getId() {
+        return id;
+    }
+
+    private long id;
     private String name;
     private int type;
     private double unitAmount;
