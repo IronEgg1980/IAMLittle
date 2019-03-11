@@ -33,6 +33,7 @@
         <TextView
             android:background="@drawable/dialog_single_button_selector"
             android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             android:layout_marginBottom="1dp"
             android:clickable="true"
             android:id="@+id/dialog_single_button"
