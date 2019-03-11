@@ -1,11 +1,12 @@
 package aqth.yzw.iamlittle.Adapters;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
     private List<ItemEntity> mList;
     private IItemClickListener itemClickListener;
     private IItemClickListener itemLongClickListener;
+    private Context mContext;
 
     public void setItemLongClickListener(IItemClickListener itemLongClickListener) {
         this.itemLongClickListener = itemLongClickListener;
@@ -30,11 +32,13 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
         this.itemClickListener = itemClickListener;
     }
 
-    public ScheduleShowAdapter(List<ItemEntity> list){
+    public ScheduleShowAdapter(Context context, List<ItemEntity> list){
+        mContext = context;
         mList = list;
         isInputMode = false;
     }
-    public ScheduleShowAdapter(List<ItemEntity> list,boolean isInputMode){
+    public ScheduleShowAdapter(Context context,List<ItemEntity> list,boolean isInputMode){
+        mContext = context;
         mList = list;
         isInputMode = true;
     }
@@ -62,20 +66,27 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
             for(int k = 0;k<9;k++){
                 final int x = i;
                 final int y = k;
+                if(inputItem.getCurrent(k)){
+                    holder.getTVs()[k].setBackgroundColor(Color.WHITE);
+                }else{
+                    holder.getTVs()[k].setBackgroundColor(mContext.getColor(R.color.scheduleItemTextViewBG));
+                }
                 holder.getTVs()[k].setText(inputItem.getValues(k));
+                holder.getTVs()[k].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setCurrentCell(x, y);
+                        notifyDataSetChanged();
+                        itemClickListener.onClick(v, x, y);
+                    }
+                });
                 if (isInputMode) {
-                    holder.getTVs()[k].setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            setCurrentCell(x, y);
-                            itemClickListener.onClick(v, x, y);
-                        }
-                    });
                     holder.getTVs()[k].setLongClickable(true);
                     holder.getTVs()[k].setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
                             setCurrentCell(x, y);
+                            notifyDataSetChanged();
                             itemLongClickListener.onClick(v, x, y);
                             return true;
                         }

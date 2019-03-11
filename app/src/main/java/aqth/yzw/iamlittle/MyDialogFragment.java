@@ -67,9 +67,6 @@ public class MyDialogFragment extends DialogFragment {
         cancel = view.findViewById(R.id.dialog_cancel_button);
         cancel.setText(mCancelText);
         cancel.setTextColor(mCancelColor);
-        confirm = view.findViewById(R.id.dialog_confirm_button);
-        confirm.setText(mConfirmText);
-        confirm.setTextColor(mConfirmColor);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +74,9 @@ public class MyDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+        confirm = view.findViewById(R.id.dialog_confirm_button);
+        confirm.setText(mConfirmText);
+        confirm.setTextColor(mConfirmColor);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +95,7 @@ public class MyDialogFragment extends DialogFragment {
         if (dialog != null) {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.6), ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 

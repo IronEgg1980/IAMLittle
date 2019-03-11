@@ -1,8 +1,11 @@
 package aqth.yzw.iamlittle;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,8 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.litepal.LitePal;
 
@@ -41,36 +48,43 @@ public class ScheduleActivity extends AppCompatActivity {
         if(list == null)
             list = new ArrayList<>();
         list.clear();
-        String[] dates = MyTool.getWeekStartEndString(c.getTime());
-        List<Schedule> temp = LitePal.order("personname")
-                .where("date >= ? and date <= ?",dates[0],dates[1]).find(Schedule.class);
-        List<String> person = new ArrayList<>();
-        String currentPerson = "";
-        for(int i = 0;i<temp.size();i++){
-            if(i == 0) {
-                currentPerson = temp.get(0).getPersonName();
-                person.add(currentPerson);
-            }else{
-                String s = temp.get(i).getPersonName();
-                if(!s.equals(currentPerson)){
-                    currentPerson = s;
-                    person.add(currentPerson);
-                }
+//        String[] dates = MyTool.getWeekStartEndString(c.getTime());
+//        List<Schedule> temp = LitePal.order("personname")
+//                .where("date >= ? and date <= ?",dates[0],dates[1]).find(Schedule.class);
+//        List<String> person = new ArrayList<>();
+//        String currentPerson = "";
+//        for(int i = 0;i<temp.size();i++){
+//            if(i == 0) {
+//                currentPerson = temp.get(0).getPersonName();
+//                person.add(currentPerson);
+//            }else{
+//                String s = temp.get(i).getPersonName();
+//                if(!s.equals(currentPerson)){
+//                    currentPerson = s;
+//                    person.add(currentPerson);
+//                }
+//            }
+//        }
+//        for(String s:person){
+//            List<Schedule> schedules = LitePal.order("date")
+//                    .where("personname = ? and date >= ? and date <= ?",s,dates[0],dates[1]).find(Schedule.class);
+//            ItemEntityScheduleInput item = new ItemEntityScheduleInput();
+//            item.setValues(0,s);
+//            String note = "";
+//            for(int i = 1;i<=schedules.size();i++){
+//                Schedule schedule = schedules.get(i-1);
+//                item.setValues(i,schedule.getShiftName());
+//                note = schedule.getNote();
+//            }
+//            item.setValues(8,note);
+//            list.add(item);
+//        }
+        for(int i = 0;i<10;i++){
+            ItemEntityScheduleInput itemEntityScheduleInput = new ItemEntityScheduleInput();
+            for(int j = 0;j<9;j++){
+                itemEntityScheduleInput.setValues(j,"行"+i+"列"+j);
             }
-        }
-        for(String s:person){
-            List<Schedule> schedules = LitePal.order("date")
-                    .where("personname = ? and date >= ? and date <= ?",s,dates[0],dates[1]).find(Schedule.class);
-            ItemEntityScheduleInput item = new ItemEntityScheduleInput();
-            item.setValues(0,s);
-            String note = "";
-            for(int i = 1;i<=schedules.size();i++){
-                Schedule schedule = schedules.get(i-1);
-                item.setValues(i,schedule.getShiftName());
-                note = schedule.getNote();
-            }
-            item.setValues(8,note);
-            list.add(item);
+            list.add(itemEntityScheduleInput);
         }
         if(list.size() == 0)
             list.add(new ItemEntity());
@@ -160,11 +174,26 @@ public class ScheduleActivity extends AppCompatActivity {
                 nextWeek();
             }
         });
-        thisWeek();
         updateList();
         recyclerView = findViewById(R.id.schedule_show_recyclerview);
-        adapter = new ScheduleShowAdapter(list);
+        adapter = new ScheduleShowAdapter(this,list);
+        adapter.setItemClickListener(new IItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onClick(View view, int x, int y) {
+                if(y == 8){
+                    ItemEntityScheduleInput input =(ItemEntityScheduleInput)list.get(x);
+                    MyDialogFragmenSingleButton singleButton = MyDialogFragmenSingleButton.newInstant(input.getValues(y),"关闭");
+                    singleButton.show(getSupportFragmentManager(),"ShowNote");
+                }
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        thisWeek();
     }
 }

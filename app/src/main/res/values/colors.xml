@@ -6,4 +6,5 @@
     <color name="colorMan">#3399ff</color>
     <color name="colorWoman">#ff0099</color>
     <color name="colorText">#555555</color>
+    <color name="scheduleItemTextViewBG">#eeeeee</color>
 </resources>
