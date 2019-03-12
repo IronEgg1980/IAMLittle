@@ -40,14 +40,19 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
     public ScheduleShowAdapter(Context context,List<ItemEntity> list,boolean isInputMode){
         mContext = context;
         mList = list;
-        isInputMode = true;
+        this.isInputMode = true;
     }
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         if(i == 1){
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_empty_layout,viewGroup,false);
-            return new RecyclerviewEmptyViewHolder(view);
+            if(isInputMode){
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_addbutton_layout, viewGroup, false);
+                return new RecyclerViewAddButtonViewHolder(view);
+            }else {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_empty_layout, viewGroup, false);
+                return new RecyclerviewEmptyViewHolder(view);
+            }
         }else{
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.schedule_recyclerview_item,viewGroup,false);
             return new ScheduleItemViewHolder(view);
@@ -56,21 +61,27 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
-        ItemEntity itemEntity = mList.get(i);
+        final ItemEntity itemEntity = mList.get(i);
+        final int x = i;
         if(itemEntity.getType() == ItemType.EMPTY){
-            RecyclerviewEmptyViewHolder holder = (RecyclerviewEmptyViewHolder)viewHolder;
-            holder.getTextView().setText("没有本周排班数据");
+            if(isInputMode){
+                RecyclerViewAddButtonViewHolder holder = (RecyclerViewAddButtonViewHolder)viewHolder;
+                holder.getButton().setText("增加一行");
+                holder.getButton().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClickListener.onClick(v,x,0);
+                    }
+                });
+            }else {
+                RecyclerviewEmptyViewHolder holder = (RecyclerviewEmptyViewHolder) viewHolder;
+                holder.getTextView().setText("没有本周排班数据");
+            }
         }else{
             ScheduleItemViewHolder holder = (ScheduleItemViewHolder)viewHolder;
             ItemEntityScheduleInput inputItem = (ItemEntityScheduleInput)itemEntity;
             for(int k = 0;k<9;k++){
-                final int x = i;
                 final int y = k;
-                if(inputItem.getCurrent(k)){
-                    holder.getTVs()[k].setBackgroundColor(Color.WHITE);
-                }else{
-                    holder.getTVs()[k].setBackgroundColor(mContext.getColor(R.color.scheduleItemTextViewBG));
-                }
                 holder.getTVs()[k].setText(inputItem.getValues(k));
                 holder.getTVs()[k].setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -81,6 +92,11 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
                     }
                 });
                 if (isInputMode) {
+                    if(inputItem.getCurrent(k)){
+                        holder.getTVs()[k].setBackgroundColor(Color.WHITE);
+                    }else{
+                        holder.getTVs()[k].setBackgroundColor(mContext.getColor(R.color.scheduleItemTextViewBG));
+                    }
                     holder.getTVs()[k].setLongClickable(true);
                     holder.getTVs()[k].setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
@@ -91,6 +107,12 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
                             return true;
                         }
                     });
+                }else{
+                    if(x % 2 == 0){
+                        holder.getTVs()[k].setBackgroundColor(mContext.getColor(R.color.scheduleItemTextViewBG));
+                    }else{
+                        holder.getTVs()[k].setBackgroundColor(Color.WHITE);
+                    }
                 }
             }
         }

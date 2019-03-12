@@ -458,7 +458,6 @@ final private static long[] lunarInfo = new long[] { 0x04bd8, 0x04ae0, 0x0a570, 
             sToday.append('(');
             sToday.append(AnimalsYear(year));
             sToday.append(")年");
-            sToday.append(" \n");
             sToday.append("     ");
             sToday.append(nStr1[(int) l[1]]);
             sToday.append("月");
@@ -475,9 +474,7 @@ final private static long[] lunarInfo = new long[] { 0x04bd8, 0x04ae0, 0x0a570, 
             sToday.append(cyclical(year));
             sToday.append('(');
             sToday.append(AnimalsYear(year));
-            sToday.append(")年");
-            sToday.append(" \n");
-            sToday.append("     ");
+            sToday.append(")年  ");
             sToday.append(nStr1[(int) l[1]]);
             sToday.append("月");
             sToday.append(getChinaDate((int) (l[2])));

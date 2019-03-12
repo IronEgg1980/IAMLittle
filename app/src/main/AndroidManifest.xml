@@ -20,10 +20,11 @@
         <activity
             android:name=".PersonManageActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ShiftManageActivity" />
         <activity
-            android:name=".ShiftManageActivity" />
-        <activity android:name=".ScheduleActivity"
-            android:screenOrientation="landscape"/>
+            android:name=".ScheduleActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".ScheduleInputEditActivity"></activity>
     </application>
 
 </manifest>

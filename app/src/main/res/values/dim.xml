@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="toolbar_height">48dp</dimen>
-    <dimen name="dialogButtonRadius">24dp</dimen>
+    <dimen name="dialogButtonRadius">20dp</dimen>
     <dimen name="genderCheckboxRadius">12dp</dimen>
     <dimen name="normalButtonRadius">10dp</dimen>
+    <dimen name="dividerLineWidth">0.5dp</dimen>
 </resources>

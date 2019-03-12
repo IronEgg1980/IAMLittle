@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@drawable/dialog_shape">
-
-    <TextView
-        android:text="测试文字"
-        android:id="@+id/dialog_info_textView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="20dp"
-        android:textSize="16sp" />
-
+    <DatePicker
+        android:layout_margin="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="true"
+        android:firstDayOfWeek="2"
+        android:id="@+id/date_picker_dialog_datepicker"/>
     <View
-        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorPrimary"/>
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"

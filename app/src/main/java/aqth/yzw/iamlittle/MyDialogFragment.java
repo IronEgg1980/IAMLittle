@@ -56,10 +56,6 @@ public class MyDialogFragment extends DialogFragment {
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return super.onCreateDialog(savedInstanceState);
-    }
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment,container,false);
         info = view.findViewById(R.id.dialog_info_textView);

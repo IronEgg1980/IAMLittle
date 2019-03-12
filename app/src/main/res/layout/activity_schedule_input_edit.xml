@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScheduleActivity">
+    tools:context=".ScheduleInputEditActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,21 +20,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <LinearLayout
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="56dp"
                     android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/schedule_activity_title"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/white"
-                        android:text="今天是"/>
+                    <Button
+                        android:id="@+id/schedule_inputedit_activity_save"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:drawableLeft="@drawable/ic_save_white_24dp"
+                        style="@style/ScheduleInputEditButtonStyle"
+                        android:text="@string/save" />
+                    <Button
+                        android:id="@+id/schedule_inputedit_activity_cancel"
+                        android:layout_marginRight="32dp"
+                        android:drawableLeft="@drawable/ic_cancel_white_24dp"
+                        style="@style/ScheduleInputEditButtonStyle"
+                        android:text="@string/cancel" />
                     <CheckBox
                         style="@style/CustomCheckboxTheme"
                         android:textColor="@android:color/white"
@@ -42,66 +47,7 @@
                         android:text="显示农历"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:id="@+id/schedule_activity_showNongLiCheckBox"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="56dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/schedule_activity_preWeek"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:drawableTop="@drawable/ic_arrow_back_white_24dp"
-                        style="@style/ScheduleTitleButtonStyle"
-                        android:text="上一周" />
-
-                    <Button
-                        android:id="@+id/schedule_activity_thisWeek"
-                        android:layout_marginRight="8dp"
-                        android:drawableTop="@drawable/ic_view_week_white_24dp"
-                        style="@style/ScheduleTitleButtonStyle"
-                        android:text="本周" />
-                    <Button
-                        android:id="@+id/schedule_activity_nextWeek"
-                        android:layout_marginRight="8dp"
-                        android:drawableTop="@drawable/ic_arrow_forward_white_24dp"
-                        style="@style/ScheduleTitleButtonStyle"
-                        android:text="下一周" />
-                    <Button
-                        android:id="@+id/schedule_activity_selectDate"
-                        android:layout_marginRight="32dp"
-                        android:drawableTop="@drawable/ic_date_range_white_24dp"
-                        style="@style/ScheduleTitleButtonStyle"
-                        android:text="日期" />
-                    <Button
-                        android:id="@+id/schedule_activity_addschedule"
-                        android:layout_marginRight="8dp"
-                        android:drawableTop="@drawable/ic_schedule_add_white_24dp"
-                        style="@style/ScheduleTitleButtonStyle"
-                        android:text="排班" />
-
-                    <Button
-                        android:id="@+id/schedule_activity_editschedule"
-                        android:layout_marginRight="8dp"
-                        android:drawableTop="@drawable/ic_edit_white_24dp"
-                        style="@style/ScheduleTitleButtonStyle"
-                        android:text="调整" />
-                    <Button
-                        android:id="@+id/schedule_activity_deleschedule"
-                        android:layout_marginRight="32dp"
-                        android:drawableTop="@drawable/ic_delete_white_24dp"
-                        style="@style/ScheduleTitleButtonStyle"
-                        android:text="删除" />
-                    <Button
-                        android:id="@+id/schedule_activity_back"
-                        android:layout_marginRight="32dp"
-                        android:drawableTop="@drawable/ic_close_white_24dp"
-                        style="@style/ScheduleTitleButtonStyle"
-                        android:text="关闭" />
+                        android:id="@+id/schedule_inputedit_activity_showNongLiCheckBox"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -306,7 +252,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/schedule_show_recyclerview"
+        android:id="@+id/schedule_inputedit_activity_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

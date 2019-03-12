@@ -15,5 +15,32 @@
     <style name="ScheduleItemTextViewStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorText</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_button_selector</item>
+    </style>
+    <style name="ScheduleTitleButtonStyle">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/button_normal_selector</item>
+    </style>
+    <style name="ScheduleInputEditButtonStyle" parent="ScheduleTitleButtonStyle">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingLeft">8dp</item>
+    </style>
+    <style name="NormalButtonStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/button_normal_selector</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 </resources>
