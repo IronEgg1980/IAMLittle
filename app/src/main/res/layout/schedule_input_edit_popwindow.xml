@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        style="@style/ScheduleInputEditButtonStyle"
+        android:id="@+id/schedule_inputedit_popwindow_clear"
+        android:text="@string/clearText"
+        android:drawableLeft="@drawable/ic_arrow_back_white_24dp"
+        />
+    <Button
+        android:layout_marginRight="8dp"
+        style="@style/ScheduleInputEditButtonStyle"
+        android:id="@+id/schedule_inputedit_popwindow_delLine"
+        android:text="@string/delLine"
+        android:drawableLeft="@drawable/ic_arrow_back_white_24dp"
+        />
+</LinearLayout>

@@ -46,13 +46,8 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         if(i == 1){
-            if(isInputMode){
-                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_addbutton_layout, viewGroup, false);
-                return new RecyclerViewAddButtonViewHolder(view);
-            }else {
-                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_empty_layout, viewGroup, false);
-                return new RecyclerviewEmptyViewHolder(view);
-            }
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_empty_layout, viewGroup, false);
+            return new RecyclerviewEmptyViewHolder(view);
         }else{
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.schedule_recyclerview_item,viewGroup,false);
             return new ScheduleItemViewHolder(view);
@@ -63,18 +58,18 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
         final ItemEntity itemEntity = mList.get(i);
         final int x = i;
+
         if(itemEntity.getType() == ItemType.EMPTY){
+            RecyclerviewEmptyViewHolder holder = (RecyclerviewEmptyViewHolder) viewHolder;
             if(isInputMode){
-                RecyclerViewAddButtonViewHolder holder = (RecyclerViewAddButtonViewHolder)viewHolder;
-                holder.getButton().setText("增加一行");
-                holder.getButton().setOnClickListener(new View.OnClickListener() {
+                holder.getTextView().setText("增加一行");
+                holder.getTextView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         itemClickListener.onClick(v,x,0);
                     }
                 });
             }else {
-                RecyclerviewEmptyViewHolder holder = (RecyclerviewEmptyViewHolder) viewHolder;
                 holder.getTextView().setText("没有本周排班数据");
             }
         }else{

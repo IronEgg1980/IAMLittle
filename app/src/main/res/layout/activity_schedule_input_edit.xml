@@ -8,13 +8,15 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:id="@+id/activity_schedule_input_edit_appbar">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways|snap">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,6 +42,12 @@
                         android:drawableLeft="@drawable/ic_cancel_white_24dp"
                         style="@style/ScheduleInputEditButtonStyle"
                         android:text="@string/cancel" />
+                    <Button
+                        android:id="@+id/schedule_inputedit_activity_template"
+                        android:layout_marginRight="32dp"
+                        android:drawableLeft="@drawable/ic_cancel_white_24dp"
+                        style="@style/ScheduleInputEditButtonStyle"
+                        android:text="@string/template" />
                     <CheckBox
                         style="@style/CustomCheckboxTheme"
                         android:textColor="@android:color/white"
@@ -250,10 +258,25 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/schedule_inputedit_activity_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:id="@+id/schedule_inputedit_activity_recyclerview2"/>
+</LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

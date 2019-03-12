@@ -18,4 +18,7 @@
     <string name="setPersonLeave">出科</string>
     <string name="callBack">入科</string>
     <string name="schedule">排班表</string>
+    <string name="template">模板</string>
+    <string name="clearText">清除文字</string>
+    <string name="delLine">删除该行</string>
 </resources>
