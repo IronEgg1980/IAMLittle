@@ -7,18 +7,17 @@
     tools:context=".MainActivity">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="480dp">
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:minHeight="48dp"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             android:id="@+id/toolbarLayout">
-            <TextView
-                android:layout_width="match_parent"
+            <ImageView android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/edit"/>
+                android:id="@+id/activity_main_title_image"
+                android:scaleType="centerCrop"/>
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
@@ -33,33 +32,40 @@
     </android.support.design.widget.AppBarLayout>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:layout_margin="8dp"
-                android:id="@+id/person_manage"
-                android:text="@string/person_manage"
-                style="@style/NormalButtonStyle"
-                />
-            <Button
-                android:layout_margin="8dp"
-                android:id="@+id/shift_manage"
-                android:text="@string/shift_manage"
-                style="@style/NormalButtonStyle"
-                />
-            <Button
-                android:layout_margin="8dp"
-                android:id="@+id/schedule_activity"
-                android:text="@string/schedule"
-                style="@style/NormalButtonStyle"
-                />
-            <TextView
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.v7.widget.RecyclerView
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
-                android:layout_height="800dp" />
+                android:layout_height="200dp"
+                android:id="@+id/activity_main_recyclerview"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <Button
+                    android:layout_margin="8dp"
+                    android:id="@+id/person_manage"
+                    android:text="@string/person_manage"
+                    style="@style/NormalButtonStyle"
+                    />
+                <Button
+                    android:layout_margin="8dp"
+                    android:id="@+id/shift_manage"
+                    android:text="@string/shift_manage"
+                    style="@style/NormalButtonStyle"
+                    />
+                <Button
+                    android:layout_margin="8dp"
+                    android:id="@+id/schedule_activity"
+                    android:text="@string/schedule"
+                    style="@style/NormalButtonStyle"
+                    />
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
