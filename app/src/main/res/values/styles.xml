@@ -42,10 +42,10 @@
     </style>
     <style name="NormalButtonStyle">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">@drawable/button_normal_selector</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
     </style>
     <style name="pop_window_animation">
         <item name="android:windowEnterAnimation">@anim/bottom_to_top</item>

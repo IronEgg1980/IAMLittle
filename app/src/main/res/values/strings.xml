@@ -22,4 +22,5 @@
     <string name="template">模板</string>
     <string name="clearText">清除文字</string>
     <string name="delLine">删除该行</string>
+    <string name="count">统计</string>
 </resources>
