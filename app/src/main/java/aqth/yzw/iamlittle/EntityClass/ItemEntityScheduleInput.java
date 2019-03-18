@@ -13,8 +13,8 @@ public class ItemEntityScheduleInput extends ItemEntity {
     private boolean[] current;
 
     public ItemEntityScheduleInput(){
-        values = new String[9];
-        current = new boolean[9];
+        values = new String[]{"","","","","","","","",""};
+        current = new boolean[]{false,false,false,false,false,false,false,false,false};
         clearCurrent();
     }
 

@@ -35,7 +35,7 @@
         <item name="android:background">@drawable/button_normal_selector</item>
     </style>
     <style name="ScheduleInputEditButtonStyle" parent="ScheduleTitleButtonStyle">
-        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">32dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:paddingLeft">8dp</item>
@@ -46,5 +46,15 @@
         <item name="android:background">@drawable/button_normal_selector</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+    </style>
+    <style name="pop_window_animation">
+        <item name="android:windowEnterAnimation">@anim/bottom_to_top</item>
+        <item name="android:windowExitAnimation">@anim/top_to_bottom</item>
+    </style>
+    <style name="person_manage_button_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 </resources>

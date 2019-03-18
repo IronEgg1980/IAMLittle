@@ -10,6 +10,15 @@ public class Schedule extends LitePalSupport {
     private String shiftName;
     private int shiftType;
     private String note;
+    private int rowNumber;
+
+    public int getRowNumber() {
+        return rowNumber;
+    }
+
+    public void setRowNumber(int rowNumber) {
+        this.rowNumber = rowNumber;
+    }
 
     public Date getDate() {
         return date;

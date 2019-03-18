@@ -7,4 +7,5 @@
     <color name="colorWoman">#ff0099</color>
     <color name="colorText">#555555</color>
     <color name="scheduleItemTextViewBG">#eeeeee</color>
+    <color name="half_translate">#66666666</color>
 </resources>

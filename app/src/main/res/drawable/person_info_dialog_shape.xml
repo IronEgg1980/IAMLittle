@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <corners android:topLeftRadius="@dimen/dialogButtonRadius"
+        android:topRightRadius="@dimen/dialogButtonRadius"/>
+    <stroke android:color="@color/colorPrimary"
+        android:width="1dp"
+        android:dashWidth="0dp"/>
+    <solid android:color="@android:color/white"/>
+</shape>

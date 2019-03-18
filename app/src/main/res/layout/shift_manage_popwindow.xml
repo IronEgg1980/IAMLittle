@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popwindow_shape"
+    android:layout_margin="4dp">
+    <Button
+        android:drawableTop="@drawable/ic_mode_edit_cyan_700_24dp"
+        style="@style/person_manage_button_style"
+        android:id="@+id/popwindow_edit_shift"
+        android:text="修改" />
+    <Button
+        android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
+        android:id="@+id/popwindow_edit_unitamount"
+        android:text="调整"
+        style="@style/person_manage_button_style"/>
+    <Button
+        android:drawableTop="@drawable/ic_delete_red_500_24dp"
+        android:id="@+id/popwindow_del_shift"
+        android:text="删除"
+        android:textColor="@android:color/holo_red_light"
+        style="@style/person_manage_button_style"/>
+</LinearLayout>

@@ -117,7 +117,7 @@ public class InputEditShiftFragmen extends DialogFragment {
         normalRB.setChecked(true);
         leaveRB.setChecked(false);
         countRB.setChecked(false);
-        linearGroup.setVisibility(View.GONE);
+        linearGroup.setVisibility(View.INVISIBLE);
         shiftNameET.requestFocus();
     }
     @Override
@@ -192,6 +192,10 @@ public class InputEditShiftFragmen extends DialogFragment {
             }
         });
         confirmBT = view.findViewById(R.id.input_edit_shift_confirmButton);
+        if(mode == 1)
+            confirmBT.setText("添加");
+        else
+            confirmBT.setText("修改");
         confirmBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,7 +208,7 @@ public class InputEditShiftFragmen extends DialogFragment {
                     if (mode == 1) {
                         mShift.save();
                         isAdd = true;
-                        Toast toast = Toast.makeText(getContext(),"添加成功！输入数据继续添加，点击关闭按钮返回。",Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getContext(),"已保存！可继续添加下一个，或按关闭返回。",Toast.LENGTH_SHORT);
                         toast.setGravity(Gravity.CENTER,0,0);
                         toast.show();
                         initialInput();
@@ -236,9 +240,11 @@ public class InputEditShiftFragmen extends DialogFragment {
         super.onStart();
         Dialog dialog = getDialog();
         if(dialog != null){
+            dialog.setCanceledOnTouchOutside(false);
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
+            int width = (int)(Math.min(dm.widthPixels,dm.heightPixels)*0.8);
+            dialog.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 }

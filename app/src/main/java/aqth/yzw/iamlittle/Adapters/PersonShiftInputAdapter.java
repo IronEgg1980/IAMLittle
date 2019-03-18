@@ -65,7 +65,7 @@ public class PersonShiftInputAdapter extends RecyclerView.Adapter<PersonShiftInp
             viewHolder.textView.setText(name);
             viewHolder.imageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_phone_green_800_48dp));
 
-        }else{
+        }else if(type == 2){
             // person
             final ItemEntityPerson person = (ItemEntityPerson)itemEntity;
             String name = person.getPerson().getName();
@@ -97,6 +97,8 @@ public class PersonShiftInputAdapter extends RecyclerView.Adapter<PersonShiftInp
         ItemEntity itemEntity = mList.get(position);
         if(itemEntity.getType() == ItemType.PERSON)
             return  2;
+        if(itemEntity.getType() == ItemType.EMPTY)
+            return 0;
         return 1;
     }
 }

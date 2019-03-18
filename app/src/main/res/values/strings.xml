@@ -2,6 +2,7 @@
     <string name="app_name">我是一个小小的助手</string>
     <string name="person_manage">人员管理</string>
     <string name="shift_manage">班次设置</string>
+    <string name="setup">设置</string>
     <string name="save">保存</string>
     <string name="confirm">确定</string>
     <string name="close">关闭</string>
@@ -11,7 +12,7 @@
     <string name="onduty">在岗</string>
     <string name="ratio">系数</string>
     <string name="edit">修改</string>
-    <string name="add">增加</string>
+    <string name="add">添加</string>
     <string name="editPerson">修改信息</string>
     <string name="editRatio">调整系数</string>
     <string name="delePerson">删除人员</string>

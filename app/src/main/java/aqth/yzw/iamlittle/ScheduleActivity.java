@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -48,7 +49,7 @@ import aqth.yzw.iamlittle.EntityClass.Schedule;
 
 public class ScheduleActivity extends AppCompatActivity {
     private TextView[] dateTVs;
-    private Date[] dates;
+    private Date[] mDates;
     private Date today;
     private SimpleDateFormat format1,simpleDateFormat;
     private Calendar c;
@@ -58,15 +59,28 @@ public class ScheduleActivity extends AppCompatActivity {
     private ScheduleShowAdapter adapter;
     private SharedPreferences preference;
     private String nongli;
-    private TextView title;
+    private TextView title,bottomTV;
     private CheckBox showNongLiCB;
 
+    private long getUnScheduledWeek(long l){
+        long result = l;
+        Date date = new Date(l);
+        String[] dates = MyTool.getWeekStartEndString(date);
+        List<Schedule> temp = LitePal.order("personname")
+                .where("date >= ? and date <= ?",dates[0],dates[1]).find(Schedule.class);
+        if(temp != null && temp.size() >0){
+            result = result + MyTool.ONE_WEEK_MILLISECOND;
+            return getUnScheduledWeek(result);
+        }else {
+            return result;
+        }
+    }
     private void updateList(){
         if(list == null)
             list = new ArrayList<>();
         list.clear();
         String[] dates = MyTool.getWeekStartEndString(c.getTime());
-        List<Schedule> temp = LitePal.order("personname")
+        List<Schedule> temp = LitePal.order("rownumber")
                 .where("date >= ? and date <= ?",dates[0],dates[1]).find(Schedule.class);
         List<String> person = new ArrayList<>();
         String currentPerson = "";
@@ -90,13 +104,16 @@ public class ScheduleActivity extends AppCompatActivity {
             String note = "";
             for(int i = 1;i<=schedules.size();i++){
                 Schedule schedule = schedules.get(i-1);
-                item.setValues(i,schedule.getShiftName());
-                note = schedule.getNote();
+                if(!TextUtils.isEmpty(schedule.getShiftName()))
+                    item.setValues(i,schedule.getShiftName());
+                else
+                    item.setValues(i,"");
+                if(i == 1)
+                    note = schedule.getNote();
             }
             item.setValues(8,note);
             list.add(item);
         }
-
         if(list.size() == 0)
             list.add(new ItemEntity());
         adapter.notifyDataSetChanged();
@@ -123,32 +140,33 @@ public class ScheduleActivity extends AppCompatActivity {
         updateList();
     }
     private void changeTitleText(){
-        dates = MyTool.getAWeekDates(c.getTime());
-        c.setTime(dates[0]);
+        mDates = MyTool.getAWeekDates(c.getTime());
+        c.setTime(mDates[0]);
         for(int i = 0;i<7;i++){
             dateTVs[i].setTextSize(11);
             if(showNongLi) {
-                String nongli = MyTool.getNongLiNoYear(dates[i]);
-                dateTVs[i].setText(format1.format(dates[i]) + "\n" + nongli);
+                String nongli = MyTool.getNongLiNoYear(mDates[i]);
+                dateTVs[i].setText(format1.format(mDates[i]) + "\n" + nongli);
             }else {
-                dateTVs[i].setText(format1.format(dates[i]));
+                dateTVs[i].setText(format1.format(mDates[i]));
             }
-            if(simpleDateFormat.format(today).equals(simpleDateFormat.format(dates[i]))){
+            if(simpleDateFormat.format(today).equals(simpleDateFormat.format(mDates[i]))){
                 dateTVs[i].setText("今天");
                 dateTVs[i].setTextSize(14);
             }
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1000 && resultCode == 1001){
             boolean b = data.getBooleanExtra("IsSaved",false);
             if (b){
-                Toast.makeText(ScheduleActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(ScheduleActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                long l = data.getLongExtra("Date",c.getTimeInMillis());
+                c.setTimeInMillis(l);
+                updateList();
+                changeTitleText();
+                Toast.makeText(ScheduleActivity.this,"排班已保存",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -221,12 +239,16 @@ public class ScheduleActivity extends AppCompatActivity {
             public void onClick(View view, int x, int y) {
                 if(y == 8){
                     ItemEntityScheduleInput input =(ItemEntityScheduleInput)list.get(x);
+                    String note = input.getValues(y);
+                    if(TextUtils.isEmpty(note) || note.length() < 12){
+                        return;
+                    }
                     PopupWindow popupWindow = new PopupWindow(view,480,RelativeLayout.LayoutParams.WRAP_CONTENT);
                     popupWindow.setBackgroundDrawable(new ColorDrawable());
                     popupWindow.setOutsideTouchable(true);
                     View v = LayoutInflater.from(view.getContext()).inflate(R.layout.popwindow_layout,null);
                     TextView textView = v.findViewById(R.id.popwindow_textview);
-                    textView.setText(input.getValues(y));
+                    textView.setText(note);
                     popupWindow.setContentView(v);
                     int[] local = new int[2];
                     view.getLocationOnScreen(local);
@@ -264,13 +286,58 @@ public class ScheduleActivity extends AppCompatActivity {
         findViewById(R.id.schedule_activity_addschedule).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                long l = getUnScheduledWeek(c.getTimeInMillis());
                 Intent intent = new Intent();
                 intent.putExtra("IsAddMode",true);
+                intent.putExtra("Date",l);
+                intent.setClass(ScheduleActivity.this,ScheduleInputEditActivity.class);
+                startActivityForResult(intent,1000);
+            }
+        });
+        findViewById(R.id.schedule_activity_deleschedule).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(list.size() == 1){
+                    Toast toast = Toast.makeText(recyclerView.getContext(),"本周没有排班",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                    return;
+                }
+                MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除本周排班？","取消","删除",
+                        Color.BLACK,Color.RED);
+                dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                    @Override
+                    public void onDissmiss(boolean flag) {
+                        if(flag){
+                            String[] _dates = MyTool.getWeekStartEndString(c.getTime());
+                            LitePal.deleteAll(Schedule.class,"date >= ? and date <= ?",_dates[0],_dates[1]);
+                            updateList();
+                        }
+                    }
+
+                    @Override
+                    public void onDissmiss(boolean flag, Object object) {
+
+                    }
+                });
+                dialogFragment.show(getSupportFragmentManager(),"DelSchedule");
+            }
+        });
+        findViewById(R.id.schedule_activity_editschedule).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(list.size() == 1){
+                    Toast toast = Toast.makeText(recyclerView.getContext(),"本周没有排班",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                    return;
+                }
+                Intent intent = new Intent();
+                intent.putExtra("IsAddMode",false);
                 intent.putExtra("Date",c.getTimeInMillis());
                 intent.setClass(ScheduleActivity.this,ScheduleInputEditActivity.class);
                 startActivityForResult(intent,1000);
             }
         });
-
     }
 }

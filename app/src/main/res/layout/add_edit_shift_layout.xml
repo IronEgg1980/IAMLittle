@@ -4,88 +4,98 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_shape">
-    <TextView
-        android:layout_marginTop="24dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:text="名称"/>
-    <EditText
-        android:id="@+id/input_edit_shift_nameTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center"
-        android:inputType="text"
-        android:maxLines="1"
-        android:maxLength="6"
-        />
-    <TextView
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:text="类型"/>
-    <RadioGroup
-        android:id="@+id/input_edit_shift_radioGroup"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:id="@+id/input_edit_shift_normalType"
-            android:text="常规"
-            android:textColor="@color/colorText"/>
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:id="@+id/input_edit_shift_leaveType"
-            android:text="请假"
-            android:textColor="@color/colorText"/>
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:id="@+id/input_edit_shift_countType"
-            android:text="需要统计"
-            android:textColor="@color/colorText"/>
-    </RadioGroup>
     <LinearLayout
-        android:id="@+id/show_unitAmount_group"
-        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp">
+        android:orientation="horizontal">
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:text="名称"/>
+        <EditText
+            android:id="@+id/input_edit_shift_nameTextView"
+            android:layout_marginLeft="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text"
+            android:maxLines="1"
+            android:maxLength="6"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:text="类型"/>
+        <RadioGroup
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/input_edit_shift_radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/input_edit_shift_normalType"
+                android:text="常规"
+                android:textColor="@color/colorText"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/input_edit_shift_leaveType"
+                android:text="请假"
+                android:textColor="@color/colorText"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/input_edit_shift_countType"
+                android:text="统计"
+                android:textColor="@color/colorText"/>
+        </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/show_unitAmount_group"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:textSize="12sp"
             android:gravity="center"
             android:text="单位金额"/>
         <EditText
+            android:layout_marginLeft="8dp"
             android:inputType="numberDecimal"
             android:maxLines="1"
             android:maxLength="8"
-            android:gravity="right"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/input_edit_shift_unitAmountEditText" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -94,7 +104,6 @@
         android:id="@+id/linearLayout3"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginBottom="1dp"
@@ -107,7 +116,7 @@
             android:layout_weight="1"
             android:background="@drawable/dialog_lbutton_selector"
             android:gravity="center"
-            android:text="@string/cancel" />
+            android:text="@string/close" />
 
         <View
             android:layout_width="1dp"
@@ -123,7 +132,7 @@
             android:layout_weight="1"
             android:background="@drawable/dialog_rbutton_selector"
             android:gravity="center"
-            android:text="@string/confirm" />
+            android:text="@string/add" />
     </LinearLayout>
 
 </LinearLayout>

@@ -13,6 +13,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.litepal.LitePal;
 
@@ -137,15 +140,22 @@ public class InputEditPersonInfoFragment extends DialogFragment {
         super.onStart();
         Dialog dialog = getDialog();
         if (dialog != null) {
+            dialog.setCanceledOnTouchOutside(false);// 点击外部不消失
+            //dialog.setCancelable(false);// 按返回键不消失
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
+            int width = (int)(Math.min(dm.widthPixels,dm.heightPixels)*0.8);
+            dialog.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.input_person_info_layout,container,true);
+        final View view =inflater.inflate(R.layout.input_person_info_layout,container,true);
+        final Window window= getDialog().getWindow();
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        flag = false;
+        ageET = view.findViewById(R.id.input_person_info_age);
         nameET = view.findViewById(R.id.input_person_name_edittext);
         nameET.setText(name);
         man = view.findViewById(R.id.input_person_info_genderMan);
@@ -154,11 +164,12 @@ public class InputEditPersonInfoFragment extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 gender=isChecked;
+                ageET.requestFocus();
+                ageET.selectAll();
             }
         });
         woman = view.findViewById(R.id.input_person_info_genderWoman);
         woman.setChecked(!gender);
-        ageET = view.findViewById(R.id.input_person_info_age);
         if(age > 0){
             ageET.setText(age +"");
         }
@@ -177,11 +188,15 @@ public class InputEditPersonInfoFragment extends DialogFragment {
         view.findViewById(R.id.input_person_info_cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flag = false;
                 dismiss();
             }
         });
-        view.findViewById(R.id.input_person_info_confirmButton).setOnClickListener(new View.OnClickListener() {
+        TextView confirm = view.findViewById(R.id.input_person_info_confirmButton);
+        if(mode == 1)
+            confirm.setText("添加");
+        else
+            confirm.setText("修改");
+        confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(confirmInput()) {
@@ -191,8 +206,9 @@ public class InputEditPersonInfoFragment extends DialogFragment {
                     ratio = Double.valueOf(ratioET.getText().toString().trim());
                     phone = phoneET.getText().toString().trim();
                     note = noteET.getText().toString().trim();
-                    if(person == null)
+                    if(mode == 1){
                         person = new Person();
+                    }
                     person.setName(name);
                     person.setGender(gender);
                     person.setAge(age);
@@ -202,18 +218,28 @@ public class InputEditPersonInfoFragment extends DialogFragment {
                     person.setNote(note);
                     if (mode == 1) {
                         person.save();
+                        flag = true;
+                        Toast toast = Toast.makeText(view.getContext(),"已保存！可继续添加人员，或按关闭返回",Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER,0,0);
+                        toast.show();
+                        nameET.setText("");
+                        man.setChecked(true);
+                        woman.setChecked(false);
+                        ageET.setText("");
+                        ratioET.setText("");
+                        phoneET.setText("");
+                        noteET.setText("");
+                        nameET.requestFocus();
                     } else {
                         person.update(personID);
+                        flag = true;
+                        dismiss();
                     }
-                    flag = true;
-                    dismiss();
                 }
             }
         });
         nameET.requestFocus();
         nameET.setSelection(name.length());
-        Window window= getDialog().getWindow();
-        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         return view;
     }
