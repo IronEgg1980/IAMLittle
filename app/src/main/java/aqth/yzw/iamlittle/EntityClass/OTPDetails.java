@@ -11,6 +11,16 @@ public class OTPDetails extends ItemEntity {
     private double uniteAmount;
     private double amount;
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    private int count;
+
     public String getShiftName() {
         return shiftName;
     }
@@ -26,6 +36,7 @@ public class OTPDetails extends ItemEntity {
         if(overTimePay != null){
             this.shiftName = overTimePay.getShiftName();
             this.uniteAmount = overTimePay.getShiftUA();
+            this.count = overTimePay.getShiftCount();
             this.amount = overTimePay.getAmount();
         }
     }

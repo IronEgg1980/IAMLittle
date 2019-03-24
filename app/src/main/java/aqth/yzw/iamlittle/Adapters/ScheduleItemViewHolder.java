@@ -8,6 +8,12 @@ import aqth.yzw.iamlittle.R;
 
 public class ScheduleItemViewHolder extends RecyclerView.ViewHolder {
     private TextView[] TVs;
+
+    public TextView getRowNumberTV() {
+        return rowNumberTV;
+    }
+
+    private TextView rowNumberTV;
     public TextView[] getTVs() {
         return TVs;
     }
@@ -23,5 +29,6 @@ public class ScheduleItemViewHolder extends RecyclerView.ViewHolder {
         TVs[6] = itemView.findViewById(R.id.schedule_item_shiftTV6);
         TVs[7] = itemView.findViewById(R.id.schedule_item_shiftTV7);
         TVs[8] = itemView.findViewById(R.id.schedule_item_noteTV);
+        rowNumberTV = itemView.findViewById(R.id.schedule_item_rowNumberTV);
     }
 }

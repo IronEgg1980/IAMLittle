@@ -184,6 +184,7 @@ public class PersonManageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showCallDialog(p);
+                popupWindow.dismiss();
             }
         });
         edit.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +254,10 @@ public class PersonManageFragment extends Fragment {
             public void onClick(View view, final int position) {
                 if (position == list.size() - 1) {
                     // 新增一人
-                    showAddPersonDialog();
+                    if (popupWindow!= null && popupWindow.isShowing())
+                        popupWindow.dismiss();
+                    else
+                        showAddPersonDialog();
                 } else {
                     ItemEntityPerson person = (ItemEntityPerson) list.get(position);
                     final Person p = person.getPerson();

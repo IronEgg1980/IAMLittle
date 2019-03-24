@@ -13,6 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+        <ImageView
+            android:paddingRight="8dp"
+            android:src="@drawable/person_image"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:id="@+id/recyclerview_item_person_headshot"/>
 
         <TextView
             android:id="@+id/recyclerview_item_person_name"

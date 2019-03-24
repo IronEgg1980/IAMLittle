@@ -198,7 +198,10 @@ public class ShiftManageActivity extends AppCompatActivity {
             public void onClick(View view, final int position) {
                 if(position == adapter.getItemCount() -1){
                     // 新增按钮
-                    addShift(position);
+                    if (popupWindow!= null && popupWindow.isShowing())
+                        popupWindow.dismiss();
+                    else
+                        addShift(position);
                 }else{
                     ItemEntityShift itemEntity = (ItemEntityShift) list.get(position);
                     final Shift shift = itemEntity.getShift();

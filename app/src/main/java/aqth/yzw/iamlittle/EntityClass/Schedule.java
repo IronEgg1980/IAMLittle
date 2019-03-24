@@ -9,6 +9,16 @@ public class Schedule extends LitePalSupport {
     private String personName;
     private String shiftName;
     private int shiftType;
+
+    public double getShiftUnitAmount() {
+        return shiftUnitAmount;
+    }
+
+    public void setShiftUnitAmount(double shiftUnitAmount) {
+        this.shiftUnitAmount = shiftUnitAmount;
+    }
+
+    private double shiftUnitAmount;
     private String note;
     private int rowNumber;
 

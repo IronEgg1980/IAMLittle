@@ -58,7 +58,7 @@ public class TodayScheduleAdapter extends RecyclerView.Adapter {
             viewHolder1.personTV.setText(person);
         }else{
             RecyclerviewEmptyViewHolder viewHolder1 = (RecyclerviewEmptyViewHolder)viewHolder;
-            viewHolder1.getTextView().setText("空空如也");
+            viewHolder1.getTextView().setText("没有今日排班信息(⊙_⊙)");
         }
     }
 

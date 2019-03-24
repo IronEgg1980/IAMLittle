@@ -3,8 +3,8 @@
 
         <corners android:topLeftRadius="@dimen/normalButtonRadius"
             android:topRightRadius="@dimen/normalButtonRadius"/>
-        <stroke android:color="@android:color/white"
+        <stroke android:color="#cc555555"
             android:width="1dp"
             android:dashWidth="0dp"/>
-        <solid android:color="#cc333333"/>
+        <solid android:color="#cc555555"/>
 </shape>

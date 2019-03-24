@@ -17,7 +17,6 @@ import aqth.yzw.iamlittle.EntityClass.ItemEntityShift;
 import aqth.yzw.iamlittle.EntityClass.Shift;
 import aqth.yzw.iamlittle.IItemClickListener;
 import aqth.yzw.iamlittle.ItemType;
-import aqth.yzw.iamlittle.MyDialogFragment;
 import aqth.yzw.iamlittle.MyTool;
 import aqth.yzw.iamlittle.R;
 
@@ -30,12 +29,12 @@ public class ShiftManageAdapter extends RecyclerView.Adapter {
         this.shiftItemClickListener = shiftItemClickListener;
     }
 
-    protected class ShiftVieHolder extends RecyclerView.ViewHolder{
+    protected class ShiftViewHolder extends RecyclerView.ViewHolder{
         LinearLayout rootView;
         TextView typeColorTV,typeTextTV,nameTV,unitAmountTV,danweijine,emptyTV;
-        public ShiftVieHolder(@NonNull View itemView) {
+        public ShiftViewHolder(@NonNull View itemView) {
             super(itemView);
-            rootView = itemView.findViewById(R.id.shift_item_rootView);
+            rootView = itemView.findViewById(R.id.shift_recyclerview_item_root);
             typeColorTV = itemView.findViewById(R.id.shift_recyclerview_item_typeColor);
             typeTextTV = itemView.findViewById(R.id.shift_recyclerview_item_typeTextView);
             nameTV = itemView.findViewById(R.id.shift_recyclerview_item_nameTextView);
@@ -62,7 +61,7 @@ public class ShiftManageAdapter extends RecyclerView.Adapter {
                return new RecyclerviewEmptyViewHolder(v);
            }else{
                View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shift_recyclerview_item,viewGroup,false);
-               return new ShiftVieHolder(v);
+               return new ShiftViewHolder(v);
            }
     }
 
@@ -81,7 +80,7 @@ public class ShiftManageAdapter extends RecyclerView.Adapter {
                 }
             });
         }else{
-            ShiftVieHolder vieHolder2 = (ShiftVieHolder)viewHolder;
+            ShiftViewHolder vieHolder2 = (ShiftViewHolder)viewHolder;
             ItemEntityShift itemEntityShift = (ItemEntityShift)itemEntity;
             final Shift shift = itemEntityShift.getShift();
             vieHolder2.rootView.setOnClickListener(new View.OnClickListener() {

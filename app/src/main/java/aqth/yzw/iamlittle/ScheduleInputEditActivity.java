@@ -690,7 +690,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
                     // 编辑排班需要的操作
                     String[] dates = MyTool.getWeekStartEndString(c.getTime());
                     LitePal.deleteAll(Schedule.class,"date >= ? and date <= ?",dates[0],dates[1]);
-                    publishProgress(-1);
+                    publishProgress(0);
                 }
                 Thread.sleep(500);
                 for (int k = 0;k<list.size() -1;k++) {
@@ -707,8 +707,10 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
                                 shift = input.getValues(i + 1);
                             Shift shift1 = LitePal.where("name = ?", shift).findFirst(Shift.class);
                             int type = MyTool.SHIFT_NORMAL;
+                            double unitAmont = 0;
                             if (shift1 != null) {
                                 type = shift1.getType();
+                                unitAmont = shift1.getUnitAmount();
                             }
                             Schedule schedule = new Schedule();
                             schedule.setRowNumber(k+1);
@@ -716,6 +718,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
                             schedule.setPersonName(personName);
                             schedule.setShiftName(shift);
                             schedule.setShiftType(type);
+                            schedule.setShiftUnitAmount(unitAmont);
                             if (i == 0)
                                 schedule.setNote(note);
                             schedule.save();
@@ -734,7 +737,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             int i = values[0];
-            if(i == -1){
+            if(i == 0){
                 infoTextView.setText("更新数据");
             }else {
                 infoTextView.setText("已完成：" + i + "/" + count);

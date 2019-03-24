@@ -73,6 +73,15 @@
                 app:layout_collapseMode="pin">
 
                 <TextView
+                    android:id="@+id/schedule_item_rowNumberTV"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:text="行号"
+                    android:layout_marginRight="1dp"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    />
+                <TextView
                     android:id="@+id/schedule_item_title_nameTV"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

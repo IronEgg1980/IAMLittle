@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
     <android.support.design.widget.AppBarLayout
+        android:background="@color/colorPrimary"
+        android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
-        android:layout_height="320dp">
+        android:layout_height="match_parent">
         <android.support.design.widget.CollapsingToolbarLayout
+            app:contentScrim="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:minHeight="48dp"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             android:id="@+id/toolbarLayout">
             <ImageView android:layout_width="match_parent"
@@ -19,7 +21,7 @@
                 android:id="@+id/activity_main_title_image"
                 android:scaleType="centerCrop"/>
             <LinearLayout
-                android:layout_marginTop="56dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginRight="16dp"
                 android:layout_width="120dp"
                 android:layout_height="160dp"
@@ -63,15 +65,25 @@
                     android:textColor="@android:color/white"
                     android:text="XX（猪）年 二月十二"/>
             </LinearLayout>
-
-            <android.support.v7.widget.Toolbar
+            <Button
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_activity_title_button"
+                android:layout_marginBottom="80dp"
+                android:layout_gravity="bottom"
+                android:background="@android:color/transparent"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:text="开始使用"/>
+            <android.support.v7.widget.Toolbar
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
                 android:id="@+id/toolbar"
                 app:layout_collapseMode="pin"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ToolbarPopmenuStyle"
-                android:background="@color/colorPrimary"
                 />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -83,27 +95,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
+                android:background="@drawable/main_activity_calendar_shape"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/dialog_shape"
                 android:orientation="vertical">
                 <TextView
+                    android:background="@drawable/calenda_title_shape"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="今日排班"
-                    android:gravity="center"/>
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:text="今日排班"/>
+
                 <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_main_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/activity_main_recyclerview"/>
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

@@ -30,7 +30,7 @@ public class EditPersonRatioFragment extends DialogFragment {
     private String name;
     private TextView textView;
     private EditText editText;
-
+    private TextView title;
     public void setOnDialogFragmentDismiss(OnDialogFragmentDismiss onDialogFragmentDismiss) {
         this.onDialogFragmentDismiss = onDialogFragmentDismiss;
     }
@@ -86,7 +86,9 @@ public class EditPersonRatioFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.edit_person_ratio_layout,container,false);
         textView = v.findViewById(R.id.edit_person_textview);
-        textView.setText(name+"，原系数为："+oldRatio+"，如需修改，请输入新系数");
+        title = v.findViewById(R.id.edit_person_ratio_title);
+        title.setText(name);
+        textView.setText("原系数为："+oldRatio+"，请输入新系数");
         editText = v.findViewById(R.id.edit_person_edittext);
         v.findViewById(R.id.edit_person_info_cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override

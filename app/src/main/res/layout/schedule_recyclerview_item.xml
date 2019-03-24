@@ -6,8 +6,19 @@
     android:background="@color/colorPrimary"
     >
     <TextView
+        android:layout_marginRight="1dp"
+        android:id="@+id/schedule_item_rowNumberTV"
+        android:background="@color/scheduleItemTextViewBG"
+        android:textColor="@color/colorText"
+        android:gravity="center"
+        android:textSize="10sp"
+        android:text="999"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        />
+    <TextView
         android:background="@android:color/white"
-        android:layout_marginRight="@dimen/dividerLineWidth"
+        android:layout_marginRight="1dp"
         android:layout_width="0dp"
         android:layout_weight="1.5"
         android:layout_height="match_parent"
@@ -17,7 +28,7 @@
         android:textSize="16sp"
         android:text="人员姓名"/>
     <TextView
-        android:layout_marginRight="@dimen/dividerLineWidth"
+        android:layout_marginRight="1dp"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
@@ -25,7 +36,7 @@
         style="@style/ScheduleItemTextViewStyle"
         android:text="星期一"/>
     <TextView
-        android:layout_marginRight="@dimen/dividerLineWidth"
+        android:layout_marginRight="1dp"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
@@ -33,40 +44,40 @@
         android:id="@+id/schedule_item_shiftTV2"
         android:text="星期二"/>
     <TextView
+        android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_marginRight="@dimen/dividerLineWidth"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV3"
         android:text="星期三"/>
     <TextView
+        android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_marginRight="@dimen/dividerLineWidth"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV4"
         android:text="星期四"/>
     <TextView
+        android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_marginRight="@dimen/dividerLineWidth"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV5"
         android:text="星期五"/>
     <TextView
+        android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_marginRight="@dimen/dividerLineWidth"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV6"
         android:text="星期六"/>
     <TextView
+        android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_marginRight="@dimen/dividerLineWidth"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"

@@ -52,14 +52,14 @@ public class ScheduleActivity extends AppCompatActivity {
     private Date[] mDates;
     private Date today;
     private SimpleDateFormat format1,simpleDateFormat;
-    private Calendar c;
+    private Calendar c,_c;
     private boolean showNongLi;
     private List<ItemEntity> list;
     private RecyclerView recyclerView;
     private ScheduleShowAdapter adapter;
     private SharedPreferences preference;
     private String nongli;
-    private TextView title,bottomTV;
+    private TextView title,year,weekofyear;
     private CheckBox showNongLiCB;
 
     private long getUnScheduledWeek(long l){
@@ -96,6 +96,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 }
             }
         }
+        int k = 1;
         for(String s:person){
             List<Schedule> schedules = LitePal.order("date")
                     .where("personname = ? and date >= ? and date <= ?",s,dates[0],dates[1]).find(Schedule.class);
@@ -142,6 +143,11 @@ public class ScheduleActivity extends AppCompatActivity {
     private void changeTitleText(){
         mDates = MyTool.getAWeekDates(c.getTime());
         c.setTime(mDates[0]);
+        _c.setTime(mDates[6]);
+        int _year = _c.get(Calendar.YEAR);
+        int _weekofyear = _c.get(Calendar.WEEK_OF_YEAR);
+        year.setText(_year + " 年度");
+        weekofyear.setText("第 "+_weekofyear+" 周");
         for(int i = 0;i<7;i++){
             dateTVs[i].setTextSize(11);
             if(showNongLi) {
@@ -155,6 +161,23 @@ public class ScheduleActivity extends AppCompatActivity {
                 dateTVs[i].setTextSize(14);
             }
         }
+    }
+    private void showNote(View view,int x,int y){
+        ItemEntityScheduleInput input =(ItemEntityScheduleInput)list.get(x);
+        String note = input.getValues(y);
+        if(TextUtils.isEmpty(note) || note.length() < 12){
+            return;
+        }
+        PopupWindow popupWindow = new PopupWindow(view,480,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new ColorDrawable());
+        popupWindow.setOutsideTouchable(true);
+        View v = LayoutInflater.from(view.getContext()).inflate(R.layout.popwindow_layout,null);
+        TextView textView = v.findViewById(R.id.popwindow_textview);
+        textView.setText(note);
+        popupWindow.setContentView(v);
+        int[] local = new int[2];
+        view.getLocationOnScreen(local);
+        popupWindow.showAtLocation(view,Gravity.NO_GRAVITY,local[0],local[1]);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -176,6 +199,8 @@ public class ScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
         preference = PreferenceManager.getDefaultSharedPreferences(ScheduleActivity.this);
+        _c = new GregorianCalendar();
+        _c.setFirstDayOfWeek(Calendar.MONDAY);
         showNongLi = preference.getBoolean("ShowNongLi",false);
         showNongLiCB = findViewById(R.id.schedule_activity_showNongLiCheckBox);
         showNongLiCB.setChecked(showNongLi);
@@ -200,6 +225,8 @@ public class ScheduleActivity extends AppCompatActivity {
         dateTVs[5] = findViewById(R.id.schedule_item_title_date6);
         dateTVs[6] = findViewById(R.id.schedule_item_title_date7);
         title = findViewById(R.id.schedule_activity_title);
+        year = findViewById(R.id.schedule_activity_year);
+        weekofyear = findViewById(R.id.schedule_activity_weekofyear);
         nongli = "";
         findViewById(R.id.schedule_activity_thisWeek).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,21 +265,11 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int x, int y) {
                 if(y == 8){
-                    ItemEntityScheduleInput input =(ItemEntityScheduleInput)list.get(x);
-                    String note = input.getValues(y);
-                    if(TextUtils.isEmpty(note) || note.length() < 12){
-                        return;
+                    TextView tv = (TextView)view;
+                    int line = tv.getLineCount();
+                    if(line > 1 && tv.getLayout().getEllipsisCount(1) > 0) {
+                        showNote(view, x, y);
                     }
-                    PopupWindow popupWindow = new PopupWindow(view,480,RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    popupWindow.setBackgroundDrawable(new ColorDrawable());
-                    popupWindow.setOutsideTouchable(true);
-                    View v = LayoutInflater.from(view.getContext()).inflate(R.layout.popwindow_layout,null);
-                    TextView textView = v.findViewById(R.id.popwindow_textview);
-                    textView.setText(note);
-                    popupWindow.setContentView(v);
-                    int[] local = new int[2];
-                    view.getLocationOnScreen(local);
-                    popupWindow.showAtLocation(view,Gravity.NO_GRAVITY,local[0],local[1]);
                 }
             }
         });

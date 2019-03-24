@@ -40,7 +40,30 @@ public final class MyTool {
         }
         return sb.toString();
     }
-
+    public static long getDayStart(Date date){
+        Calendar c = new GregorianCalendar();
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTimeInMillis();
+    }
+    public static String getDayStartString(Date date){
+        return String.valueOf(getDayStart(date));
+    }
+    public static long getDayEnd(Date date){
+        Calendar c = new GregorianCalendar();
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        c.set(Calendar.MILLISECOND, 999);
+        return c.getTimeInMillis();
+    }
+    public static String getDayEndString(Date date){
+        return String.valueOf(getDayEnd(date));
+    }
     public static long[] getDayStartEnd(Date date) {
         long[] times = new long[2];
         Calendar c = new GregorianCalendar();

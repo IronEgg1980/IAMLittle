@@ -21,12 +21,12 @@ import java.util.GregorianCalendar;
 public class SelectDateDialogFragment extends DialogFragment {
     private Calendar c;
     private boolean flag;
-
     public void setOnDialogFragmentDismiss(OnDialogFragmentDismiss onDialogFragmentDismiss) {
         this.onDialogFragmentDismiss = onDialogFragmentDismiss;
     }
 
     private OnDialogFragmentDismiss onDialogFragmentDismiss;
+    private DatePicker datePicker;
     public static SelectDateDialogFragment newInstant(long date){
         SelectDateDialogFragment fragment = new SelectDateDialogFragment();
         Bundle bundle = new Bundle();
@@ -50,7 +50,7 @@ public class SelectDateDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.date_picker_dialog,container,false);
-        DatePicker datePicker = view.findViewById(R.id.date_picker_dialog_datepicker);
+        datePicker = view.findViewById(R.id.date_picker_dialog_datepicker);
         //如果只要日历部分，隐藏header
         ViewGroup mContainer = (ViewGroup) datePicker.getChildAt(0);
         View header = mContainer.getChildAt(0);

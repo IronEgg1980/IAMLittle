@@ -25,8 +25,9 @@ public class EditShiftUnitAmountFragment extends DialogFragment {
     private double unitAmount,oldValue;
     private long id;
     private String name;
-    private TextView textView;
+    private TextView textView,title;
     private EditText editText;
+    private int mode;
 
     public void setOnDialogFragmentDismiss(OnDialogFragmentDismiss onDialogFragmentDismiss) {
         this.onDialogFragmentDismiss = onDialogFragmentDismiss;
@@ -40,12 +41,23 @@ public class EditShiftUnitAmountFragment extends DialogFragment {
         bundle.putLong("ID",shift.getId());
         bundle.putDouble("UnitAmount",shift.getUnitAmount());
         bundle.putString("Name",shift.getName());
+        bundle.putInt("Mode",1);
         fragment.setArguments(bundle);
         return fragment;
+    }
+    public static EditShiftUnitAmountFragment newInstant(String name,double oldValue){
+        EditShiftUnitAmountFragment fragmen = new EditShiftUnitAmountFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("ShiftName",name);
+        bundle.putDouble("UnitAmount",oldValue);
+        bundle.putInt("Mode",2);
+        fragmen.setArguments(bundle);
+        return fragmen;
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mode = 0;
         flag=false;
         unitAmount = 0;
         oldValue = 0;
@@ -53,7 +65,10 @@ public class EditShiftUnitAmountFragment extends DialogFragment {
         name = "";
         Bundle bundle = getArguments();
         if(bundle!=null){
-            id = bundle.getLong("ID");
+            mode = bundle.getInt("Mode");
+            if(mode == 1) {
+                id = bundle.getLong("ID");
+            }
             oldValue = bundle.getDouble("UnitAmount");
             unitAmount = bundle.getDouble("UnitAmount");
             name = bundle.getString("Name");
@@ -79,7 +94,9 @@ public class EditShiftUnitAmountFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.edit_shift_unitamount,container,false);
         textView = v.findViewById(R.id.edit_shift_unitamount_textview);
-        textView.setText(name+"，原单位金额："+oldValue+"，如需修改，请输入新金额");
+        title = v.findViewById(R.id.edit_shift_unitamount_title);
+        title.setText(name);
+        textView.setText("原单位金额："+oldValue+"，请输入新金额");
         editText = v.findViewById(R.id.edit_shift_unitamount_edittext);
         v.findViewById(R.id.edit_shift_unitamount_cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,9 +120,11 @@ public class EditShiftUnitAmountFragment extends DialogFragment {
                     return;
                 }
                 if(unitAmount != oldValue) {
-                    Shift shift = LitePal.find(Shift.class,id);
-                    shift.setUnitAmount(unitAmount);
-                    shift.save();
+                    if(mode == 1) {
+                        Shift shift = LitePal.find(Shift.class, id);
+                        shift.setUnitAmount(unitAmount);
+                        shift.save();
+                    }
                     flag = true;
                 }else{
                     flag = false;

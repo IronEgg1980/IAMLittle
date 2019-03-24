@@ -47,14 +47,14 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="56dp"
                     android:orientation="horizontal">
-
                     <Button
                         android:id="@+id/schedule_activity_preWeek"
-                        android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
                         android:drawableTop="@drawable/ic_arrow_back_white_24dp"
                         style="@style/ScheduleTitleButtonStyle"
@@ -78,6 +78,7 @@
                         android:drawableTop="@drawable/ic_date_range_white_24dp"
                         style="@style/ScheduleTitleButtonStyle"
                         android:text="日期" />
+
                     <Button
                         android:id="@+id/schedule_activity_addschedule"
                         android:layout_marginRight="8dp"
@@ -99,10 +100,39 @@
                         android:text="删除" />
                     <Button
                         android:id="@+id/schedule_activity_back"
-                        android:layout_marginRight="32dp"
                         android:drawableTop="@drawable/ic_close_white_24dp"
                         style="@style/ScheduleTitleButtonStyle"
                         android:text="关闭" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"/>
+                        <TextView
+                            android:text="2019年度"
+                            android:textSize="11sp"
+                            android:textColor="@android:color/white"
+                            android:id="@+id/schedule_activity_year"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"/>
+                        <TextView
+                            android:text="第20周"
+                            android:textSize="11sp"
+                            android:textColor="@android:color/white"
+                            android:id="@+id/schedule_activity_weekofyear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -112,7 +142,6 @@
                 android:layout_gravity="bottom"
                 android:orientation="horizontal"
                 app:layout_collapseMode="pin">
-
                 <TextView
                     android:id="@+id/schedule_item_title_nameTV"
                     android:layout_width="0dp"

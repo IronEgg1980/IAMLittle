@@ -58,7 +58,6 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
         final ItemEntity itemEntity = mList.get(i);
         final int x = i;
-
         if(itemEntity.getType() == ItemType.EMPTY){
             RecyclerviewEmptyViewHolder holder = (RecyclerviewEmptyViewHolder) viewHolder;
             if(isInputMode){
@@ -75,6 +74,11 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
         }else{
             ScheduleItemViewHolder holder = (ScheduleItemViewHolder)viewHolder;
             ItemEntityScheduleInput inputItem = (ItemEntityScheduleInput)itemEntity;
+            if(isInputMode && i < getItemCount() -1){
+                holder.getRowNumberTV().setText((i+1)+"");
+            }else{
+                holder.getRowNumberTV().setVisibility(View.GONE);
+            }
             for(int k = 0;k<9;k++){
                 final int y = k;
                 holder.getTVs()[k].setText(inputItem.getValues(k));

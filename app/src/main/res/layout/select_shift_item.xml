@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/select_shift_root"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_height="40dp">
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/select_shift_checkbox"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:id="@+id/select_shift_name"
+        android:gravity="center_vertical"
+        android:text="班次"/>
+    <TextView
+        android:id="@+id/select_shift_info"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="单位金额："/>
+    <TextView
+        android:id="@+id/select_shift_unitamount"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/holo_orange_light"
+        android:text="100元"/>
+</LinearLayout>

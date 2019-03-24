@@ -17,11 +17,13 @@ import static android.view.KeyEvent.KEYCODE_BACK;
 
 public class ShowDataCommonActivity extends AppCompatActivity {
     private final int OTP_MODE = 1;
-    private final int JXGZ_MODE = 2;
     private Toolbar toolbar;
-    private LinearLayout linearLayout;
+
+    public void setShowDetails(boolean showDetails) {
+        this.showDetails = showDetails;
+    }
+
     private boolean showDetails;
-    private String title;
     private int mode;
     private FragmentManager fragmentManager;
 
@@ -40,24 +42,28 @@ public class ShowDataCommonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = ShowDataCommonActivity.this;
+        fragmentManager = getSupportFragmentManager();
+        showDetails = false;
         Intent intent = getIntent();
         if(intent != null){
-            title = intent.getStringExtra("Title");
             mode = intent.getIntExtra("Mode",1);
         }
         setContentView(R.layout.activity_show_data_common);
         toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         setSupportActionBar(toolbar);
-        context = ShowDataCommonActivity.this;
-        fragmentManager = getSupportFragmentManager();
-        linearLayout = findViewById(R.id.common_linerarlayout);
-        showDetails = false;
-        toolbar.setTitle(title);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(showDetails){
+                    if(mode == 1)
+                        setTitle("统计加班");
+                    else
+                        setTitle("绩效工资");
                     showDetails = false;
+                    OTPFragment fragment1 = (OTPFragment) getSupportFragmentManager().findFragmentByTag("Total");
+                    fragment1.notifyDataChange();
                     fragmentManager.popBackStackImmediate();
                 }else
                     finish();
@@ -68,8 +74,14 @@ public class ShowDataCommonActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(fragmentManager != null && fragmentManager.getBackStackEntryCount() > 0){
+            fragmentManager.popBackStackImmediate(0,1);
+        }
         if(mode == OTP_MODE){
-
+            fragmentManager.beginTransaction()
+                    .add(R.id.common_linerarlayout,new OTPFragment(),"Total")
+                    .addToBackStack(null)
+                    .commit();
         }else{
 
         }
@@ -78,9 +90,14 @@ public class ShowDataCommonActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KEYCODE_BACK){
-            // 写逻辑
             if(isShowDetails()){
+                if(mode == 1)
+                    setTitle("统计加班");
+                else
+                    setTitle("绩效工资");
                 showDetails = false;
+                OTPFragment fragment1 = (OTPFragment) getSupportFragmentManager().findFragmentByTag("Total");
+                fragment1.notifyDataChange();
                 fragmentManager.popBackStackImmediate();
             }else{
                 finish();
