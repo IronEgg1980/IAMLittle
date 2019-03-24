@@ -4,28 +4,23 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import org.litepal.LitePal;
 
-import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -174,12 +169,36 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,PersonManageActivity.class));
             }
         });
-        findViewById(R.id.count_shift).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.count_shift_list).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra("Mode",1);
-                intent.setClass(MainActivity.this,ShowDataCommonActivity.class);
+                intent.setClass(MainActivity.this, OTPActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.count_shift).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("Mode",2);
+                intent.setClass(MainActivity.this, OTPActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.JXGZ).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        findViewById(R.id.JXGZ_cal).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("Mode",2);
+                intent.setClass(MainActivity.this,PRPActivity.class);
                 startActivity(intent);
             }
         });

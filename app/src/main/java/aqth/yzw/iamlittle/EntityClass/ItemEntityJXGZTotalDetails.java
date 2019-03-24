@@ -16,10 +16,6 @@ public class ItemEntityJXGZTotalDetails extends ItemEntity {
         return details;
     }
 
-    public void setDetails(JXGZDetails details) {
-        this.details = details;
-    }
-
     private JXGZDetails details;
 
     public boolean isSelect() {

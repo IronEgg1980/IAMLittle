@@ -2,6 +2,7 @@ package aqth.yzw.iamlittle.EntityClass;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import aqth.yzw.iamlittle.ItemType;
@@ -22,11 +23,31 @@ public class ItemEntityJXGZTotal extends ItemEntity {
     private boolean isSelect = false;
 
     public Date getDate() {
-        return list.get(0).getDate();
+        if(list.size() > 0)
+            return list.get(0).getDate();
+        else
+            return new GregorianCalendar().getTime();
     }
-
+    public Date getRecordTime(){
+        if(list.size() > 0)
+            return list.get(0).getRecordTime();
+        else
+            return new GregorianCalendar().getTime();
+    }
+    public String getTAString(int flag){
+        return MyTool.doubleToString(getTotalAmount(),flag)+"元";
+    }
+    public String getRAString(int flag){
+        return MyTool.doubleToString(getRatioAmount(),flag)+"元";
+    }
+    public String getAAString(int flag){
+        return MyTool.doubleToString(getAverageAmount(),flag)+"元";
+    }
+    public String getDAString(int flag){
+        return MyTool.doubleToString(getDeduceAmount(),flag)+"元";
+    }
     public double getTotalAmount() {
-        return MyTool.getDouble(getRatioAmount() + getAverageAmount() + getDeduceAmount(),2);
+        return (getRatioAmount()+ getAverageAmount() + getDeduceAmount());
     }
 
     public double getRatioAmount() {
@@ -36,7 +57,7 @@ public class ItemEntityJXGZTotal extends ItemEntity {
                 d += details.getJXGZAmount();
             }
         }
-        return MyTool.getDouble(d,2);
+        return d;
     }
 
     public double getAverageAmount() {
@@ -46,7 +67,7 @@ public class ItemEntityJXGZTotal extends ItemEntity {
                 d += details.getJXGZAmount();
             }
         }
-        return MyTool.getDouble(d,2);
+        return d;
     }
 
     public double getDeduceAmount() {
@@ -56,7 +77,7 @@ public class ItemEntityJXGZTotal extends ItemEntity {
                 d += details.getJXGZAmount();
             }
         }
-        return MyTool.getDouble(d,2);
+        return d;
     }
 
     private Date date;

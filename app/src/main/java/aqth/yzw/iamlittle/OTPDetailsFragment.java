@@ -3,9 +3,6 @@ package aqth.yzw.iamlittle;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.litepal.LitePal;
-import org.w3c.dom.Entity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import aqth.yzw.iamlittle.Adapters.OTPDetailsAdapter;
@@ -69,11 +64,18 @@ public class OTPDetailsFragment extends Fragment {
             public void onDissmiss(boolean flag) {
                 if(flag){
                     LitePal.deleteAll(OverTimePay.class,"recordTime = ?",String.valueOf(recordTime));
-                    fillList();
-                    adapter.notifyDataSetChanged();
                     Toast toast = Toast.makeText(getContext(),"已删除数据",Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
+                    OTPFragment fragment =(OTPFragment) getFragmentManager().findFragmentByTag("Total");
+                    if(fragment != null){
+                        fragment.notifyDataChange();
+                        getActivity().setTitle("数据列表");
+                        ((OTPActivity)getActivity()).setShowDetails(false);
+                        getFragmentManager().popBackStackImmediate(0,0);
+                    }else{
+                        getActivity().finish();
+                    }
                 }
             }
 
@@ -92,7 +94,7 @@ public class OTPDetailsFragment extends Fragment {
         return fragment;
     }
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recordTime = Calendar.getInstance().getTimeInMillis();
         if(getArguments() != null){
@@ -102,11 +104,9 @@ public class OTPDetailsFragment extends Fragment {
         adapter = new OTPDetailsAdapter(list);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.show_total_fragment_layout,container,false);
-        getActivity().setTitle("详细信息");
         setHasOptionsMenu(true);
         recyclerView = view.findViewById(R.id.fragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

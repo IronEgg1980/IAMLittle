@@ -7,7 +7,15 @@ public class JXGZPersonDetailsTemp extends LitePalSupport {
     private String JXGZName;
     private double JXGZAmount;
     private int JXGZType;
+    private double thatRatio;
 
+    public double getThatRatio() {
+        return thatRatio;
+    }
+
+    public void setThatRatio(double thatRatio) {
+        this.thatRatio = thatRatio;
+    }
     public String getPersonName() {
         return personName;
     }

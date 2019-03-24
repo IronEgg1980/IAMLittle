@@ -2,15 +2,10 @@ package aqth.yzw.iamlittle;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,9 +16,7 @@ import android.view.ViewGroup;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import aqth.yzw.iamlittle.Adapters.OTPTotalAdapter;
@@ -40,11 +33,10 @@ public class OTPFragment extends Fragment {
     private List<ItemEntity> list;
     private OTPTotalAdapter adapter;
     private void updateList(){
-        Calendar c = new GregorianCalendar();
         if(list == null)
             list = new ArrayList<>();
         list.clear();
-        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT recordTime,startDay,endDay FROM OverTimePay");
+        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT recordTime,startDay,endDay FROM OverTimePay ORDER BY recordTime desc");
         if(cursor.moveToFirst()){
             do{
                 OTPTotalEntity entity = new OTPTotalEntity();
@@ -58,18 +50,20 @@ public class OTPFragment extends Fragment {
             list.add(new ItemEntity());
     }
     private void countOTP(){
-        ((ShowDataCommonActivity)getActivity()).setShowDetails(true);
+        getActivity().setTitle("开始统计");
+        ((OTPActivity)getActivity()).setShowDetails(true);
         Fragment fragment = CountOTPFragment.newInstant(0);
         Fragment fragment1 = getFragmentManager().findFragmentByTag("Total");
         getFragmentManager().beginTransaction()
-                .add(R.id.common_linerarlayout,fragment,"Details")
+                .add(R.id.common_linerarlayout,fragment,"Count")
                 .addToBackStack(null)
                 .hide(fragment1)
                 .show(fragment)
                 .commit();
     }
     private void showDetails(Date recordTime){
-        ((ShowDataCommonActivity)getActivity()).setShowDetails(true);
+        getActivity().setTitle("详细数据");
+        ((OTPActivity)getActivity()).setShowDetails(true);
         OTPFragment fragment1 = (OTPFragment) getFragmentManager().findFragmentByTag("Total");
         OTPDetailsFragment fragment = OTPDetailsFragment.newInstant(recordTime);
         getFragmentManager().beginTransaction()
@@ -79,10 +73,9 @@ public class OTPFragment extends Fragment {
                 .show(fragment)
                 .commit();
     }
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getActivity().setTitle("统计加班");
+    public View onCreateView( LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle("数据列表");
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.show_total_fragment_layout,container,false);
         updateList();

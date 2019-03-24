@@ -2,6 +2,7 @@ package aqth.yzw.iamlittle;
 
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +30,25 @@ public final class MyTool {
     public final static boolean GENDER_MAN = true;
     public final static boolean GENDER_WOMAN = false;
     // 常用方法
+
+    public static String getJXGZ_TypeString(int type){
+        String typeText = "";
+        switch (type){
+            case MyTool.JXGZ_RATIO:
+                typeText = "系数分配";
+                break;
+            case MyTool.JXGZ_AVERAGE:
+                typeText = "平均分配";
+                break;
+            case MyTool.JXGZ_DEDUCE:
+                typeText = "扣款";
+                break;
+            case MyTool.JXGZ_ADD:
+                typeText = "分配他人扣款";
+                break;
+        }
+        return typeText;
+    }
     // 取得随机字符串
     public static String getRandomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -155,7 +175,21 @@ public final class MyTool {
         times[1] = String.valueOf(temp[1]);
         return times;
     }
-
+    public static String doubleToString(double d,int flag){
+        if(flag<0)
+            return String.valueOf(d);
+        String s = "0.";
+        DecimalFormat format;
+        if(flag == 0){
+            format = new DecimalFormat("0");
+        }else{
+            for(int i = 0;i<flag;i++){
+                s+="0";
+            }
+            format = new DecimalFormat(s);
+        }
+        return format.format(d);
+    }
     public static double getDouble(double d, int flag) {
         double _d = 0;
         if (flag < 0)

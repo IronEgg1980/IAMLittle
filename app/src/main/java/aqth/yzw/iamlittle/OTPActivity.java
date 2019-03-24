@@ -1,21 +1,16 @@
 package aqth.yzw.iamlittle;
-
-import android.app.Activity;
-import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import static android.view.KeyEvent.KEYCODE_BACK;
 
-public class ShowDataCommonActivity extends AppCompatActivity {
+public class OTPActivity extends AppCompatActivity {
     private final int OTP_MODE = 1;
     private Toolbar toolbar;
 
@@ -26,10 +21,6 @@ public class ShowDataCommonActivity extends AppCompatActivity {
     private boolean showDetails;
     private int mode;
     private FragmentManager fragmentManager;
-
-    public Toolbar getToolbar() {
-        return toolbar;
-    }
 
     public boolean isShowDetails() {
         return showDetails;
@@ -42,7 +33,7 @@ public class ShowDataCommonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = ShowDataCommonActivity.this;
+        context = OTPActivity.this;
         fragmentManager = getSupportFragmentManager();
         showDetails = false;
         Intent intent = getIntent();
@@ -56,17 +47,18 @@ public class ShowDataCommonActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(showDetails){
-                    if(mode == 1)
-                        setTitle("统计加班");
-                    else
-                        setTitle("绩效工资");
-                    showDetails = false;
-                    OTPFragment fragment1 = (OTPFragment) getSupportFragmentManager().findFragmentByTag("Total");
-                    fragment1.notifyDataChange();
-                    fragmentManager.popBackStackImmediate();
-                }else
+                if(mode == 1) {
+                    if (showDetails) {
+                        setTitle("数据列表");
+                        showDetails = false;
+                        OTPFragment fragment1 = (OTPFragment) getSupportFragmentManager().findFragmentByTag("Total");
+                        fragment1.notifyDataChange();
+                        fragmentManager.popBackStackImmediate(0, 0);
+                    } else
+                        finish();
+                }else{
                     finish();
+                }
             }
         });
     }
@@ -82,23 +74,27 @@ public class ShowDataCommonActivity extends AppCompatActivity {
                     .add(R.id.common_linerarlayout,new OTPFragment(),"Total")
                     .addToBackStack(null)
                     .commit();
-        }else{
-
+            setTitle("数据列表");
+            }else{
+            fragmentManager.beginTransaction()
+                    .replace(R.id.common_linerarlayout,CountOTPFragment.newInstant(1),"Count")
+                    .commit();
+            setTitle("开始统计");
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KEYCODE_BACK){
-            if(isShowDetails()){
-                if(mode == 1)
-                    setTitle("统计加班");
-                else
-                    setTitle("绩效工资");
-                showDetails = false;
-                OTPFragment fragment1 = (OTPFragment) getSupportFragmentManager().findFragmentByTag("Total");
-                fragment1.notifyDataChange();
-                fragmentManager.popBackStackImmediate();
+            if(mode == 1) {
+                if (showDetails) {
+                    setTitle("数据列表");
+                    showDetails = false;
+                    OTPFragment fragment1 = (OTPFragment) getSupportFragmentManager().findFragmentByTag("Total");
+                    fragment1.notifyDataChange();
+                    fragmentManager.popBackStackImmediate(0, 0);
+                } else
+                    finish();
             }else{
                 finish();
             }

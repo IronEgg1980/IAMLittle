@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import aqth.yzw.iamlittle.ItemType;
+import aqth.yzw.iamlittle.MyTool;
 
 public class ItemEntityJXGZPersonTotal extends ItemEntity {
     @Override
@@ -25,16 +26,28 @@ public class ItemEntityJXGZPersonTotal extends ItemEntity {
     private List<JXGZPersonDetails> list;
     private boolean isSelect;
     private boolean isExpand;
-    private Date date;
-    private String personName;
     private double amount;
+
+    public int getChildCount() {
+        return list.size();
+    }
+
+    private int childCount;
 
     public Date getDate() {
         return list.get(0).getDate();
     }
-
+    public double getThatRatio(){
+        return list.get(0).getThatRatio();
+    }
     public String getPersonName() {
-        return list.get(0).getPersonName();
+        if(list.size() > 0)
+            return list.get(0).getPersonName();
+        else
+            return "查无此人";
+    }
+    public String getAmountString(int flag){
+        return MyTool.doubleToString(getAmount(),flag)+"元";
     }
 
     public double getAmount() {
@@ -47,10 +60,6 @@ public class ItemEntityJXGZPersonTotal extends ItemEntity {
 
     public List<JXGZPersonDetails> getList() {
         return list;
-    }
-
-    public void setList(List<JXGZPersonDetails> list) {
-        this.list = list;
     }
 
     public boolean isSelect() {

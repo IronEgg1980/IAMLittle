@@ -12,22 +12,18 @@
         android:id="@+id/select_shift_checkbox"/>
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="match_parent"
         android:id="@+id/select_shift_name"
         android:gravity="center_vertical"
         android:text="班次"/>
-    <TextView
-        android:id="@+id/select_shift_info"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:text="单位金额："/>
+
     <TextView
         android:id="@+id/select_shift_unitamount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|end"
         android:textColor="@android:color/holo_orange_light"
         android:text="100元"/>
 </LinearLayout>

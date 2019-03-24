@@ -6,6 +6,16 @@ import java.util.Date;
 
 public class JXGZDetails extends LitePalSupport {
     private Date date;
+
+    public Date getRecordTime() {
+        return recordTime;
+    }
+
+    public void setRecordTime(Date recordTime) {
+        this.recordTime = recordTime;
+    }
+
+    private Date recordTime;
     private String JXGZName;
     private double JXGZAmount;
     private int JXGZType;

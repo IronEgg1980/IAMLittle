@@ -5,113 +5,138 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
     <android.support.design.widget.AppBarLayout
-        android:background="@color/colorPrimary"
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
         <android.support.design.widget.CollapsingToolbarLayout
-            app:contentScrim="@color/colorPrimary"
+            android:id="@+id/toolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            android:id="@+id/toolbarLayout">
-            <ImageView android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            app:contentScrim="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+            <ImageView
                 android:id="@+id/activity_main_title_image"
-                android:scaleType="centerCrop"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
             <LinearLayout
-                android:layout_marginTop="80dp"
-                android:layout_marginRight="16dp"
                 android:layout_width="120dp"
                 android:layout_height="160dp"
-                android:orientation="vertical"
-                android:background="@drawable/main_activity_calendar_shape"
                 android:layout_gravity="right"
-                >
+                android:layout_marginTop="80dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/main_activity_calendar_shape"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/activity_main_yearmonthTV"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
                     android:background="@drawable/calenda_title_shape"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:text="2019年3月"
                     android:textColor="@android:color/white"
-                    android:text="2019年3月"/>
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/activity_main_dayTV"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:textSize="48sp"
+                    android:gravity="center"
                     android:text="23"
-                    android:gravity="center"/>
+                    android:textSize="48sp" />
+
                 <TextView
                     android:id="@+id/activity_main_weekTV"
-                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
                     android:text="星期一"
-                    android:textSize="18sp"
-                    android:gravity="center"/>
+                    android:textSize="18sp" />
+
                 <TextView
                     android:id="@+id/activity_main_nongliTV"
-                    android:layout_margin="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_margin="8dp"
                     android:layout_weight="0.3"
                     android:gravity="center"
-                    android:textSize="9sp"
+                    android:text="XX（猪）年 二月十二"
                     android:textColor="@android:color/white"
-                    android:text="XX（猪）年 二月十二"/>
+                    android:textSize="9sp" />
             </LinearLayout>
+
             <Button
+                android:id="@+id/main_activity_title_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/main_activity_title_button"
-                android:layout_marginBottom="80dp"
                 android:layout_gravity="bottom"
-                android:background="@android:color/transparent"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:layout_marginBottom="80dp"
+                android:background="@drawable/main_activity_calendar_shape"
+                android:text="开始使用"
                 android:textColor="@android:color/white"
-                android:text="开始使用"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/main_activity_versionTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:background="@color/half_translate"
+                android:gravity="end"
+                android:text="Version:2.0.1"
+                android:textColor="@android:color/white"
+                android:textSize="10sp" />
+
             <android.support.v7.widget.Toolbar
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
                 android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_marginTop="20dp"
+                android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
                 app:layout_collapseMode="pin"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ToolbarPopmenuStyle"
-                />
+                app:popupTheme="@style/ToolbarPopmenuStyle" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
-                android:background="@drawable/main_activity_calendar_shape"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/main_activity_calendar_shape"
                 android:orientation="vertical">
+
                 <TextView
-                    android:background="@drawable/calenda_title_shape"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:background="@drawable/calenda_title_shape"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:text="今日排班"
                     android:textColor="@android:color/white"
-                    android:text="今日排班"/>
+                    android:textSize="16sp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/activity_main_recyclerview"
@@ -120,49 +145,63 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal">
+
                 <Button
-                    android:drawableTop="@drawable/ic_person_indigo_600_24dp"
                     android:id="@+id/person_manage"
-                    android:text="@string/person_manage"
                     style="@style/NormalButtonStyle"
-                    />
+                    android:drawableTop="@drawable/ic_person_indigo_600_24dp"
+                    android:text="@string/person_manage" />
+
                 <Button
-                    android:drawableTop="@drawable/person_leave"
                     android:id="@+id/shift_manage"
-                    android:text="@string/shift_manage"
                     style="@style/NormalButtonStyle"
-                    />
+                    android:drawableTop="@drawable/person_leave"
+                    android:text="@string/shift_manage" />
+
                 <Button
-                    android:drawableTop="@drawable/person_onduty"
                     android:id="@+id/schedule_activity"
-                    android:text="@string/schedule"
                     style="@style/NormalButtonStyle"
-                    />
+                    android:drawableTop="@drawable/person_onduty"
+                    android:text="@string/schedule" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/count_shift_list"
+                    style="@style/NormalButtonStyle"
+                    android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
+                    android:text="加班费" />
+
+                <Button
+                    android:id="@+id/count_shift"
+                    style="@style/NormalButtonStyle"
+                    android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
+                    android:text="统计加班" />
             </LinearLayout>
             <LinearLayout
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
                 <Button
-                    android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
-                    android:id="@+id/count_shift"
-                    android:text="统计加班"
+                    android:id="@+id/JXGZ_cal"
                     style="@style/NormalButtonStyle"
-                    />
-                <Button
                     android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
+                    android:text="计算绩效" />
+                <Button
                     android:id="@+id/JXGZ"
-                    android:text="绩效工资"
                     style="@style/NormalButtonStyle"
-                    />
-                <Button
-                    style="@style/NormalButtonStyle"
-                    />
+                    android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
+                    android:text="绩效工资" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

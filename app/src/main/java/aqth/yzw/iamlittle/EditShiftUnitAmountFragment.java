@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -19,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.litepal.LitePal;
+
 import aqth.yzw.iamlittle.EntityClass.Shift;
 
 public class EditShiftUnitAmountFragment extends DialogFragment {
@@ -48,14 +47,14 @@ public class EditShiftUnitAmountFragment extends DialogFragment {
     public static EditShiftUnitAmountFragment newInstant(String name,double oldValue){
         EditShiftUnitAmountFragment fragmen = new EditShiftUnitAmountFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("ShiftName",name);
+        bundle.putString("Name",name);
         bundle.putDouble("UnitAmount",oldValue);
         bundle.putInt("Mode",2);
         fragmen.setArguments(bundle);
         return fragmen;
     }
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mode = 0;
         flag=false;
@@ -91,7 +90,7 @@ public class EditShiftUnitAmountFragment extends DialogFragment {
         }
     }
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.edit_shift_unitamount,container,false);
         textView = v.findViewById(R.id.edit_shift_unitamount_textview);
         title = v.findViewById(R.id.edit_shift_unitamount_title);
