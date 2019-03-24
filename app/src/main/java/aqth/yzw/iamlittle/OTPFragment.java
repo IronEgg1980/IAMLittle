@@ -12,6 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,7 +37,6 @@ public class OTPFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
     private RecyclerView recyclerView;
-    private FloatingActionButton actionButton;
     private List<ItemEntity> list;
     private OTPTotalAdapter adapter;
     private void updateList(){
@@ -55,44 +57,42 @@ public class OTPFragment extends Fragment {
         if(list.size() == 0)
             list.add(new ItemEntity());
     }
+    private void countOTP(){
+        ((ShowDataCommonActivity)getActivity()).setShowDetails(true);
+        Fragment fragment = CountOTPFragment.newInstant(0);
+        Fragment fragment1 = getFragmentManager().findFragmentByTag("Total");
+        getFragmentManager().beginTransaction()
+                .add(R.id.common_linerarlayout,fragment,"Details")
+                .addToBackStack(null)
+                .hide(fragment1)
+                .show(fragment)
+                .commit();
+    }
+    private void showDetails(Date recordTime){
+        ((ShowDataCommonActivity)getActivity()).setShowDetails(true);
+        OTPFragment fragment1 = (OTPFragment) getFragmentManager().findFragmentByTag("Total");
+        OTPDetailsFragment fragment = OTPDetailsFragment.newInstant(recordTime);
+        getFragmentManager().beginTransaction()
+                .add(R.id.common_linerarlayout,fragment,"Details")
+                .addToBackStack(null)
+                .hide(fragment1)
+                .show(fragment)
+                .commit();
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getActivity().setTitle("统计加班");
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.show_total_fragment_layout,container,false);
         updateList();
         recyclerView = view.findViewById(R.id.fragment_recyclerview);
-        actionButton = view.findViewById(R.id.fragment_floatingButton);
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getContext(),"添加数据",Toast.LENGTH_SHORT).show();
-                ((ShowDataCommonActivity)getActivity()).setShowDetails(true);
-                Fragment fragment = new CountOTPFragment();
-                Fragment fragment1 = getFragmentManager().findFragmentByTag("Total");
-                getFragmentManager().beginTransaction()
-                        .add(R.id.common_linerarlayout,fragment,"Details")
-                        .addToBackStack(null)
-                        .hide(fragment1)
-                        .show(fragment)
-                        .commit();
-            }
-        });
         adapter = new OTPTotalAdapter(list);
         adapter.setItemClickListener(new IItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ((ShowDataCommonActivity)getActivity()).setShowDetails(true);
-                OTPFragment fragment1 = (OTPFragment) getFragmentManager().findFragmentByTag("Total");
                 Date date =((OTPTotalEntity)list.get(position)).getRecordTime();
-                OTPDetailsFragment fragment = OTPDetailsFragment.newInstant(date);
-                getFragmentManager().beginTransaction()
-                        .add(R.id.common_linerarlayout,fragment,"Details")
-                        .addToBackStack(null)
-                        .hide(fragment1)
-                        .show(fragment)
-                        .commit();
-
+                showDetails(date);
             }
 
             @Override
@@ -104,5 +104,21 @@ public class OTPFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),RecyclerView.VERTICAL));
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.title_menu_add,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.title_menu_add){
+            countOTP();
+            return true;
+        }
+        return  super.onOptionsItemSelected(item);
     }
 }

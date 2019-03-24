@@ -43,7 +43,7 @@ public class CountOTPFragment extends Fragment {
     private SimpleDateFormat format1,format2 ;
     private Calendar calendar;
     private String s1,s2;
-
+    private int mode;
     private void fillShiftList(){
         if(endDay.getTime()<startDay.getTime()){
             return;
@@ -173,15 +173,26 @@ public class CountOTPFragment extends Fragment {
                 }
             }
         }
-        OTPFragment fragment =(OTPFragment) getFragmentManager().findFragmentByTag("Total");
-        fragment.notifyDataChange();
-        ((ShowDataCommonActivity)getActivity()).setShowDetails(false);
-        getFragmentManager().popBackStackImmediate();
+        if(mode == 0) {
+            OTPFragment fragment = (OTPFragment) getFragmentManager().findFragmentByTag("Total");
+            fragment.notifyDataChange();
+            ((ShowDataCommonActivity) getActivity()).setShowDetails(false);
+            getFragmentManager().popBackStackImmediate();
+        }else {
+            OTPDetailsFragment fragment2 = OTPDetailsFragment.newInstant(recordTime);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.common_linerarlayout, fragment2, "Details")
+                    .commit();
+        }
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
+        mode = 0;
+        if(getArguments() != null){
+            mode = getArguments().getInt("Mode");
+        }
         adapter = new ShiftSelectAdapter(list);
         adapter.setItemClickListener(new IItemClickListener() {
             @Override
@@ -262,5 +273,13 @@ public class CountOTPFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),RecyclerView.VERTICAL));
         return view;
+    }
+
+    public static CountOTPFragment newInstant(int mode){
+        CountOTPFragment fragment = new CountOTPFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("Mode",mode);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 }

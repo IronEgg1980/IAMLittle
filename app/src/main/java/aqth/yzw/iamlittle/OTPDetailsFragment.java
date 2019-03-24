@@ -11,6 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -33,7 +36,6 @@ import aqth.yzw.iamlittle.EntityClass.OverTimePay;
 public class OTPDetailsFragment extends Fragment {
     private List<ItemEntity> list;
     private RecyclerView recyclerView;
-    private FloatingActionButton actionButton;
     private OTPDetailsAdapter adapter;
     private long recordTime;
     private void fillList(){
@@ -105,17 +107,29 @@ public class OTPDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.show_total_fragment_layout,container,false);
         getActivity().setTitle("详细信息");
-        actionButton = view.findViewById(R.id.fragment_floatingButton);
-        actionButton.setImageDrawable(getActivity().getDrawable(R.drawable.ic_delete_white_24dp));
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleData();
-            }
-        });
+        setHasOptionsMenu(true);
         recyclerView = view.findViewById(R.id.fragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         return view;
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.title_menu_dele_share,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.title_menu_dele){
+            deleData();
+            return true;
+        }
+        if(item.getItemId()== R.id.title_menu_share){
+            Toast.makeText(getContext(),"分享数据",Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return  super.onOptionsItemSelected(item);
     }
 }
