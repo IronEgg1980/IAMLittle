@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,17 +56,18 @@ public class CountOTPFragment extends Fragment {
         if (cursor.moveToFirst()) {
             do {
                 String shiftName = cursor.getString(0);
-                double unitAmount = cursor.getDouble(1);
-                int type= cursor.getInt(2);
-
-                ItemEntitySelectShift selectShift = new ItemEntitySelectShift();
-                if(type == MyTool.SHIFT_NEEDCOUNT)
-                    selectShift.setSelect(true);
-                else
-                    selectShift.setSelect(false);
-                selectShift.setShiftName(shiftName);
-                selectShift.setUnitAmount(unitAmount);
-                list.add(selectShift);
+                if(!TextUtils.isEmpty(shiftName)) {
+                    double unitAmount = cursor.getDouble(1);
+                    int type = cursor.getInt(2);
+                    ItemEntitySelectShift selectShift = new ItemEntitySelectShift();
+                    if (type == MyTool.SHIFT_NEEDCOUNT)
+                        selectShift.setSelect(true);
+                    else
+                        selectShift.setSelect(false);
+                    selectShift.setShiftName(shiftName);
+                    selectShift.setUnitAmount(unitAmount);
+                    list.add(selectShift);
+                }
             } while (cursor.moveToNext());
         }
         if (list.size() == 0) {

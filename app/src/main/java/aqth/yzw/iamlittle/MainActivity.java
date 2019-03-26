@@ -197,8 +197,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra("Mode",2);
-                intent.setClass(MainActivity.this,PRPActivity.class);
+                intent.setClass(MainActivity.this,CalculatePRP.class);
                 startActivity(intent);
             }
         });

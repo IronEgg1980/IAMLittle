@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        app:titleTextColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/calprp_activity_framlayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <RadioButton
+            android:id="@+id/calprp_activity_bottomRB1"
+            style="@style/BottomRadioButtonStyle"
+            android:drawableTop="@drawable/ic_add_circle_outline_white_24dp"
+            android:text="输入"
+            android:layout_marginRight="1dp"
+            />
+        <RadioButton
+            android:layout_marginRight="1dp"
+            android:id="@+id/calprp_activity_bottomRB2"
+            style="@style/BottomRadioButtonStyle"
+            android:drawableTop="@drawable/ic_remove_circle_outline_white_24dp"
+            android:text="扣款"
+
+            />
+        <RadioButton
+            android:layout_marginRight="1dp"
+            android:id="@+id/calprp_activity_bottomRB3"
+            style="@style/BottomRadioButtonStyle"
+            android:drawableTop="@drawable/ic_check_white_24dp"
+            android:text="核对"
+
+            />
+        <RadioButton
+            android:id="@+id/calprp_activity_bottomRB4"
+            style="@style/BottomRadioButtonStyle"
+            android:drawableTop="@drawable/ic_list_white_24dp"
+            android:text="计算结果"
+            />
+    </RadioGroup>
+</android.support.constraint.ConstraintLayout>

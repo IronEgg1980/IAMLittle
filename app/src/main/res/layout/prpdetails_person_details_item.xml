@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="24dp"
-    android:layout_marginLeft="56dp"
+    android:layout_height="32dp"
+    android:layout_marginLeft="28dp"
     android:layout_marginRight="12dp"
     android:id="@+id/prpdetails_person_details_item_root"
     android:orientation="horizontal">

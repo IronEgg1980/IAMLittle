@@ -23,9 +23,9 @@ public class PRPActivity extends AppCompatActivity {
         //finish();
         if(mode == 1) {
             if (isShowDetails) {
-                setTitle("数据列表");
+                setTitle("绩效工资列表");
                 isShowDetails = false;
-                PRPListFragment fragment1 = (PRPListFragment) getSupportFragmentManager().findFragmentByTag("Total");
+                PRPListFragment fragment1 = (PRPListFragment) getSupportFragmentManager().findFragmentByTag("List");
                 fragment1.notifyDataChange();
                 fragmentManager.popBackStackImmediate(0, 0);
             } else
@@ -62,10 +62,10 @@ public class PRPActivity extends AppCompatActivity {
                 fragmentManager.popBackStackImmediate(0,1);
             }
             fragmentManager.beginTransaction()
-                    .add(R.id.common_linerarlayout,new PRPListFragment(),"Total")
+                    .add(R.id.common_linerarlayout,new PRPListFragment(),"List")
                     .addToBackStack(null)
                     .commit();
-            setTitle("数据列表");
+            setTitle("绩效工资列表");
         }else{
             PRPDetailsFragment fragment = new PRPDetailsFragment();
             fragmentManager.beginTransaction()

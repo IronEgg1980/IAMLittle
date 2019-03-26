@@ -19,6 +19,7 @@ import android.widget.Toast;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -37,6 +38,7 @@ public class PRPDetailsFragment extends Fragment {
     private PRPDetailsAdapter totalAdapter, personAdapter;
     private int mode;
     private String recordTime;
+    private PRPActivity activity;
 
     private void showToast(String content) {
         Toast toast = Toast.makeText(getContext(), content, Toast.LENGTH_SHORT);
@@ -54,46 +56,8 @@ public class PRPDetailsFragment extends Fragment {
             for (JXGZDetails details : temp1) {
                 totalDetailsList.add(new ItemEntityJXGZTotalDetails(details));
             }
-        }
-    }
-
-    private void updateTotalListTemp() {
-        if (totalDetailsList == null)
-            totalDetailsList = new ArrayList<>();
-        totalDetailsList.clear();
-        Date date = new GregorianCalendar().getTime();
-        for (int i = 1; i < 10; i++) {
-            JXGZDetails details = new JXGZDetails();
-            details.setDate(date);
-            details.setRecordTime(date);
-            details.setJXGZName("绩效工资"+i);
-            details.setJXGZType(i%4+1);
-            details.setJXGZAmount(999.1*i+998.3);
-            totalDetailsList.add(new ItemEntityJXGZTotalDetails(details));
-        }
-    }
-
-    private void updatePersonListTemp() {
-        Date date = new GregorianCalendar().getTime();
-        if (personDetailsList == null) {
-            personDetailsList = new ArrayList<>();
-        }
-        personDetailsList.clear();
-        for (int i = 0; i < 10; i++) {
-            List<JXGZPersonDetails> temp = new ArrayList<>();
-            String personName = "人员" + i;
-            for (int j = 0; j < 5; j++) {
-                JXGZPersonDetails details = new JXGZPersonDetails();
-                details.setDate(date);
-                details.setRecordTime(date);
-                details.setPersonName(personName);
-                details.setJXGZName("绩效工资" + j);
-                details.setJXGZType((j % 3 + 1));
-                details.setThatRatio(1.0);
-                details.setJXGZAmount(999 * (j + 1) * 1.1);
-                temp.add(details);
-            }
-            personDetailsList.add(new ItemEntityJXGZPersonTotal(temp));
+        }else{
+            totalDetailsList.add(new ItemEntity());
         }
     }
 
@@ -119,7 +83,28 @@ public class PRPDetailsFragment extends Fragment {
             }
         }
     }
-
+    private void updatePersonList2() {
+        if (personDetailsList == null) {
+            personDetailsList = new ArrayList<>();
+        }
+        personDetailsList.clear();
+       for(int i = 0;i<9;i++){
+           String name = "人员"+i;
+           List<JXGZPersonDetails> temp = new ArrayList<>();
+           for(int j = 1;j<5;j++){
+               JXGZPersonDetails details = new JXGZPersonDetails();
+               details.setPersonName(name);
+               details.setThatRatio(1.2);
+               details.setDate(Calendar.getInstance().getTime());
+               details.setJXGZName("项目"+j);
+               details.setJXGZType(j%4+1);
+               details.setJXGZAmount(999.2* j+8.9);
+               details.setRecordTime(Calendar.getInstance().getTime());
+               temp.add(details);
+           }
+           personDetailsList.add(new ItemEntityJXGZPersonTotal(temp));
+       }
+    }
     private void showChild(int position) {
         //personAdapter.notifyItemChanged(position);
         ItemEntity itemEntity = personDetailsList.get(position);
@@ -150,11 +135,20 @@ public class PRPDetailsFragment extends Fragment {
     }
 
     private void dele() {
-
+        LitePal.deleteAll(JXGZDetails.class,"recordTime = ?",recordTime);
+        LitePal.deleteAll(JXGZPersonDetails.class,"recordTime = ?",recordTime);
+        if(mode == 0){
+            activity.finish();
+        }else{
+            activity.setShowDetails(false);
+            activity.setTitle("绩效工资列表");
+            getFragmentManager().popBackStackImmediate();
+        }
+        showToast("已删除");
     }
 
     private void share() {
-
+        showToast("分享功能暂未启用，正在更新中！");
     }
 
     public static PRPDetailsFragment newInstant(int mode, String recordTime) {
@@ -195,6 +189,7 @@ public class PRPDetailsFragment extends Fragment {
 
             }
         });
+        activity = (PRPActivity)getActivity();
     }
 
     @Nullable
@@ -214,9 +209,9 @@ public class PRPDetailsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //updateTotalList();
-        updateTotalListTemp();
-        updatePersonListTemp();
+        updateTotalList();
+//        updatePersonList();
+        updatePersonList2();
     }
 
     @Override

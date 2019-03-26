@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/prpdetails_person_total_item_root"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <View
@@ -11,8 +11,9 @@
         android:background="@color/half_translate" />
 
     <LinearLayout
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
@@ -21,67 +22,72 @@
         <TextView
             android:id="@+id/prpdetails_person_total_item_name"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:gravity="bottom"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="姓名"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
+            android:layout_height="wrap_content"
+            android:text="总金额："
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/prpdetails_person_total_item_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:gravity="end"
+            android:text="12345"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="本月系数："
             android:textSize="10sp" />
 
         <TextView
             android:id="@+id/prpdetails_person_total_item_ratio"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:gravity="bottom"
-            android:text="1.2"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            android:text="总金额："
-            android:textSize="10sp" />
-
-        <TextView
-            android:id="@+id/prpdetails_person_total_item_amount"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="bottom|end"
-            android:text="12345"
-            android:textColor="@android:color/holo_orange_light"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="56dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:text="1.2"
+            android:textSize="10sp" />
         <ImageView
             android:id="@+id/prpdetails_person_total_item_IV"
             android:layout_width="24dp"
-            android:paddingRight="8dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_clear_all_orange_400_24dp" />
+            android:scaleType="fitEnd"
+            android:src="@drawable/ic_expand_more_grey_500_24dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/prpdetails_person_total_item_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
 
         <TextView
+            android:layout_marginLeft="40dp"
             android:id="@+id/prpdetails_person_total_item_TV1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center_vertical"
-            android:text="名称"
+            android:text="项目名称"
             android:textSize="10sp" />
 
         <TextView
@@ -101,6 +107,5 @@
             android:gravity="center_vertical|end"
             android:text="金额"
             android:textSize="10sp" />
-
     </LinearLayout>
 </LinearLayout>

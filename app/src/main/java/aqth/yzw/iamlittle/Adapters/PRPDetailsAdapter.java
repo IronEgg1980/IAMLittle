@@ -28,7 +28,7 @@ public class PRPDetailsAdapter extends RecyclerView.Adapter {
     }
 
     protected class FatherViewHolder extends RecyclerView.ViewHolder{
-        private LinearLayout root;
+        private LinearLayout root,bottom;
         private TextView nameTV,ratioTV,totalAmountTV,TV1,TV2,TV3;
         private ImageView imageView;
         public FatherViewHolder(@NonNull View itemView) {
@@ -41,6 +41,7 @@ public class PRPDetailsAdapter extends RecyclerView.Adapter {
             TV2= itemView.findViewById(R.id.prpdetails_person_total_item_TV2);
             TV3 =itemView.findViewById(R.id.prpdetails_person_total_item_TV3);
             imageView = itemView.findViewById(R.id.prpdetails_person_total_item_IV);
+            bottom = itemView.findViewById(R.id.prpdetails_person_total_item_bottom);
         }
     }
     protected class ChildViewHolder extends RecyclerView.ViewHolder{
@@ -69,7 +70,9 @@ public class PRPDetailsAdapter extends RecyclerView.Adapter {
 
         switch (i){
             case 0:// empty
-                return null;
+                View view0 = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_empty_layout,
+                        viewGroup,false);
+                return new RecyclerviewEmptyViewHolder(view0);
             case 1:// father
                 View view2 = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.prpdetails_person_total_item,
                         viewGroup,false);
@@ -94,6 +97,8 @@ public class PRPDetailsAdapter extends RecyclerView.Adapter {
 
         switch (type){
             case 0:// empty
+                RecyclerviewEmptyViewHolder holder0 = (RecyclerviewEmptyViewHolder)viewHolder;
+                holder0.getTextView().setText("没有找到本月绩效工资数据┗( T﹏T )┛");
                 break;
             case 1:// father
                 final FatherViewHolder holder2 = (FatherViewHolder)viewHolder;
@@ -102,15 +107,11 @@ public class PRPDetailsAdapter extends RecyclerView.Adapter {
                 holder2.totalAmountTV.setText(personTotal.getAmountString(2));
                 holder2.ratioTV.setText(personTotal.getThatRatio()+"");
                 if(personTotal.isExpand()){
-                    holder2.imageView.setVisibility(View.INVISIBLE);
-                    holder2.TV1.setVisibility(View.VISIBLE);
-                    holder2.TV2.setVisibility(View.VISIBLE);
-                    holder2.TV3.setVisibility(View.VISIBLE);
+                    holder2.imageView.setImageResource(R.drawable.ic_arrow_up_grey_500_24dp);
+                    holder2.bottom.setVisibility(View.VISIBLE);
                 }else{
-                    holder2.imageView.setVisibility(View.VISIBLE);
-                    holder2.TV1.setVisibility(View.INVISIBLE);
-                    holder2.TV2.setVisibility(View.INVISIBLE);
-                    holder2.TV3.setVisibility(View.INVISIBLE);
+                    holder2.imageView.setImageResource(R.drawable.ic_expand_more_grey_500_24dp);
+                    holder2.bottom.setVisibility(View.GONE);
                 }
                 holder2.root.setOnClickListener(new View.OnClickListener() {
                     @Override
