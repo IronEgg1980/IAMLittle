@@ -8,20 +8,39 @@ public class ItemEntityPerson extends ItemEntity {
     public ItemType getType(){
         return ItemType.PERSON;
     }
-    public ItemEntityPerson(Person p){
-        this.person = p;
+    public ItemEntityPerson(String name,double ratio){
+        this.name = name;
+        this.ratio = ratio;
     }
+    public ItemEntityPerson(Person person){
+        this.person = person;
+        this.name = person.getName();
+        this.ratio = person.getRatio();
+    }
+    private boolean isSelect = false;
+    private String name;
+    private double ratio;
+    private Person person;
 
     public Person getPerson() {
         return person;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public String getName() {
+        return name;
     }
 
-    private Person person;
-    private boolean isSelect = false;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
+    }
 
     public boolean isSelect() {
         return isSelect;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/select_person_root"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:padding="4dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/person_image"
+        android:scaleType="fitCenter"/>
+    <TextView
+        android:layout_marginRight="4dp"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:id="@+id/select_person_name"
+        android:gravity="center_vertical"
+        android:text="姓名"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="11sp"
+        android:gravity="center_vertical"
+        android:text="本月系数："/>
+
+    <TextView
+        android:id="@+id/select_person_ratio"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:textColor="@android:color/holo_orange_light"
+        android:textSize="16sp"
+        android:gravity="center_vertical"
+        android:text="1.0"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/select_person_checkbox"/>
+</LinearLayout>

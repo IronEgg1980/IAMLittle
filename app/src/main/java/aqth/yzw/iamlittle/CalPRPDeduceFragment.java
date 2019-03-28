@@ -10,12 +10,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class CalPRPDeduceFragment extends Fragment {
+    private CalculatePRP activity;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = (CalculatePRP)getActivity();
+        activity.setTitle("计算扣款");
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.recyclerview_empty_layout,container,false);
-        ((TextView)view.findViewById(R.id.recylerview_emptyitem)).setText("扣款");
+        View view =  inflater.inflate(R.layout.calprp_deduce_fragment_layout,container,false);
         return view;
     }
 }

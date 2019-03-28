@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="4dp"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,22 +9,22 @@
     <TextView
         android:paddingRight="16dp"
         android:layout_width="0dp"
-        android:layout_weight="0.618"
-        android:layout_height="32dp"
+        android:layout_weight="0.6"
+        android:layout_height="wrap_content"
         android:id="@+id/today_schedule_item_shift"
-        android:gravity="end|center_vertical"
+        android:gravity="end"
         android:textStyle="bold"
         android:textSize="18sp"
         android:textColor="@android:color/holo_blue_light"
         android:text="班次"/>
+
     <TextView
         android:textColor="@android:color/white"
-        android:paddingLeft="16dp"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
         android:id="@+id/today_schedule_item_person"
-        android:layout_gravity="center_vertical"
-        android:textSize="14sp"
-        android:text="人员姓名、人员姓名、人员姓名、人员姓名"/>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="16dp"
+        android:textSize="15sp"
+        android:text="人员姓名、人员姓名、人员姓名、人员姓名" />
 </LinearLayout>

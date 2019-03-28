@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:background="@drawable/person_info_dialog_shape"
-    android:layout_margin="4dp"
+    android:layout_margin="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/popmenu_close"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="28dp"
         android:background="@drawable/person_info_title_shape"
         android:src="@drawable/ic_arrow_drop_down_white_36dp"
         android:scaleType="fitCenter"/>
@@ -20,8 +20,8 @@
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/popmenu_person_image"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
+            android:layout_width="90dp"
+            android:layout_height="120dp"
             android:src="@drawable/person_image"/>
         <LinearLayout
             android:layout_marginRight="16dp"
@@ -29,24 +29,22 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
+                android:paddingTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:id="@+id/popmenu_person_name"
                 android:textSize="32sp"
-                android:text="张三丰"
-                android:gravity="center_vertical"/>
+                android:text="张三丰"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
+                android:layout_height="40dp"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:id="@+id/popmenu_person_age"
-                    android:gravity="center_vertical"
                     android:textSize="14sp"
                     android:text="22岁"/>
                 <TextView
@@ -54,7 +52,6 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:id="@+id/popmenu_person_gender"
-                    android:gravity="center_vertical"
                     android:textSize="14sp"
                     android:text="男"/>
                 <TextView
@@ -63,43 +60,40 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:textSize="14sp"
-                    android:text="状态：在岗"
-                    android:gravity="center_vertical"/>
+                    android:text="状态：在岗"/>
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="40dp"
         android:orientation="horizontal">
         <TextView
-            android:layout_width="100dp"
+            android:paddingTop="4dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:textSize="12sp"
             android:text="绩效系数："
-            android:gravity="end|center_vertical"/>
+            android:gravity="end"/>
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/popmenu_person_ratio"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:text="1.2"
-            android:textColor="@android:color/holo_orange_light"
-            android:gravity="center_vertical"/>
+            android:textColor="@android:color/holo_orange_light"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal">
         <LinearLayout
-            android:layout_width="100dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <ImageView
-                android:layout_gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="24dp"
@@ -107,9 +101,10 @@
                 android:src="@drawable/ic_phone_green_800_48dp"
                 android:scaleType="fitEnd"/>
             <TextView
+                android:paddingTop="2dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical|end"
+                android:gravity="end"
                 android:textSize="12sp"
                 android:text="Tel："/>
         </LinearLayout>
@@ -118,36 +113,37 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="16sp"
-            android:gravity="center_vertical"
             android:id="@+id/popmenu_person_phone"
             android:text="1235686"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:paddingTop="2dp"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
             android:text="备注："
             android:textSize="12sp"
-            android:gravity="end|center_vertical"
+            android:gravity="end"
             />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="16sp"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
             android:id="@+id/popmenu_person_note"
-            android:gravity="center_vertical"
             android:text="beizhu"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="2dp"
         android:background="@color/colorPrimary"/>
 
     <LinearLayout
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -177,6 +173,4 @@
             android:id="@+id/popmenu_set_person_onduty"
             android:text="入科"/>
     </LinearLayout>
-
-
 </LinearLayout>

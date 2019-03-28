@@ -82,6 +82,7 @@ public class CalPRPSelectMonthFragment extends Fragment {
                     });
                     dialogFragment.show(getFragmentManager(),"Dialog");
                 }else {
+                    activity.setMonthHasSeleted(true);
                     activity.inputData();
                 }
 
@@ -94,5 +95,12 @@ public class CalPRPSelectMonthFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 隐藏日期控件的日期列（第3个getChildAt(i)，i=0 年;i=1 月;i=2 日）
+        ((ViewGroup)((ViewGroup)datePicker.getChildAt(0)).getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
     }
 }

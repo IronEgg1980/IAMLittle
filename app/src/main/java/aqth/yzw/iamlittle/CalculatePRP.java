@@ -6,9 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import org.litepal.LitePal;
 
@@ -18,107 +20,6 @@ import aqth.yzw.iamlittle.EntityClass.JXGZDetailsTemp;
 import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
 
 public class CalculatePRP extends AppCompatActivity {
-    public void back() {
-        if (hasInputed && !hasSaved) {
-            MyDialogFragment dialogFragment = MyDialogFragment.newInstant("数据未保存，是否当前页面退出？", "否", "是");
-            dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
-                @Override
-                public void onDissmiss(boolean flag) {
-                    if (flag) {
-                        finish();
-                    }
-                }
-
-                @Override
-                public void onDissmiss(boolean flag, Object object) {
-
-                }
-            });
-        } else {
-            finish();
-        }
-    }
-
-    public void inputData() {
-        inputRB.setChecked(true);
-        deduceRB.setChecked(false);
-        checkoutRB.setChecked(false);
-        saveRB.setChecked(false);
-        if (bottomRadioGroup.getVisibility() == View.GONE)
-            bottomRadioGroup.setVisibility(View.VISIBLE);
-        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPInputDataFragment(), "Input").commit();
-    }
-
-    public void deduceData() {
-        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPDeduceFragment(), "Deduce").commit();
-    }
-
-    public void checkOutData() {
-        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPCheckoutFragment(), "Checkout").commit();
-    }
-
-    public void showAndSave() {
-        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPSaveFragment(), "ShowAndSave").commit();
-    }
-
-    public boolean isMonthHasSeleted() {
-        return monthHasSeleted;
-    }
-
-    public void setMonthHasSeleted(boolean monthHasSeleted) {
-        this.monthHasSeleted = monthHasSeleted;
-    }
-
-    private boolean monthHasSeleted;
-    private FragmentManager fragmentManager;
-    private RadioGroup bottomRadioGroup;
-    private RadioButton inputRB, deduceRB, checkoutRB, saveRB;
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Date getRecordTime() {
-        return recordTime;
-    }
-
-    public void setRecordTime(Date recordTime) {
-        this.recordTime = recordTime;
-    }
-
-    public boolean isHasInputed() {
-        return hasInputed;
-    }
-
-    public void setHasInputed(boolean hasInputed) {
-        this.hasInputed = hasInputed;
-    }
-
-    public boolean isHasCheckouted() {
-        return hasCheckouted;
-    }
-
-    public void setHasCheckouted(boolean hasCheckouted) {
-        this.hasCheckouted = hasCheckouted;
-    }
-
-    public boolean isHasSaved() {
-        return hasSaved;
-    }
-
-    public void setHasSaved(boolean hasSaved) {
-        this.hasSaved = hasSaved;
-    }
-
-    private Date date;
-    private Date recordTime;
-    private boolean hasInputed;
-    private boolean hasCheckouted;
-    private boolean hasSaved;
 
     @Override
     public void onBackPressed() {
@@ -128,6 +29,29 @@ public class CalculatePRP extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragmentManager = getSupportFragmentManager();
+        hasCheckouted = false;
+        monthHasSeleted = false;
+        input_b = true;
+        deduce_b=false;
+        checkout_b=false;
+        save_b = false;
+        if (savedInstanceState != null) {
+            monthHasSeleted = savedInstanceState.getBoolean("MonthHasSeleted");
+            if(monthHasSeleted) {
+                hasCheckouted = savedInstanceState.getBoolean("HasCheckouted");
+                date = new Date(savedInstanceState.getLong("Date"));
+                recordTime = new Date(savedInstanceState.getLong("RecordTime"));
+                input_b = savedInstanceState.getBoolean("RB1");
+                deduce_b = savedInstanceState.getBoolean("RB2");
+                checkout_b = savedInstanceState.getBoolean("RB3");
+                save_b = savedInstanceState.getBoolean("RB4");
+            }else{
+                fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout,new CalPRPSelectMonthFragment(),"SelectMonth").commit();
+            }
+        }else{
+            fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout,new CalPRPSelectMonthFragment(),"SelectMonth").commit();
+        }
         setContentView(R.layout.calprp_activity_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -138,17 +62,6 @@ public class CalculatePRP extends AppCompatActivity {
                 back();
             }
         });
-        hasInputed = false;
-        hasSaved = false;
-        hasCheckouted = false;
-        monthHasSeleted = false;
-        if (savedInstanceState != null) {
-            monthHasSeleted = savedInstanceState.getBoolean("MonthHasSeleted");
-            hasInputed = savedInstanceState.getBoolean("HasInputed");
-            hasSaved = savedInstanceState.getBoolean("HasSaved");
-            hasCheckouted = savedInstanceState.getBoolean("HasCheckouted");
-        }
-        fragmentManager = getSupportFragmentManager();
         inputRB = findViewById(R.id.calprp_activity_bottomRB1);
         deduceRB = findViewById(R.id.calprp_activity_bottomRB2);
         checkoutRB = findViewById(R.id.calprp_activity_bottomRB3);
@@ -174,26 +87,122 @@ public class CalculatePRP extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!monthHasSeleted) {
-            fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPSelectMonthFragment(), "SelectMonth").commit();
-        }else{
-            inputData();
+        if(monthHasSeleted) {
+            inputRB.setChecked(input_b);
+            deduceRB.setChecked(deduce_b);
+            checkoutRB.setChecked(checkout_b);
+            saveRB.setChecked(save_b);
         }
     }
 
-    //这里继续，写保存状态的代码
-
     @Override
-    protected void onDestroy() {
-        if (LitePal.isExist(JXGZDetailsTemp.class))
-            LitePal.deleteAll(JXGZDetailsTemp.class);
-        if (LitePal.isExist(JXGZPersonDetailsTemp.class))
-            LitePal.deleteAll(JXGZPersonDetailsTemp.class);
-        super.onDestroy();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("MonthHasSeleted",monthHasSeleted);
+        outState.putBoolean("HasCheckouted",hasCheckouted);
+        outState.putLong("Date",date.getTime());
+        outState.putLong("RecordTime",recordTime.getTime());
+        outState.putBoolean("RB1",inputRB.isChecked());
+        outState.putBoolean("RB2",deduceRB.isChecked());
+        outState.putBoolean("RB3",checkoutRB.isChecked());
+        outState.putBoolean("RB4",saveRB.isChecked());
     }
+    public void back() {
+        if (LitePal.isExist(JXGZPersonDetailsTemp.class)) {
+            MyDialogFragment dialogFragment = MyDialogFragment.newInstant("数据未保存，是否退出当前页面？", "否", "是");
+            dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                @Override
+                public void onDissmiss(boolean flag) {
+                    if (flag) {
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onDissmiss(boolean flag, Object object) {
+
+                }
+            });
+        } else {
+            finish();
+        }
+    }
+
+    public void inputData() {
+        input_b = true;
+        deduce_b=false;
+        checkout_b=false;
+        save_b = false;
+        inputRB.setChecked(true);
+        if (bottomRadioGroup.getVisibility() == View.GONE)
+            bottomRadioGroup.setVisibility(View.VISIBLE);
+        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPInputDataFragment(), "Input").commit();
+    }
+    public void deduceData() {
+        input_b = false;
+        deduce_b=true;
+        checkout_b=false;
+        save_b = false;
+        deduceRB.setChecked(true);
+        if (bottomRadioGroup.getVisibility() == View.GONE)
+            bottomRadioGroup.setVisibility(View.VISIBLE);
+        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPDeduceFragment(), "Deduce").commit();
+    }
+    public void checkOutData() {
+        input_b = false;
+        deduce_b=false;
+        checkout_b=true;
+        save_b = false;
+        checkoutRB.setChecked(true);
+        if (bottomRadioGroup.getVisibility() == View.GONE)
+            bottomRadioGroup.setVisibility(View.VISIBLE);
+        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPCheckoutFragment(), "Checkout").commit();
+    }
+    public void showAndSave() {
+        input_b = false;
+        deduce_b=false;
+        checkout_b=false;
+        save_b = true;
+        saveRB.setChecked(true);
+        if (bottomRadioGroup.getVisibility() == View.GONE)
+            bottomRadioGroup.setVisibility(View.VISIBLE);
+        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPSaveFragment(), "ShowAndSave").commit();
+    }
+    public void setMonthHasSeleted(boolean monthHasSeleted) {
+        this.monthHasSeleted = monthHasSeleted;
+    }
+    public Date getDate() {
+        return date;
+    }
+    public void setDate(Date date) {
+        this.date = date;
+    }
+    public Date getRecordTime() {
+        return recordTime;
+    }
+    public void setRecordTime(Date recordTime) {
+        this.recordTime = recordTime;
+    }
+    public boolean isHasCheckouted() {
+        return hasCheckouted;
+    }
+    public void setHasCheckouted(boolean hasCheckouted) {
+        this.hasCheckouted = hasCheckouted;
+    }
+    public boolean isMonthHasSeleted() {
+        return monthHasSeleted;
+    }
+    public void showToast(String content){
+        Toast toast = Toast.makeText(CalculatePRP.this,content,Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER,0,0);
+        toast.show();
+    }
+    private Date date;
+    private Date recordTime;
+    private boolean hasCheckouted;
+    private boolean monthHasSeleted;
+    private FragmentManager fragmentManager;
+    private RadioGroup bottomRadioGroup;
+    private RadioButton inputRB, deduceRB, checkoutRB, saveRB;
+    private boolean input_b,deduce_b,checkout_b,save_b;
 }

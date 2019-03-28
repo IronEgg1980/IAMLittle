@@ -142,7 +142,8 @@ public class PersonManageFragment extends Fragment {
         dialogFragment.show(getFragmentManager(),"dialog");
     }
     protected void editRatio(final int position,final Person p){
-        EditPersonRatioFragment fragment1 = EditPersonRatioFragment.newInstant(p);
+        final ItemEntityPerson person = (ItemEntityPerson) list.get(position);
+        EditPersonRatioFragment fragment1 = EditPersonRatioFragment.newInstant(p.getName(),p.getRatio());
         fragment1.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
             @Override
             public void onDissmiss(boolean flag) {
@@ -155,6 +156,8 @@ public class PersonManageFragment extends Fragment {
                     //updateList();
                     double newValue = (double)o;
                     p.setRatio(newValue);
+                    p.save();
+                    person.setRatio(newValue);
                     adapter.notifyItemChanged(position);
                 }
             }
@@ -262,7 +265,7 @@ public class PersonManageFragment extends Fragment {
                     ItemEntityPerson person = (ItemEntityPerson) list.get(position);
                     final Person p = person.getPerson();
                     if (popupWindow == null)
-                        getPopWindow(p, position);
+                        getPopWindow(p,position);
                     if (popupWindow.isShowing())
                         popupWindow.dismiss();
                     else

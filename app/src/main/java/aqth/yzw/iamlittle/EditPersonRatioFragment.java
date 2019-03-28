@@ -37,16 +37,23 @@ public class EditPersonRatioFragment extends DialogFragment {
 
     private OnDialogFragmentDismiss onDialogFragmentDismiss;
     private boolean flag;
-    public static EditPersonRatioFragment newInstant(Person p){
+//    public static EditPersonRatioFragment newInstant(Person p){
+//        EditPersonRatioFragment fragment = new EditPersonRatioFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putLong("ID",p.getId());
+//        bundle.putDouble("Ratio",p.getRatio());
+//        bundle.putString("Name",p.getName());
+//        fragment.setArguments(bundle);
+//        return fragment;
+//    }
+    public static EditPersonRatioFragment newInstant(String name,double ratio){
         EditPersonRatioFragment fragment = new EditPersonRatioFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong("ID",p.getId());
-        bundle.putDouble("Ratio",p.getRatio());
-        bundle.putString("Name",p.getName());
+        bundle.putDouble("Ratio",ratio);
+        bundle.putString("Name",name);
         fragment.setArguments(bundle);
         return fragment;
     }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,9 +119,9 @@ public class EditPersonRatioFragment extends DialogFragment {
                     return;
                 }
                 if(ratio != oldRatio) {
-                    Person p = LitePal.find(Person.class,id);
-                    p.setRatio(ratio);
-                    p.save();
+//                    Person p = LitePal.find(Person.class,id);
+//                    p.setRatio(ratio);
+//                    p.save();
                     flag = true;
                 }else{
                     flag = false;

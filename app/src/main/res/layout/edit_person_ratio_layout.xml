@@ -19,22 +19,17 @@
         android:id="@+id/edit_person_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center_vertical" />
+        android:layout_margin="16dp" />
 
     <EditText
         android:id="@+id/edit_person_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="right|center_vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:inputType="numberDecimal"
         android:hint="输入新系数"
-        android:maxLength="6"
+        android:maxLength="10"
         android:maxLines="1" />
     <View
         android:layout_marginTop="12dp"
