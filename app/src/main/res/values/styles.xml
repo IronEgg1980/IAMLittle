@@ -65,6 +65,7 @@
         <item name="android:button">@null</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:gravity">center_horizontal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">4dp</item>
     </style>
 </resources>

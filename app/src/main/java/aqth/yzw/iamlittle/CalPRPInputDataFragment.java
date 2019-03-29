@@ -18,9 +18,7 @@ import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import aqth.yzw.iamlittle.Adapters.PersonSelectAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
@@ -42,6 +40,8 @@ public class CalPRPInputDataFragment extends Fragment {
     private PersonSelectAdapter adapter;
     private int ratioCount, averageCount, deduceCount;
     private String hintString;
+    private double totalRatio;
+    private int personCount;
 
     private void updatePersonList() {
         String[] dates = MyTool.getMonthStartAndEndString(date);
@@ -58,8 +58,41 @@ public class CalPRPInputDataFragment extends Fragment {
         list.add(new ItemEntity());
     }
 
-    private void checkInput() {
-
+    private boolean checkInput() {
+        isDeduce = isDeduceRB.isChecked();
+        isByRatio = isByRatioRB.isChecked();
+        if(TextUtils.isEmpty(totalAmountET.getText())) {
+            totalAmountET.setError("请输入金额");
+            totalAmountET.requestFocus();
+            return false;
+        }
+        if(totalAmount <0){
+            totalAmountET.setError("请输入有效金额");
+            totalAmountET.requestFocus();
+            return false;
+        }
+        boolean b = false;
+        totalRatio = 0.0;
+        personCount = 0;
+        for(ItemEntity itemEntity : list){
+            if(itemEntity.getType() == ItemType.PERSON){
+                ItemEntityPerson person = (ItemEntityPerson)itemEntity;
+                if(person.isSelect()){
+                    b = true;
+                    totalRatio += person.getRatio();
+                    personCount++;
+                }
+            }
+        }
+        if(!b){
+            activity.showToast("没有选择分配人员");
+            return false;
+        }
+        if(isByRatio && totalRatio==0){
+            activity.showToast("总系数为0，请核对后再试！");
+            return false;
+        }
+        return true;
     }
 
     private void initialInput() {
@@ -83,6 +116,51 @@ public class CalPRPInputDataFragment extends Fragment {
     }
 
     private void calculate() {
+        if(checkInput()) {
+            int type = 0;
+            double perAmount = 0.0;
+            itemName = TextUtils.isEmpty(itemNameET.getText()) ?
+                    hintString : itemNameET.getText().toString().trim();
+            totalAmount = Double.valueOf(totalAmountET.getText().toString().trim());
+            if(isDeduce){
+                type = MyTool.JXGZ_DEDUCE;
+                totalAmount = -totalAmount;
+                if(isByRatio){
+                    perAmount = totalAmount / totalRatio;
+                }else{
+                    perAmount = totalAmount / personCount;
+                }
+            }else{
+                if(isByRatio){
+                    type = MyTool.JXGZ_RATIO;
+                    perAmount = totalAmount / totalRatio;
+                }else{
+                    type = MyTool.JXGZ_AVERAGE;
+                    perAmount = totalAmount / personCount;
+                }
+            }
+            for(ItemEntity itemEntity:list){
+                if(itemEntity.getType() ==ItemType.PERSON){
+                    ItemEntityPerson person = (ItemEntityPerson)itemEntity;
+                    if(person.isSelect()){
+                        String name = person.getName();
+                        double ratio = person.getRatio();
+                        double amount = 0;
+                        if(isByRatio){
+                            amount = MyTool.getDouble(perAmount * ratio,2);
+                        }else{
+                            amount = MyTool.getDouble(perAmount,2);
+                        }
+                        // 保存到临时单次计算结果数据库
+
+                    }
+                }
+            }
+        }
+    }
+
+    private void showResultDialog() {
+        // 保存了才能++
         if (isDeduce) {
             deduceCount++;
         } else {
@@ -92,10 +170,6 @@ public class CalPRPInputDataFragment extends Fragment {
                 averageCount++;
             }
         }
-    }
-
-    private void showResultDialog() {
-
     }
 
     private void setHint() {
@@ -203,13 +277,9 @@ public class CalPRPInputDataFragment extends Fragment {
             }
         });
         if (savedInstanceState != null) {
-            itemName = savedInstanceState.getString("ItemName", itemName);
-            totalAmount = savedInstanceState.getDouble("TotalAmount", totalAmount);
             ratioCount = savedInstanceState.getInt("RatioCount", ratioCount);
             averageCount = savedInstanceState.getInt("AverageCount", averageCount);
             deduceCount = savedInstanceState.getInt("DeduceCount", deduceCount);
-            isDeduce = savedInstanceState.getBoolean("IsDeduce", isDeduce);
-            isByRatio = savedInstanceState.getBoolean("IsByRatio", isByRatio);
         }
     }
 
@@ -265,26 +335,16 @@ public class CalPRPInputDataFragment extends Fragment {
                 showResultDialog();
             }
         });
-        isAsignRB.setChecked(!isDeduce);
-        isDeduceRB.setChecked(isDeduce);
-        isByRatioRB.setChecked(isByRatio);
-        isAverageRB.setChecked(!isByRatio);
+        isAsignRB.setChecked(true);
+        isByRatioRB.setChecked(true);
         return view;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (!TextUtils.isEmpty(itemNameET.getText()))
-            itemName = itemNameET.getText().toString().trim();
-        if (!TextUtils.isEmpty(totalAmountET.getText()))
-            totalAmount = Double.valueOf(totalAmountET.getText().toString().trim());
-        outState.putString("ItemName", itemName);
-        outState.putDouble("TotalAmount", totalAmount);
         outState.putInt("RatioCount", ratioCount);
         outState.putInt("AverageCount", averageCount);
         outState.putInt("DeduceCount", deduceCount);
-        outState.putBoolean("IsDeduce", isDeduce);
-        outState.putBoolean("IsByRatio", isByRatio);
         super.onSaveInstanceState(outState);
     }
 
@@ -293,10 +353,6 @@ public class CalPRPInputDataFragment extends Fragment {
         updatePersonList();
         adapter.notifyDataSetChanged();
         setHint();
-        itemNameET.setText(itemName);
-        if (totalAmount > 0)
-            totalAmountET.setText(totalAmount + "");
         super.onStart();
-//        initialInput();
     }
 }

@@ -1,11 +1,10 @@
 package aqth.yzw.iamlittle;
 
-import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RadioButton;
@@ -16,7 +15,6 @@ import org.litepal.LitePal;
 
 import java.util.Date;
 
-import aqth.yzw.iamlittle.EntityClass.JXGZDetailsTemp;
 import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
 
 public class CalculatePRP extends AppCompatActivity {
@@ -46,11 +44,12 @@ public class CalculatePRP extends AppCompatActivity {
                 deduce_b = savedInstanceState.getBoolean("RB2");
                 checkout_b = savedInstanceState.getBoolean("RB3");
                 save_b = savedInstanceState.getBoolean("RB4");
-            }else{
-                fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout,new CalPRPSelectMonthFragment(),"SelectMonth").commit();
             }
         }else{
-            fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout,new CalPRPSelectMonthFragment(),"SelectMonth").commit();
+            Fragment fragment = new CalPRPSelectMonthFragment();
+            fragmentManager.beginTransaction().add(R.id.calprp_activity_framlayout,fragment,"SelectMonth")
+                    .addToBackStack(null)
+                    .commit();
         }
         setContentView(R.layout.calprp_activity_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -63,31 +62,61 @@ public class CalculatePRP extends AppCompatActivity {
             }
         });
         inputRB = findViewById(R.id.calprp_activity_bottomRB1);
-        deduceRB = findViewById(R.id.calprp_activity_bottomRB2);
-        checkoutRB = findViewById(R.id.calprp_activity_bottomRB3);
-        saveRB = findViewById(R.id.calprp_activity_bottomRB4);
-        bottomRadioGroup = findViewById(R.id.radioGroup2);
-        bottomRadioGroup.setVisibility(View.GONE);
-        bottomRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        inputRB.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.calprp_activity_bottomRB1:
-                        inputData();
-                        break;
-                    case R.id.calprp_activity_bottomRB2:
-                        deduceData();
-                        break;
-                    case R.id.calprp_activity_bottomRB3:
-                        checkOutData();
-                        break;
-                    case R.id.calprp_activity_bottomRB4:
-                        showAndSave();
-                        break;
+            public void onClick(View v) {
+                if(inputRB.isChecked()){
+                    inputData();
                 }
             }
         });
+        deduceRB = findViewById(R.id.calprp_activity_bottomRB2);
+        deduceRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(deduceRB.isChecked())
+                    deduceData();
+            }
+        });
+        checkoutRB = findViewById(R.id.calprp_activity_bottomRB3);
+        checkoutRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkoutRB.isChecked())
+                    checkOutData();
+            }
+        });
+        saveRB = findViewById(R.id.calprp_activity_bottomRB4);
+        saveRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(saveRB.isChecked())
+                    showAndSave();
+            }
+        });
+        bottomRadioGroup = findViewById(R.id.radioGroup2);
+        bottomRadioGroup.setVisibility(View.GONE);
+//        bottomRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                switch (checkedId) {
+//                    case R.id.calprp_activity_bottomRB1:
+//                        inputData();
+//                        break;
+//                    case R.id.calprp_activity_bottomRB2:
+//                        deduceData();
+//                        break;
+//                    case R.id.calprp_activity_bottomRB3:
+//                        checkOutData();
+//                        break;
+//                    case R.id.calprp_activity_bottomRB4:
+//                        showAndSave();
+//                        break;
+//                }
+//            }
+//        });
         if(monthHasSeleted) {
+            bottomRadioGroup.setVisibility(View.VISIBLE);
             inputRB.setChecked(input_b);
             deduceRB.setChecked(deduce_b);
             checkoutRB.setChecked(checkout_b);
@@ -136,7 +165,30 @@ public class CalculatePRP extends AppCompatActivity {
         inputRB.setChecked(true);
         if (bottomRadioGroup.getVisibility() == View.GONE)
             bottomRadioGroup.setVisibility(View.VISIBLE);
-        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPInputDataFragment(), "Input").commit();
+        Fragment fragment2 = fragmentManager.findFragmentByTag("Input");
+        Fragment currentFragment = new Fragment();
+        for(Fragment fragment:fragmentManager.getFragments())
+        {
+            if(fragment.isVisible()){
+                currentFragment = fragment;
+                break;
+            }
+        }
+        if(fragment2 == null) {
+            fragment2 = new CalPRPInputDataFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.calprp_activity_framlayout,fragment2, "Input")
+                    .addToBackStack(null)
+                    .hide(currentFragment)
+                    .show(fragment2)
+                    .commit();
+        }else{
+            fragmentManager.beginTransaction()
+                    .hide(currentFragment)
+                    .show(fragment2)
+                    .commit();
+        }
+        currentFragment = fragment2;
     }
     public void deduceData() {
         input_b = false;
@@ -146,7 +198,27 @@ public class CalculatePRP extends AppCompatActivity {
         deduceRB.setChecked(true);
         if (bottomRadioGroup.getVisibility() == View.GONE)
             bottomRadioGroup.setVisibility(View.VISIBLE);
-        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPDeduceFragment(), "Deduce").commit();
+        Fragment currentFragment = new Fragment() ;
+        for(Fragment fragment:fragmentManager.getFragments())
+        {
+            if(fragment.isVisible()){
+                currentFragment = fragment;
+                break;
+            }
+        }
+        Fragment fragment2 = fragmentManager.findFragmentByTag("Deduce");
+        if(fragment2==null){
+            fragment2 = new CalPRPDeduceFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.calprp_activity_framlayout,fragment2, "Deduce")
+                    .addToBackStack(null)
+                    .commit();
+        }
+        fragmentManager.beginTransaction()
+                .hide(currentFragment)
+                .show(fragment2)
+                .commit();
+        currentFragment = fragment2;
     }
     public void checkOutData() {
         input_b = false;
@@ -156,7 +228,27 @@ public class CalculatePRP extends AppCompatActivity {
         checkoutRB.setChecked(true);
         if (bottomRadioGroup.getVisibility() == View.GONE)
             bottomRadioGroup.setVisibility(View.VISIBLE);
-        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPCheckoutFragment(), "Checkout").commit();
+        Fragment currentFragment = new Fragment() ;
+        for(Fragment fragment:fragmentManager.getFragments())
+        {
+            if(fragment.isVisible()){
+                currentFragment = fragment;
+                break;
+            }
+        }
+        Fragment fragment2 = fragmentManager.findFragmentByTag("CheckOut");
+        if(fragment2==null){
+            fragment2 = new CalPRPCheckoutFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.calprp_activity_framlayout,fragment2, "CheckOut")
+                    .addToBackStack(null)
+                    .commit();
+        }
+        fragmentManager.beginTransaction()
+                .hide(currentFragment)
+                .show(fragment2)
+                .commit();
+        currentFragment = fragment2;
     }
     public void showAndSave() {
         input_b = false;
@@ -166,7 +258,27 @@ public class CalculatePRP extends AppCompatActivity {
         saveRB.setChecked(true);
         if (bottomRadioGroup.getVisibility() == View.GONE)
             bottomRadioGroup.setVisibility(View.VISIBLE);
-        fragmentManager.beginTransaction().replace(R.id.calprp_activity_framlayout, new CalPRPSaveFragment(), "ShowAndSave").commit();
+        Fragment currentFragment = new Fragment() ;
+        for(Fragment fragment:fragmentManager.getFragments())
+        {
+            if(fragment.isVisible()){
+                currentFragment = fragment;
+                break;
+            }
+        }
+        Fragment fragment2 = fragmentManager.findFragmentByTag("ShowAndSave");
+        if(fragment2==null){
+            fragment2 = new CalPRPSaveFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.calprp_activity_framlayout,fragment2, "ShowAndSave")
+                    .addToBackStack(null)
+                    .commit();
+        }
+        fragmentManager.beginTransaction()
+                .hide(currentFragment)
+                .show(fragment2)
+                .commit();
+        currentFragment = fragment2;
     }
     public void setMonthHasSeleted(boolean monthHasSeleted) {
         this.monthHasSeleted = monthHasSeleted;
