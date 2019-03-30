@@ -138,6 +138,7 @@ public class CalPRPSaveFragment extends Fragment {
             return;
         }
         try {
+            recordTime = Calendar.getInstance().getTime();
             confirmBT.setEnabled(false);
             for (JXGZDetailsTemp temp : LitePal.findAll(JXGZDetailsTemp.class)) {
                 JXGZDetails details = new JXGZDetails();
@@ -175,7 +176,6 @@ public class CalPRPSaveFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recordTime = Calendar.getInstance().getTime();
         activity = (CalculatePRP)getActivity();
         totalDetailsList = new ArrayList<>();
         personDetailsList = new ArrayList<>();

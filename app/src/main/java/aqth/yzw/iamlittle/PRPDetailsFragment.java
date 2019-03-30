@@ -1,6 +1,7 @@
 package aqth.yzw.iamlittle;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -112,20 +113,36 @@ public class PRPDetailsFragment extends Fragment {
     }
 
     private void dele() {
-        LitePal.deleteAll(JXGZDetails.class,"recordTime = ?",recordTime);
-        LitePal.deleteAll(JXGZPersonDetails.class,"recordTime = ?",recordTime);
-        showToast("已删除");
-        if(mode == 0){
-            activity.finish();
-        }else{
-            activity.setShowDetails(false);
-            activity.setTitle("绩效工资列表");
-            PRPListFragment fragment =(PRPListFragment) getFragmentManager().findFragmentByTag("List");
-            if(fragment!=null){
-                fragment.notifyDataChange();
+        MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除该月份的所有数据？\n注意：删除后不能回复！","取消","删除",
+                Color.BLACK,Color.RED);
+        dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+            @Override
+            public void onDissmiss(boolean flag) {
+                if(flag){
+                    LitePal.deleteAll(JXGZDetails.class,"recordTime = ?",recordTime);
+                    LitePal.deleteAll(JXGZPersonDetails.class,"recordTime = ?",recordTime);
+                    showToast("已删除");
+                    if(mode == 0){
+                        activity.finish();
+                    }else{
+                        activity.setShowDetails(false);
+                        activity.setTitle("绩效工资列表");
+                        PRPListFragment fragment =(PRPListFragment) getFragmentManager().findFragmentByTag("List");
+                        if(fragment!=null){
+                            fragment.notifyDataChange();
+                        }
+                        getFragmentManager().popBackStackImmediate();
+                    }
+                }
             }
-            getFragmentManager().popBackStackImmediate();
-        }
+
+            @Override
+            public void onDissmiss(boolean flag, Object object) {
+
+            }
+        });
+        dialogFragment.show(getFragmentManager(),"Delete");
+
     }
 
     private void share() {

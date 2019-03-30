@@ -40,7 +40,7 @@ public class PRPListFragment extends Fragment {
             list = new ArrayList<>();
         list.clear();
         List<Long> tempDate = new ArrayList<>();
-        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT recordTime FROM JXGZDetails ORDER BY recordTime desc");
+        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT recordTime,date FROM JXGZDetails ORDER BY date desc");
         if(cursor!=null&&cursor.moveToFirst()){
             do{
                 tempDate.add(cursor.getLong(0));
