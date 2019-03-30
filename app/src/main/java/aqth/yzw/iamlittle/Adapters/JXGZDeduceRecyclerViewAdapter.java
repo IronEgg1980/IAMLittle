@@ -2,7 +2,6 @@ package aqth.yzw.iamlittle.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonDetailsTemp;
-import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
 import aqth.yzw.iamlittle.MyTool;
 import aqth.yzw.iamlittle.R;
 
@@ -71,6 +69,13 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
                 holder.itemNameTV.setText(temp.getJXGZPersonDetails().getJXGZName());
                 holder.itemAmountTV.setText(MyTool.doubleToString(temp.getJXGZPersonDetails().getJXGZAmount(),amountFlag));
                 holder.checkBox.setChecked(temp.isSelect());
+                holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        temp.setSelect(!temp.isSelect());
+                        notifyItemChanged(i);
+                    }
+                });
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -83,6 +88,13 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
                 holder.personName.setText(temp.getJXGZPersonDetails().getPersonName());
                 holder.personRatio.setText(temp.getJXGZPersonDetails().getThatRatio()+"");
                 holder.checkBox.setChecked(temp.isSelect());
+                holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        temp.setSelect(!temp.isSelect());
+                        notifyItemChanged(i);
+                    }
+                });
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

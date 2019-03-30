@@ -26,6 +26,7 @@ public final class MyTool {
     public final static int JXGZ_AVERAGE = 2;
     public final static int JXGZ_DEDUCE = 3;
     public final static int JXGZ_ADD = 4;
+    public final static int JXGZ_ADJUST = 5;
     // 性别
     public final static boolean GENDER_MAN = true;
     public final static boolean GENDER_WOMAN = false;
@@ -48,6 +49,9 @@ public final class MyTool {
                 break;
             case MyTool.JXGZ_ADD:
                 typeText = "分配他人扣款";
+                break;
+            case MyTool.JXGZ_ADJUST:
+                typeText = "计算误差";
                 break;
         }
         return typeText;

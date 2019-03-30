@@ -32,9 +32,7 @@ public class CalPRPSelectMonthFragment extends Fragment {
         super.onCreate(savedInstanceState);
         calendar = new GregorianCalendar();
         activity = (CalculatePRP)getActivity();
-        activity.setTitle("请选择月份");
         activity.setDate(calendar.getTime());
-        activity.setRecordTime(calendar.getTime());
         format = new SimpleDateFormat("yyyy年M月份");
     }
 

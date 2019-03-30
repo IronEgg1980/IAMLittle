@@ -95,7 +95,7 @@ public class EditShiftUnitAmountFragment extends DialogFragment {
         textView = v.findViewById(R.id.edit_shift_unitamount_textview);
         title = v.findViewById(R.id.edit_shift_unitamount_title);
         title.setText(name);
-        textView.setText("原单位金额："+oldValue+"，请输入新金额");
+        textView.setText("原金额为："+oldValue+"，请输入新金额");
         editText = v.findViewById(R.id.edit_shift_unitamount_edittext);
         v.findViewById(R.id.edit_shift_unitamount_cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
