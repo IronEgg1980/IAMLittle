@@ -29,6 +29,9 @@ public final class MyTool {
     // 性别
     public final static boolean GENDER_MAN = true;
     public final static boolean GENDER_WOMAN = false;
+    // 绩效工资扣款页面Recyclerview Adapter有关常量
+    public final static int DEDUCE_ITEM_MODE = 1;
+    public final static int SELECT_OTHERSPERSON_MODE = 2;
     // 常用方法
 
     public static String getJXGZ_TypeString(int type){
@@ -189,6 +192,10 @@ public final class MyTool {
             format = new DecimalFormat(s);
         }
         return format.format(d);
+    }
+    public static String intToString(int i){
+        DecimalFormat format = new DecimalFormat("0");
+        return format.format(i);
     }
     public static double getDouble(double d, int flag) {
         double _d = 0;

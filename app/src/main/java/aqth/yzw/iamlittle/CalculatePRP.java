@@ -152,6 +152,7 @@ public class CalculatePRP extends AppCompatActivity {
 
                 }
             });
+            dialogFragment.show(fragmentManager,"ConfirmExit");
         } else {
             finish();
         }

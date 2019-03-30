@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 
 import org.litepal.LitePal;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,10 @@ import java.util.List;
 import aqth.yzw.iamlittle.Adapters.PersonSelectAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityPerson;
+import aqth.yzw.iamlittle.EntityClass.JXGZDetailsTemp;
+import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetails;
+import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
+import aqth.yzw.iamlittle.EntityClass.JXGZSingleResultTemp;
 import aqth.yzw.iamlittle.EntityClass.Person;
 
 public class CalPRPInputDataFragment extends Fragment {
@@ -42,7 +47,8 @@ public class CalPRPInputDataFragment extends Fragment {
     private String hintString;
     private double totalRatio;
     private int personCount;
-
+    private int type;
+    private double perAmount;
     private void updatePersonList() {
         String[] dates = MyTool.getMonthStartAndEndString(date);
         if (list == null) {
@@ -66,6 +72,7 @@ public class CalPRPInputDataFragment extends Fragment {
             totalAmountET.requestFocus();
             return false;
         }
+        totalAmount = Double.valueOf(totalAmountET.getText().toString().trim());
         if(totalAmount <0){
             totalAmountET.setError("请输入有效金额");
             totalAmountET.requestFocus();
@@ -117,8 +124,9 @@ public class CalPRPInputDataFragment extends Fragment {
 
     private void calculate() {
         if(checkInput()) {
-            int type = 0;
-            double perAmount = 0.0;
+            LitePal.deleteAll(JXGZSingleResultTemp.class);
+            type = 0;
+            perAmount = 0.0;
             itemName = TextUtils.isEmpty(itemNameET.getText()) ?
                     hintString : itemNameET.getText().toString().trim();
             totalAmount = Double.valueOf(totalAmountET.getText().toString().trim());
@@ -151,25 +159,82 @@ public class CalPRPInputDataFragment extends Fragment {
                         }else{
                             amount = MyTool.getDouble(perAmount,2);
                         }
-                        // 保存到临时单次计算结果数据库
-
+                        // 保存到单次计算结果数据库
+                        JXGZSingleResultTemp singleResultTemp = new JXGZSingleResultTemp();
+                        singleResultTemp.setPersonName(name);
+                        singleResultTemp.setRatio(ratio);
+                        singleResultTemp.setAmount(amount);
+                        singleResultTemp.save();
                     }
                 }
             }
+            showResultDialog();
         }
     }
 
     private void showResultDialog() {
-        // 保存了才能++
-        if (isDeduce) {
-            deduceCount++;
-        } else {
-            if (isByRatio) {
-                ratioCount++;
-            } else {
-                averageCount++;
-            }
+        String s = "项目名称："+itemName+"，总金额："+totalAmount+"\n";
+        switch (type){
+            case MyTool.JXGZ_DEDUCE:
+                if(isByRatio){
+                    s+="按系数扣款，总系数："+totalRatio+"，1.0系数扣款金额："+MyTool.doubleToString(perAmount,2);
+                }else{
+                    s+="平均扣款，总人数："+ MyTool.intToString(personCount) +"人，每人扣款金额："+MyTool.doubleToString(perAmount,2);
+                }
+                s+="\n\n扣款明细如下：";
+                break;
+            case MyTool.JXGZ_RATIO:
+                s+="按系数分配，总系数："+totalRatio+"，1.0系数金额："+MyTool.doubleToString(perAmount,2);
+                s+="\n\n分配明细如下：";
+                break;
+            case MyTool.JXGZ_AVERAGE:
+                s+="平均分配，分配人数："+ MyTool.intToString(personCount) +"人，每人金额："+MyTool.doubleToString(perAmount,2);
+                s+="\n\n分配明细如下：";
+                break;
         }
+
+        CalPRPShowResultDialogFragment fragment = CalPRPShowResultDialogFragment.newInstant(s);
+        fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+            @Override
+            public void onDissmiss(boolean flag) {
+                if(flag){
+                    JXGZDetailsTemp jxgzDetailsTemp = new JXGZDetailsTemp();
+                    jxgzDetailsTemp.setJXGZName(itemName);
+                    jxgzDetailsTemp.setJXGZType(type);
+                    jxgzDetailsTemp.setJXGZAmount(totalAmount);
+                    jxgzDetailsTemp.save();
+                    for(JXGZSingleResultTemp temp:LitePal.findAll(JXGZSingleResultTemp.class)){
+                        JXGZPersonDetailsTemp personDetailsTemp = new JXGZPersonDetailsTemp();
+                        personDetailsTemp.setPersonName(temp.getPersonName());
+                        personDetailsTemp.setJXGZName(itemName);
+                        personDetailsTemp.setThatRatio(temp.getRatio());
+                        personDetailsTemp.setJXGZType(type);
+                        personDetailsTemp.setJXGZAmount(temp.getAmount());
+                        personDetailsTemp.save();
+                    }
+                    // 保存了才能++
+                    if (isDeduce) {
+                        deduceCount++;
+                    } else {
+                        if (isByRatio) {
+                            ratioCount++;
+                        } else {
+                            averageCount++;
+                        }
+                    }
+                    initialInput();
+                    setHint();
+                    LitePal.deleteAll(JXGZSingleResultTemp.class);
+                    activity.showToast("保存成功！");
+                }
+            }
+
+            @Override
+            public void onDissmiss(boolean flag, Object object) {
+
+            }
+        });
+        fragment.show(getFragmentManager(),"ShowResult");
     }
 
     private void setHint() {
@@ -332,7 +397,6 @@ public class CalPRPInputDataFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 calculate();
-                showResultDialog();
             }
         });
         isAsignRB.setChecked(true);

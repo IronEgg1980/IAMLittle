@@ -4,7 +4,7 @@ import org.litepal.crud.LitePalSupport;
 
 public class JXGZDetailsTemp extends LitePalSupport {
     private String JXGZName;
-    private String JXGZAmount;
+    private double JXGZAmount;
     private int JXGZType;
 
     public String getJXGZName() {
@@ -15,11 +15,11 @@ public class JXGZDetailsTemp extends LitePalSupport {
         this.JXGZName = JXGZName;
     }
 
-    public String getJXGZAmount() {
+    public double getJXGZAmount() {
         return JXGZAmount;
     }
 
-    public void setJXGZAmount(String JXGZAmount) {
+    public void setJXGZAmount(double JXGZAmount) {
         this.JXGZAmount = JXGZAmount;
     }
 
