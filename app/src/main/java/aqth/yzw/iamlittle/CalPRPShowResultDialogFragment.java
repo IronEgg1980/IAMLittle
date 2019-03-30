@@ -14,7 +14,6 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.litepal.LitePal;
@@ -61,7 +60,7 @@ public class CalPRPShowResultDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.calprp_showandsave_fragment_layout,container,true);
+        View view = inflater.inflate(R.layout.calprp_showandsave_dialogfragment,container,true);
         TextView contentTV = view.findViewById(R.id.calprp_showandsave_fragment_contentTV);
         contentTV.setText(content);
         recyclerView =view.findViewById(R.id.calprp_showandsave_frament_recyclerview);

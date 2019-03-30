@@ -1,5 +1,6 @@
 package aqth.yzw.iamlittle.EntityClass;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 public class JXGZPersonDetailsTemp extends LitePalSupport {
