@@ -16,7 +16,6 @@ import android.widget.RadioButton;
 
 import org.litepal.LitePal;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +24,6 @@ import aqth.yzw.iamlittle.Adapters.PersonSelectAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityPerson;
 import aqth.yzw.iamlittle.EntityClass.JXGZDetailsTemp;
-import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetails;
 import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
 import aqth.yzw.iamlittle.EntityClass.JXGZSingleResultTemp;
 import aqth.yzw.iamlittle.EntityClass.Person;
@@ -41,7 +39,7 @@ public class CalPRPInputDataFragment extends Fragment {
     private RecyclerView recyclerView;
     private Button cancelBT, confirmBT;
     private List<ItemEntity> list;
-    private Date date, recordTime;
+    private Date date;
     private PersonSelectAdapter adapter;
     private int ratioCount, averageCount, deduceCount;
     private String hintString;
@@ -79,7 +77,7 @@ public class CalPRPInputDataFragment extends Fragment {
             return false;
         }
         boolean b = false;
-        totalRatio = 0.0;
+        totalRatio = 0;
         personCount = 0;
         for(ItemEntity itemEntity : list){
             if(itemEntity.getType() == ItemType.PERSON){
@@ -177,14 +175,14 @@ public class CalPRPInputDataFragment extends Fragment {
         switch (type){
             case MyTool.JXGZ_DEDUCE:
                 if(isByRatio){
-                    s+="按系数扣款，总系数："+totalRatio+"，1.0系数扣款金额："+MyTool.doubleToString(perAmount,2);
+                    s+="按系数扣款，总系数："+MyTool.doubleToString(totalRatio,2)+"，1.0系数扣款金额："+MyTool.doubleToString(perAmount,2);
                 }else{
                     s+="平均扣款，总人数："+ MyTool.intToString(personCount) +"人，每人扣款金额："+MyTool.doubleToString(perAmount,2);
                 }
                 s+="\n\n扣款明细如下：";
                 break;
             case MyTool.JXGZ_RATIO:
-                s+="按系数分配，总系数："+totalRatio+"，1.0系数金额："+MyTool.doubleToString(perAmount,2);
+                s+="按系数分配，总系数："+MyTool.doubleToString(totalRatio,2)+"，1.0系数金额："+MyTool.doubleToString(perAmount,2);
                 s+="\n\n分配明细如下：";
                 break;
             case MyTool.JXGZ_AVERAGE:
@@ -225,6 +223,7 @@ public class CalPRPInputDataFragment extends Fragment {
                     initialInput();
                     setHint();
                     LitePal.deleteAll(JXGZSingleResultTemp.class);
+                    activity.setHasCheckouted(false);
                     activity.showToast("保存成功！");
                 }
             }
@@ -279,7 +278,6 @@ public class CalPRPInputDataFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (CalculatePRP) getActivity();
-        activity.setTitle("输入数据");
         hintString = "";
         itemName = "";
         totalAmount = 0.0;
@@ -289,7 +287,6 @@ public class CalPRPInputDataFragment extends Fragment {
         isDeduce = false;
         isByRatio = true;
         date = activity.getDate();
-        recordTime = activity.getRecordTime();
         list = new ArrayList<>();
         adapter = new PersonSelectAdapter(list);
         adapter.setiItemClickListener(new IItemClickListener() {

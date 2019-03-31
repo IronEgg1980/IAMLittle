@@ -66,12 +66,13 @@ public class PRPActivity extends AppCompatActivity {
                     .addToBackStack(null)
                     .commit();
             setTitle("绩效工资列表");
-        }else{
-            PRPDetailsFragment fragment = new PRPDetailsFragment();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.common_linerarlayout,fragment).commit();
-            setTitle("开始计算");
         }
+//        else{
+//            PRPDetailsFragment fragment = new PRPDetailsFragment();
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.common_linerarlayout,fragment).commit();
+//            setTitle("开始计算");
+//        }
     }
     @Override
     public void onBackPressed() {

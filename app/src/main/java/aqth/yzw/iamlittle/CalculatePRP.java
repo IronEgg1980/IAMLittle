@@ -15,6 +15,7 @@ import org.litepal.LitePal;
 
 import java.util.Date;
 
+import aqth.yzw.iamlittle.EntityClass.JXGZDetailsTemp;
 import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
 
 public class CalculatePRP extends AppCompatActivity {
@@ -39,13 +40,14 @@ public class CalculatePRP extends AppCompatActivity {
             if(monthHasSeleted) {
                 hasCheckouted = savedInstanceState.getBoolean("HasCheckouted");
                 date = new Date(savedInstanceState.getLong("Date"));
-                recordTime = new Date(savedInstanceState.getLong("RecordTime"));
                 input_b = savedInstanceState.getBoolean("RB1");
                 deduce_b = savedInstanceState.getBoolean("RB2");
                 checkout_b = savedInstanceState.getBoolean("RB3");
                 save_b = savedInstanceState.getBoolean("RB4");
+                title = savedInstanceState.getString("Title");
             }
         }else{
+            title = "选择月份";
             Fragment fragment = new CalPRPSelectMonthFragment();
             fragmentManager.beginTransaction().add(R.id.calprp_activity_framlayout,fragment,"SelectMonth")
                     .addToBackStack(null)
@@ -122,6 +124,7 @@ public class CalculatePRP extends AppCompatActivity {
             checkoutRB.setChecked(checkout_b);
             saveRB.setChecked(save_b);
         }
+        setTitle(title);
     }
 
     @Override
@@ -130,11 +133,11 @@ public class CalculatePRP extends AppCompatActivity {
         outState.putBoolean("MonthHasSeleted",monthHasSeleted);
         outState.putBoolean("HasCheckouted",hasCheckouted);
         outState.putLong("Date",date.getTime());
-        outState.putLong("RecordTime",recordTime.getTime());
         outState.putBoolean("RB1",inputRB.isChecked());
         outState.putBoolean("RB2",deduceRB.isChecked());
         outState.putBoolean("RB3",checkoutRB.isChecked());
         outState.putBoolean("RB4",saveRB.isChecked());
+        outState.putString("Title",title);
     }
     public void back() {
         if (LitePal.isExist(JXGZPersonDetailsTemp.class)) {
@@ -143,6 +146,8 @@ public class CalculatePRP extends AppCompatActivity {
                 @Override
                 public void onDissmiss(boolean flag) {
                     if (flag) {
+                        LitePal.deleteAll(JXGZDetailsTemp.class);
+                        LitePal.deleteAll(JXGZPersonDetailsTemp.class);
                         finish();
                     }
                 }
@@ -159,6 +164,8 @@ public class CalculatePRP extends AppCompatActivity {
     }
 
     public void inputData() {
+        title = "输入数据";
+        setTitle(title);
         input_b = true;
         deduce_b=false;
         checkout_b=false;
@@ -192,6 +199,8 @@ public class CalculatePRP extends AppCompatActivity {
         currentFragment = fragment2;
     }
     public void deduceData() {
+        title = "处理扣款";
+        setTitle(title);
         input_b = false;
         deduce_b=true;
         checkout_b=false;
@@ -222,6 +231,8 @@ public class CalculatePRP extends AppCompatActivity {
         currentFragment = fragment2;
     }
     public void checkOutData() {
+        title = "数据微调";
+        setTitle(title);
         input_b = false;
         deduce_b=false;
         checkout_b=true;
@@ -252,6 +263,8 @@ public class CalculatePRP extends AppCompatActivity {
         currentFragment = fragment2;
     }
     public void showAndSave() {
+        title = "核对保存";
+        setTitle(title);
         input_b = false;
         deduce_b=false;
         checkout_b=false;
@@ -290,12 +303,6 @@ public class CalculatePRP extends AppCompatActivity {
     public void setDate(Date date) {
         this.date = date;
     }
-    public Date getRecordTime() {
-        return recordTime;
-    }
-    public void setRecordTime(Date recordTime) {
-        this.recordTime = recordTime;
-    }
     public boolean isHasCheckouted() {
         return hasCheckouted;
     }
@@ -311,11 +318,11 @@ public class CalculatePRP extends AppCompatActivity {
         toast.show();
     }
     private Date date;
-    private Date recordTime;
     private boolean hasCheckouted;
     private boolean monthHasSeleted;
     private FragmentManager fragmentManager;
     private RadioGroup bottomRadioGroup;
     private RadioButton inputRB, deduceRB, checkoutRB, saveRB;
     private boolean input_b,deduce_b,checkout_b,save_b;
+    private String title;
 }

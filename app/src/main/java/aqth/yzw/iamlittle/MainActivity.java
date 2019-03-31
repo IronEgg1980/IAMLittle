@@ -190,7 +190,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.JXGZ).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,PRPActivity.class);
+                startActivity(intent);
             }
         });
         findViewById(R.id.JXGZ_cal).setOnClickListener(new View.OnClickListener() {

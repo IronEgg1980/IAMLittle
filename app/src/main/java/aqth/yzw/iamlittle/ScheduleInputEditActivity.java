@@ -5,23 +5,19 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -39,16 +35,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import aqth.yzw.iamlittle.Adapters.PersonShiftInputAdapter;
 import aqth.yzw.iamlittle.Adapters.ScheduleShowAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityPerson;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityScheduleInput;
-import aqth.yzw.iamlittle.EntityClass.ItemEntityScheduleTemplate;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityShift;
 import aqth.yzw.iamlittle.EntityClass.Person;
 import aqth.yzw.iamlittle.EntityClass.Schedule;
@@ -73,6 +66,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
     private List<ItemEntity> people,shifts;
     private int mX,mY;
     private AppBarLayout appBarLayout;
+    private Button saveBT;
     private void setBottomRecyclerViewAdapter(int adapterMode){
         if(adapterMode == 1){
             bottomTV.setText("未排班\n人员");
@@ -257,6 +251,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         dialogFragment.show(getSupportFragmentManager(),"LoadTemplate");
     }
     private void saveData(){
+        saveBT.setEnabled(false);
         if(list.size() == 1){
             Toast toast = Toast.makeText(recyclerView.getContext(),"请先排班再保存！",Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER,0,0);
@@ -517,10 +512,11 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
             }
         });
         // 保存
-        findViewById(R.id.schedule_inputedit_activity_save).setOnClickListener(new View.OnClickListener() {
+        saveBT = findViewById(R.id.schedule_inputedit_activity_save);
+        saveBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               saveData();
+                saveData();
             }
         });
         // 模板
@@ -755,6 +751,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
                 setResult(1001, result);
                 finish();
             }else{
+                saveBT.setEnabled(true);
                 Toast toast = Toast.makeText(ScheduleInputEditActivity.this,"保存失败，请重试一次！",Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER,0,0);
                 toast.show();

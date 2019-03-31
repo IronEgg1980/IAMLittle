@@ -27,108 +27,341 @@ import java.util.List;
 import aqth.yzw.iamlittle.Adapters.JXGZDeduceRecyclerViewAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonDetailsTemp;
 import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
+import aqth.yzw.iamlittle.EntityClass.JXGZSingleResultTemp;
+import aqth.yzw.iamlittle.EntityClass.Person;
 
 public class CalPRPDeduceFragment extends Fragment {
     private CalculatePRP activity;
-    private List<ItemEntityJXGZPersonDetailsTemp> deduceItemList,othersList;
-    private JXGZDeduceRecyclerViewAdapter deduceItemAdapter,selectPersonAdapter;
+    private List<ItemEntityJXGZPersonDetailsTemp> deduceItemList, othersList;
+    private JXGZDeduceRecyclerViewAdapter deduceItemAdapter, selectPersonAdapter;
     private LinearLayout linearLayout;
-    private boolean deduceByDays,asignByRatio;
-    private RadioButton deduceByDaysRB,asignByRatioRB,deduceByAmountRB,asignAverageRB;
-    private int maxDays,deduceDays;
-    private String deducePersonName;
-    private double deduceAmount;
-    private RecyclerView deduceItemRLV,selectPersonRLV;
-    private TextView deducePersonTV,deduceModeTV;
-    private EditText inputET;
-    private void initialFragment(){
+    private boolean deduceByDays, asignByRatio;
+    private RadioButton deduceByDaysRB, asignByRatioRB, deduceByAmountRB, asignAverageRB;
+    private int maxDays, amountFlag, nameCount;
+    private String deducePersonName, deduceName;
+    private double deduceAmount, perAmount;
+    private RecyclerView deduceItemRLV, selectPersonRLV;
+    private TextView deducePersonTV, deduceModeTV;
+    private EditText inputET, inputDeduceNameET;
+
+    private void initialFragment() {
         deduceByDaysRB.setChecked(deduceByDays);
         deduceByAmountRB.setChecked(!deduceByDays);
         asignByRatioRB.setChecked(asignByRatio);
         asignAverageRB.setChecked(!asignByRatio);
-        if(deduceByDays){
+        if (deduceByDays) {
             linearLayout.setVisibility(View.VISIBLE);
             updateDeduceItemRLV(deducePersonName);
-        }else{
+        } else {
             linearLayout.setVisibility(View.GONE);
         }
-        if(!TextUtils.isEmpty(deducePersonName)) {
+        if (!TextUtils.isEmpty(deducePersonName)) {
             updateSelectPersonRLV(deducePersonName);
             deducePersonTV.setText(deducePersonName);
-        }else{
+        } else {
             deducePersonTV.setText("点击选择扣款人员");
         }
+        inputDeduceNameET.setHint(deduceName);
     }
 
-    private void updateDeduceItemRLV(String personName){
-        if(deduceItemList == null)
+    private void clearInput() {
+        deduceByDaysRB.setChecked(true);
+        deduceByAmountRB.setChecked(false);
+        asignByRatioRB.setChecked(true);
+        asignAverageRB.setChecked(false);
+        deduceByDays = true;
+        asignByRatio = true;
+        deducePersonName = "";
+        deduceName = "扣款"+nameCount;
+        linearLayout.setVisibility(View.VISIBLE);
+        deducePersonTV.setText("点击选择扣款人员");
+        deducePersonTV.setError(null);
+        inputDeduceNameET.setHint(deduceName);
+        inputDeduceNameET.setText("");
+        inputET.setText("");
+        inputET.setError(null);
+        inputET.setHint("请输入天数");
+        deduceModeTV.setText("扣款天数：");
+        deduceItemList.clear();
+        deduceItemAdapter.notifyDataSetChanged();
+        othersList.clear();
+        selectPersonAdapter.notifyDataSetChanged();
+    }
+
+    private void updateDeduceItemRLV(String personName) {
+        if (deduceItemList == null)
             deduceItemList = new ArrayList<>();
         deduceItemList.clear();
-        if(!TextUtils.isEmpty(personName)){
-            List<JXGZPersonDetailsTemp> list = LitePal.where("personName = ?",personName).find(JXGZPersonDetailsTemp.class);
-            for(JXGZPersonDetailsTemp temp:list){
+        if (!TextUtils.isEmpty(personName)) {
+            List<JXGZPersonDetailsTemp> list = LitePal.where("personName = ?", personName).find(JXGZPersonDetailsTemp.class);
+            for (JXGZPersonDetailsTemp temp : list) {
                 deduceItemList.add(new ItemEntityJXGZPersonDetailsTemp(temp));
             }
         }
-        deduceItemAdapter.notifyDataSetChanged();
     }
-    private void updateSelectPersonRLV(String personName){
-        if(othersList == null)
+
+    private void updateSelectPersonRLV(String personName) {
+        if (othersList == null)
             othersList = new ArrayList<>();
         othersList.clear();
-        if(!TextUtils.isEmpty(personName)){
-            Cursor cursor = LitePal.findBySQL("SELECT DISTINCT personname,thatratio FROM JXGZPersonDetailsTemp WHERE personname != ? GROUPBY personname",personName);
-            if(cursor!=null && cursor.moveToFirst()){
-                do{
+        if (!TextUtils.isEmpty(personName)) {
+            Cursor cursor = LitePal.findBySQL("SELECT DISTINCT personname,thatratio FROM JXGZPersonDetailsTemp WHERE personname != ?", personName);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
                     JXGZPersonDetailsTemp temp = new JXGZPersonDetailsTemp();
                     temp.setPersonName(cursor.getString(0));
                     temp.setThatRatio(cursor.getDouble(1));
                     othersList.add(new ItemEntityJXGZPersonDetailsTemp(temp));
-                }while (cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         }
-        selectPersonAdapter.notifyDataSetChanged();
     }
-    private void selectPerson(){
-        //写到这里
-        deducePersonName = "";
-        deducePersonTV.setText(deducePersonName);
+
+    private void selectPerson() {
+        SelectDeducePersonDialogFragment fragment = new SelectDeducePersonDialogFragment();
+        fragment.setDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+            @Override
+            public void onDissmiss(boolean flag) {
+
+            }
+
+            @Override
+            public void onDissmiss(boolean flag, Object object) {
+                if (flag) {
+                    deducePersonName = (String) object;
+                    deducePersonTV.setText(deducePersonName);
+                    updateDeduceItemRLV(deducePersonName);
+                    deduceItemAdapter.notifyDataSetChanged();
+                    updateSelectPersonRLV(deducePersonName);
+                    selectPersonAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        fragment.show(getFragmentManager(), "SelectPerson");
+    }
+    private void calculate() {
+        LitePal.deleteAll(JXGZSingleResultTemp.class);
+        if (checkInput()) {
+            String s = "扣款人员：" + deducePersonName + "，扣款金额：" + MyTool.doubleToString(deduceAmount, amountFlag);
+            perAmount = 0;
+            if (asignByRatio) {
+                double totalRatio = 0;
+                for (ItemEntityJXGZPersonDetailsTemp temp : othersList) {
+                    if (temp.isSelect()) {
+                        totalRatio += temp.getJXGZPersonDetails().getThatRatio();
+                    }
+                }
+                if (totalRatio == 0)
+                    perAmount = 0;
+                else {
+                    perAmount = MyTool.getDouble(deduceAmount / totalRatio, amountFlag);
+                }
+                s += "\n分配方式：按系数分配，总系数：" + MyTool.doubleToString(totalRatio, amountFlag) +
+                        "，1.0系数分配金额：" + MyTool.doubleToString(perAmount, amountFlag) +
+                        "\n\n分配明细如下：";
+            } else {
+                int count = 0;
+                for (ItemEntityJXGZPersonDetailsTemp temp : othersList) {
+                    if (temp.isSelect()) {
+                        count++;
+                    }
+                }
+                if (count == 0)
+                    perAmount = 0;
+                else {
+                    perAmount = MyTool.getDouble(deduceAmount / count, amountFlag);
+                }
+                s += "\n分配方式：平均分配，分配人数：" + MyTool.doubleToString(count, 0) +
+                        "人，平均每人分配金额：" + MyTool.doubleToString(perAmount, amountFlag) +
+                        "\n\n分配明细如下：";
+            }
+            for (ItemEntityJXGZPersonDetailsTemp temp : othersList) {
+                if (temp.isSelect()) {
+                    String name = temp.getJXGZPersonDetails().getPersonName();
+                    double ratio = temp.getJXGZPersonDetails().getThatRatio();
+                    double amount = perAmount;
+                    if(asignByRatio){
+                        amount = MyTool.getDouble(ratio * perAmount,amountFlag);
+                    }
+                    JXGZSingleResultTemp singleResultTemp = new JXGZSingleResultTemp();
+                    singleResultTemp.setPersonName(name);
+                    singleResultTemp.setRatio(ratio);
+                    singleResultTemp.setAmount(amount);
+                    singleResultTemp.save();
+                }
+            }
+            showResultDialog(s);
+        }
+    }
+    private boolean checkInput() {
+        double day = 0;
+        boolean b = false, b2 = false;
+        deduceAmount = 0;
+        if (TextUtils.isEmpty(deducePersonName)) {
+//            activity.showToast("没有选择扣款人员");
+            deducePersonTV.setError("没有选择人员");
+            deducePersonTV.requestFocus();
+            return false;
+        }
+        if (TextUtils.isEmpty(inputET.getText())) {
+            inputET.setError("没有输入天数或者金额");
+            inputET.requestFocus();
+            return false;
+        }
+        if (deduceByDays) {
+            day = Double.valueOf(inputET.getText().toString().trim());
+            if (day < 0) {
+                inputET.setError("请输入有效天数");
+                inputET.requestFocus();
+                return false;
+            } else if (day > maxDays) {
+                inputET.setError("大于月份最大天数");
+                inputET.setText(maxDays+"");
+                inputET.selectAll();
+                inputET.requestFocus();
+                return false;
+            }
+            for (ItemEntityJXGZPersonDetailsTemp temp : deduceItemList) {
+                if (temp.isSelect()) {
+                    b = true;
+                    deduceAmount += temp.getJXGZPersonDetails().getJXGZAmount();
+                }
+            }
+            if (!b) {
+                activity.showToast("没有选择扣款项目");
+                return false;
+            }
+            deduceAmount = MyTool.getDouble(deduceAmount * day / maxDays, amountFlag);
+
+        } else {
+            deduceAmount = Double.valueOf(inputET.getText().toString().trim());
+            if (deduceAmount < 0) {
+                inputET.setError("请输入有效金额");
+                inputET.requestFocus();
+                return false;
+            }
+        }
+        for (ItemEntityJXGZPersonDetailsTemp temp : othersList) {
+            if (temp.isSelect()) {
+                b2 = true;
+                break;
+            }
+        }
+        if (!b2) {
+            activity.showToast("没有选择分配人员");
+            return false;
+        }
+        return true;
+    }
+    private void showResultDialog(String content){
+        CalPRPShowResultDialogFragment fragment = CalPRPShowResultDialogFragment.newInstant(content);
+        fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+            @Override
+            public void onDissmiss(boolean flag) {
+                if (flag) {
+                    double thatRatio = 0;
+                    JXGZPersonDetailsTemp temp1 = LitePal.where("personName = ?", deducePersonName).findFirst(JXGZPersonDetailsTemp.class);
+                    if (temp1 == null) {
+                        Person person = LitePal.where("name = ?", deducePersonName).findFirst(Person.class);
+                        if (person != null) {
+                            thatRatio = person.getRatio();
+                        }
+                    } else {
+                        thatRatio = temp1.getThatRatio();
+                    }
+                    deduceName = "扣款" + nameCount;
+                    if (!TextUtils.isEmpty(inputDeduceNameET.getText())) {
+                        deduceName = inputDeduceNameET.getText().toString().trim();
+                    }
+                    // 保存
+                    deduceAmount = -deduceAmount;
+                    JXGZPersonDetailsTemp temp = new JXGZPersonDetailsTemp();
+                    temp.setPersonName(deducePersonName);
+                    temp.setJXGZName(deduceName);
+                    temp.setJXGZType(MyTool.JXGZ_DEDUCE);
+                    temp.setJXGZAmount(deduceAmount);
+                    temp.setThatRatio(thatRatio);
+                    temp.save();
+                    for (ItemEntityJXGZPersonDetailsTemp item : othersList) {
+                        if (item.isSelect()) {
+                            JXGZPersonDetailsTemp temp2 = new JXGZPersonDetailsTemp();
+                            temp2.setPersonName(item.getJXGZPersonDetails().getPersonName());
+                            temp2.setJXGZName("分得" + deducePersonName + "的扣款");
+                            temp2.setJXGZType(MyTool.JXGZ_ADD);
+                            temp2.setThatRatio(item.getJXGZPersonDetails().getThatRatio());
+                            double amount = 0;
+                            if (asignByRatio)
+                                amount = MyTool.getDouble(perAmount * item.getJXGZPersonDetails().getThatRatio(), amountFlag);
+                            else
+                                amount = perAmount;
+                            temp2.setJXGZAmount(amount);
+                            temp2.save();
+                        }
+                    }
+                    LitePal.deleteAll(JXGZSingleResultTemp.class);
+                    nameCount++;
+                    clearInput();
+                    activity.setHasCheckouted(false);
+                    activity.showToast("保存成功");
+                }
+            }
+
+            @Override
+            public void onDissmiss(boolean flag, Object object) {
+
+            }
+        });
+        fragment.show(getFragmentManager(), "ShowResult");
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (CalculatePRP)getActivity();
-        activity.setTitle("计算扣款");
+        activity = (CalculatePRP) getActivity();
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(activity.getDate());
         deduceItemList = new ArrayList<>();
         othersList = new ArrayList<>();
-        deduceItemAdapter = new JXGZDeduceRecyclerViewAdapter(deduceItemList,MyTool.DEDUCE_ITEM_MODE);
-        selectPersonAdapter = new JXGZDeduceRecyclerViewAdapter(othersList,MyTool.SELECT_OTHERSPERSON_MODE);
-        if(savedInstanceState == null){
+        deduceItemAdapter = new JXGZDeduceRecyclerViewAdapter(deduceItemList, MyTool.DEDUCE_ITEM_MODE);
+        selectPersonAdapter = new JXGZDeduceRecyclerViewAdapter(othersList, MyTool.SELECT_OTHERSPERSON_MODE);
+        if (savedInstanceState == null) {
+            nameCount = 1;
             deducePersonName = "";
+            deduceName = "扣款" + nameCount;
             deduceByDays = true;
             asignByRatio = true;
             maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-            deduceDays = 0;
             deduceAmount = 0;
-        }else{
+        } else {
             deduceByDays = savedInstanceState.getBoolean("DeduceByDays");
             asignByRatio = savedInstanceState.getBoolean("AsignByRatio");
             maxDays = savedInstanceState.getInt("MaxDays");
             deducePersonName = savedInstanceState.getString("DeducePersonName");
-            deduceDays = savedInstanceState.getInt("DeduceDays");
+            nameCount = savedInstanceState.getInt("NameCount");
             deduceAmount = savedInstanceState.getDouble("DeduceAmount");
+            deduceName = "扣款" + nameCount;
         }
+        amountFlag = 2;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("DeduceByDays", deduceByDays);
+        outState.putBoolean("AsignByRatio", asignByRatio);
+        outState.putInt("MaxDays", maxDays);
+        outState.putString("DeducePersonName", deducePersonName);
+        outState.putInt("NameCount", nameCount);
+        outState.putDouble("DeduceAmount", deduceAmount);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.calprp_deduce_fragment_layout,container,false);
+        View view = inflater.inflate(R.layout.calprp_deduce_fragment_layout, container, false);
         linearLayout = view.findViewById(R.id.calprp_deduce_fragment_linear);
         deduceModeTV = view.findViewById(R.id.calprp_deduce_fragment_TV);
         inputET = view.findViewById(R.id.calprp_deduce_fragment_deduceDaysET);
+        inputDeduceNameET = view.findViewById(R.id.calprp_deduce_fragment_deduceName);
         deducePersonTV = view.findViewById(R.id.calprp_deduce_fragment_selectPerson);
         deducePersonTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +373,7 @@ public class CalPRPDeduceFragment extends Fragment {
         deduceByDaysRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     deduceByDays = true;
                     if (linearLayout.getVisibility() == View.GONE)
                         linearLayout.setVisibility(View.VISIBLE);
@@ -155,7 +388,7 @@ public class CalPRPDeduceFragment extends Fragment {
         deduceByAmountRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     deduceByDays = false;
                     if (linearLayout.getVisibility() == View.VISIBLE)
                         linearLayout.setVisibility(View.GONE);
@@ -185,6 +418,18 @@ public class CalPRPDeduceFragment extends Fragment {
         selectPersonRLV = view.findViewById(R.id.calprp_deduce_fragment_selectPersonRecyclerview);
         selectPersonRLV.setLayoutManager(new LinearLayoutManager(getContext()));
         selectPersonRLV.setAdapter(selectPersonAdapter);
+        view.findViewById(R.id.calprp_deduce_fragment_cancelBT).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearInput();
+            }
+        });
+        view.findViewById(R.id.calprp_deduce_fragment_confirmBT).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calculate();
+            }
+        });
         return view;
     }
 

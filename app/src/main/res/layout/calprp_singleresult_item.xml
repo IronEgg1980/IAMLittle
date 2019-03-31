@@ -3,7 +3,8 @@
     android:orientation="horizontal"
     android:layout_margin="4dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/calprp_singleresult_item_root">
     <TextView
         android:paddingRight="4dp"
         android:layout_width="0dp"

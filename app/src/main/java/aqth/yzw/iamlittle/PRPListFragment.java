@@ -1,6 +1,6 @@
 package aqth.yzw.iamlittle;
 
-import android.content.ClipData;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,14 +16,10 @@ import android.view.ViewGroup;
 import org.litepal.LitePal;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.SimpleFormatter;
 
 import aqth.yzw.iamlittle.Adapters.PRPTotalAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
@@ -44,7 +40,7 @@ public class PRPListFragment extends Fragment {
             list = new ArrayList<>();
         list.clear();
         List<Long> tempDate = new ArrayList<>();
-        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT recordTime FROM JXGZDetails ORDER BY recordTime desc");
+        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT recordTime,date FROM JXGZDetails ORDER BY date desc");
         if(cursor!=null&&cursor.moveToFirst()){
             do{
                 tempDate.add(cursor.getLong(0));
@@ -58,6 +54,9 @@ public class PRPListFragment extends Fragment {
             List<JXGZDetails> temp = LitePal.where("recordTime = ?",String.valueOf(l))
                     .find(JXGZDetails.class);
             list.add(new ItemEntityJXGZTotal(temp));
+        }
+        if(list.size() == 0){
+            list.add(new ItemEntity());
         }
     }
     private void showDetails(Date recordTime,Date date){
@@ -74,7 +73,9 @@ public class PRPListFragment extends Fragment {
         activity.setTitle(format.format(date));
     }
     private void add(){
-
+        Intent intent = new Intent();
+        intent.setClass(getContext(),CalculatePRP.class);
+        startActivity(intent);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,8 +86,11 @@ public class PRPListFragment extends Fragment {
         adapter.setItemClickListener(new IItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ItemEntityJXGZTotal total = (ItemEntityJXGZTotal)list.get(position);
-                showDetails(total.getRecordTime(),total.getDate());
+                ItemEntity itemEntity = list.get(position);
+                if(itemEntity.getType() == ItemType.JXGZ_TOTAL) {
+                    ItemEntityJXGZTotal total = (ItemEntityJXGZTotal) itemEntity;
+                    showDetails(total.getRecordTime(), total.getDate());
+                }
             }
 
             @Override
@@ -103,6 +107,7 @@ public class PRPListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         setHasOptionsMenu(true);
+        notifyDataChange();
         return view;
     }
 
