@@ -68,7 +68,7 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
                 ItemEntityPerson itemEntityPerson = (ItemEntityPerson)itemEntity;
                 final Person p = itemEntityPerson.getPerson();
                 personViewHolder.nameTextView.setText(p.getName());
-                personViewHolder.ratioTextView.setText(p.getRatio()+"");
+                personViewHolder.ratioTextView.setText(Double.toString(p.getRatio()));
                 personViewHolder.statusTextView.setText(p.getStatus() == MyTool.PERSON_STATUS_ONDUTY?"在岗":"离开");
                 personViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -2,6 +2,7 @@ package aqth.yzw.iamlittle.EntityClass;
 
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.ItemType;
 
 public class OTPPersonTotalEntity extends ItemEntity {
@@ -20,13 +21,14 @@ public class OTPPersonTotalEntity extends ItemEntity {
     public double getTotalAmount() {
         return totalAmount;
     }
-    public OTPPersonTotalEntity(List<OverTimePay> list){
+
+    public OTPPersonTotalEntity(List<OverTimePay> list) {
         this.personName = "";
         this.totalAmount = 0;
-        if(list != null && list.size()>0){
+        if (list != null && list.size() > 0) {
             this.personName = list.get(0).getPersonName();
-            for(OverTimePay otp:list){
-                totalAmount += otp.getAmount();
+            for (OverTimePay otp : list) {
+                totalAmount = Arith.add(totalAmount, otp.getAmount());
             }
         }
     }

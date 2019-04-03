@@ -8,6 +8,15 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 public class PersonManageActivity extends AppCompatActivity {
+    public interface IOnBackPress{
+        public void onBackPress();
+    }
+    private IOnBackPress onBackPress;
+
+    public void setOnBackPress(IOnBackPress onBackPress) {
+        this.onBackPress = onBackPress;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +28,7 @@ public class PersonManageActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPress.onBackPress();
             }
         });
     }
@@ -28,5 +37,10 @@ public class PersonManageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getSupportFragmentManager().beginTransaction().replace(R.id.recyclerview_layout,new PersonManageFragment()).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        onBackPress.onBackPress();
     }
 }

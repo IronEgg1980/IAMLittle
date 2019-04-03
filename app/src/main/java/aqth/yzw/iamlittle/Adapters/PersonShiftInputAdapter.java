@@ -63,7 +63,7 @@ public class PersonShiftInputAdapter extends RecyclerView.Adapter<PersonShiftInp
             String name = shift.getShift().getName();
             viewHolder.view.setTag(name);
             viewHolder.textView.setText(name);
-            viewHolder.imageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_phone_green_800_48dp));
+            viewHolder.imageView.setImageDrawable(mContext.getDrawable(R.drawable.shift));
 
         }else if(type == 2){
             // person
@@ -77,7 +77,7 @@ public class PersonShiftInputAdapter extends RecyclerView.Adapter<PersonShiftInp
             }else{
                 viewHolder.textView.setTextColor(mContext.getColor(R.color.colorText));
             }
-            viewHolder.imageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_contact_phone_light_green_800_48dp));
+            viewHolder.imageView.setImageDrawable(mContext.getDrawable(R.drawable.person_image));
         }
         viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override

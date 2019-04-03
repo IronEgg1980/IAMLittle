@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonTotalTemp;
 import aqth.yzw.iamlittle.IItemClickListener;
 import aqth.yzw.iamlittle.MyTool;
@@ -48,8 +49,9 @@ public class JXGZCheckoutAdapter extends RecyclerView.Adapter<JXGZCheckoutAdapte
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         ItemEntityJXGZPersonTotalTemp temp = mList.get(i);
         viewHolder.nameTV.setText(temp.getPersonName());
-        viewHolder.ratioTV.setText(temp.getThatRatio()+"");
-        String s = MyTool.doubleToString(temp.getAmount(),2);
+        viewHolder.ratioTV.setText(Double.toString(temp.getThatRatio()));
+        int scale = temp.getList().get(0).getScale();
+        String s = temp.getAmountString(scale);
         viewHolder.amountTV.setText(s);
         viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

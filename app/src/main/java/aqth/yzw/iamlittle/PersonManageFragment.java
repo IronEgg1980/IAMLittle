@@ -165,7 +165,9 @@ public class PersonManageFragment extends Fragment {
         fragment1.show(getFragmentManager(),"EditRatio");
     }
     protected void getPopWindow(final Person p ,final int position){
-        int width = WindowManager.LayoutParams.MATCH_PARENT;
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width =(int) (dm.widthPixels * 0.95);
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
         popupWindow = new PopupWindow(width,height);
         if(p.getStatus() == MyTool.PERSON_STATUS_ONDUTY) {
@@ -275,6 +277,16 @@ public class PersonManageFragment extends Fragment {
             @Override
             public void onClick(View view, int x, int y) {
 
+            }
+        });
+        final PersonManageActivity activity = (PersonManageActivity)getActivity();
+        activity.setOnBackPress(new PersonManageActivity.IOnBackPress() {
+            @Override
+            public void onBackPress() {
+                if (popupWindow!=null && popupWindow.isShowing())
+                    popupWindow.dismiss();
+                else
+                    activity.finish();
             }
         });
     }

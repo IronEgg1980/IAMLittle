@@ -226,4 +226,12 @@ public class ShiftManageActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(ShiftManageActivity.this));
        // recyclerView.addItemDecoration(new DividerItemDecoration(ShiftManageActivity.this,DividerItemDecoration.VERTICAL));
     }
+
+    @Override
+    public void onBackPressed() {
+        if (popupWindow!=null && popupWindow.isShowing())
+            popupWindow.dismiss();
+        else
+            finish();
+    }
 }

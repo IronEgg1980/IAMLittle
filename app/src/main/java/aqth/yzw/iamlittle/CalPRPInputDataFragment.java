@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 
 import org.litepal.LitePal;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,7 @@ public class CalPRPInputDataFragment extends Fragment {
     private double totalRatio;
     private int personCount;
     private int type;
+    private int amountFlag;
     private double perAmount;
     private void updatePersonList() {
         String[] dates = MyTool.getMonthStartAndEndString(date);
@@ -70,7 +72,7 @@ public class CalPRPInputDataFragment extends Fragment {
             totalAmountET.requestFocus();
             return false;
         }
-        totalAmount = Double.valueOf(totalAmountET.getText().toString().trim());
+        totalAmount = new BigDecimal(totalAmountET.getText().toString()).doubleValue();
         if(totalAmount <0){
             totalAmountET.setError("请输入有效金额");
             totalAmountET.requestFocus();
@@ -84,7 +86,7 @@ public class CalPRPInputDataFragment extends Fragment {
                 ItemEntityPerson person = (ItemEntityPerson)itemEntity;
                 if(person.isSelect()){
                     b = true;
-                    totalRatio += person.getRatio();
+                    totalRatio = Arith.add(totalRatio,person.getRatio());
                     personCount++;
                 }
             }
@@ -127,22 +129,22 @@ public class CalPRPInputDataFragment extends Fragment {
             perAmount = 0.0;
             itemName = TextUtils.isEmpty(itemNameET.getText()) ?
                     hintString : itemNameET.getText().toString().trim();
-            totalAmount = Double.valueOf(totalAmountET.getText().toString().trim());
+            totalAmount =new BigDecimal(totalAmountET.getText().toString()).doubleValue();
             if(isDeduce){
                 type = MyTool.JXGZ_DEDUCE;
-                totalAmount = -totalAmount;
+                totalAmount = Arith.div(totalAmount,-1.0);
                 if(isByRatio){
-                    perAmount = totalAmount / totalRatio;
+                    perAmount = Arith.div(totalAmount,totalRatio);
                 }else{
-                    perAmount = totalAmount / personCount;
+                    perAmount = Arith.div(totalAmount,personCount);
                 }
             }else{
                 if(isByRatio){
                     type = MyTool.JXGZ_RATIO;
-                    perAmount = totalAmount / totalRatio;
+                    perAmount = Arith.div(totalAmount,totalRatio);
                 }else{
                     type = MyTool.JXGZ_AVERAGE;
-                    perAmount = totalAmount / personCount;
+                    perAmount = Arith.div(totalAmount,personCount);
                 }
             }
             for(ItemEntity itemEntity:list){
@@ -153,15 +155,16 @@ public class CalPRPInputDataFragment extends Fragment {
                         double ratio = person.getRatio();
                         double amount = 0;
                         if(isByRatio){
-                            amount = MyTool.getDouble(perAmount * ratio,2);
+                            amount = Arith.mul(perAmount,ratio,amountFlag);
                         }else{
-                            amount = MyTool.getDouble(perAmount,2);
+                            amount = Arith.round(perAmount,amountFlag);
                         }
                         // 保存到单次计算结果数据库
                         JXGZSingleResultTemp singleResultTemp = new JXGZSingleResultTemp();
                         singleResultTemp.setPersonName(name);
                         singleResultTemp.setRatio(ratio);
                         singleResultTemp.setAmount(amount);
+                        singleResultTemp.setScale(amountFlag);
                         singleResultTemp.save();
                     }
                 }
@@ -175,18 +178,18 @@ public class CalPRPInputDataFragment extends Fragment {
         switch (type){
             case MyTool.JXGZ_DEDUCE:
                 if(isByRatio){
-                    s+="按系数扣款，总系数："+MyTool.doubleToString(totalRatio,2)+"，1.0系数扣款金额："+MyTool.doubleToString(perAmount,2);
+                    s+="按系数扣款，总系数："+Double.toString(totalRatio)+"，1.0系数扣款金额："+Arith.doubleToString(perAmount,amountFlag);
                 }else{
-                    s+="平均扣款，总人数："+ MyTool.intToString(personCount) +"人，每人扣款金额："+MyTool.doubleToString(perAmount,2);
+                    s+="平均扣款，总人数："+ Integer.toString(personCount) +"人，每人扣款金额："+Arith.doubleToString(perAmount,amountFlag);
                 }
                 s+="\n\n扣款明细如下：";
                 break;
             case MyTool.JXGZ_RATIO:
-                s+="按系数分配，总系数："+MyTool.doubleToString(totalRatio,2)+"，1.0系数金额："+MyTool.doubleToString(perAmount,2);
+                s+="按系数分配，总系数："+Double.toString(totalRatio)+"，1.0系数金额："+Arith.doubleToString(perAmount,amountFlag);
                 s+="\n\n分配明细如下：";
                 break;
             case MyTool.JXGZ_AVERAGE:
-                s+="平均分配，分配人数："+ MyTool.intToString(personCount) +"人，每人金额："+MyTool.doubleToString(perAmount,2);
+                s+="平均分配，分配人数："+ Integer.toString(personCount) +"人，每人金额："+Arith.doubleToString(perAmount,amountFlag);
                 s+="\n\n分配明细如下：";
                 break;
         }
@@ -200,6 +203,7 @@ public class CalPRPInputDataFragment extends Fragment {
                     jxgzDetailsTemp.setJXGZName(itemName);
                     jxgzDetailsTemp.setJXGZType(type);
                     jxgzDetailsTemp.setJXGZAmount(totalAmount);
+                    jxgzDetailsTemp.setScale(amountFlag);
                     jxgzDetailsTemp.save();
                     for(JXGZSingleResultTemp temp:LitePal.findAll(JXGZSingleResultTemp.class)){
                         JXGZPersonDetailsTemp personDetailsTemp = new JXGZPersonDetailsTemp();
@@ -208,6 +212,7 @@ public class CalPRPInputDataFragment extends Fragment {
                         personDetailsTemp.setThatRatio(temp.getRatio());
                         personDetailsTemp.setJXGZType(type);
                         personDetailsTemp.setJXGZAmount(temp.getAmount());
+                        personDetailsTemp.setScale(amountFlag);
                         personDetailsTemp.save();
                     }
                     // 保存了才能++
@@ -278,6 +283,7 @@ public class CalPRPInputDataFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (CalculatePRP) getActivity();
+        amountFlag = (int)new SharedPreferencesHelper(getContext()).getValue("AmountFlag",2);
         hintString = "";
         itemName = "";
         totalAmount = 0.0;

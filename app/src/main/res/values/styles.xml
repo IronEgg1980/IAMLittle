@@ -68,4 +68,20 @@
         <item name="android:gravity">center</item>
         <item name="android:paddingTop">4dp</item>
     </style>
+    <style name="main_button_group_shape">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginLeft">24dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+    <style name="main_button_style">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:background">@drawable/main_button_selector</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingLeft">8dp</item>
+    </style>
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">我是一个小小的助手</string>
+    <string name="app_name">小助手</string>
     <string name="person_manage">人员管理</string>
     <string name="shift_manage">班次设置</string>
     <string name="setup">设置</string>

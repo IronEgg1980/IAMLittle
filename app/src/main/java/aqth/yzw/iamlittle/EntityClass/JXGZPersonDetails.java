@@ -28,6 +28,15 @@ public class JXGZPersonDetails extends LitePalSupport {
     private double JXGZAmount;
     private double thatRatio;
     private int JXGZType;
+    private int scale;
+
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
 
     public Date getDate() {
         return date;

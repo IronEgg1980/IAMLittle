@@ -70,7 +70,7 @@ public class OTPDetailsFragment extends Fragment {
                     OTPFragment fragment =(OTPFragment) getFragmentManager().findFragmentByTag("Total");
                     if(fragment != null){
                         fragment.notifyDataChange();
-                        getActivity().setTitle("数据列表");
+                        getActivity().setTitle("历史数据列表");
                         ((OTPActivity)getActivity()).setShowDetails(false);
                         getFragmentManager().popBackStackImmediate(0,0);
                     }else{

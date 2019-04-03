@@ -7,6 +7,16 @@ public class JXGZSingleResultTemp extends LitePalSupport {
     private double ratio;
     private double amount;
 
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
+
+    private int scale;
+
     public String getPersonName() {
         return personName;
     }

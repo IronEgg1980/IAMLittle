@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntitySelectShift;
 import aqth.yzw.iamlittle.IItemClickListener;
@@ -77,7 +78,7 @@ public class ShiftSelectAdapter extends RecyclerView.Adapter {
                     itemClickListener.onClick(v,i);
                 }
             });
-            holder.unitAmountTV.setText(entityShift.getUnitAmount()+"");
+            holder.unitAmountTV.setText(Arith.doubleToString(entityShift.getUnitAmount()));
             holder.unitAmountTV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

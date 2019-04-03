@@ -49,7 +49,7 @@ public class OTPActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(mode == 1) {
                     if (showDetails) {
-                        setTitle("数据列表");
+                        setTitle("历史数据列表");
                         showDetails = false;
                         OTPFragment fragment1 = (OTPFragment) getSupportFragmentManager().findFragmentByTag("Total");
                         fragment1.notifyDataChange();
@@ -74,7 +74,7 @@ public class OTPActivity extends AppCompatActivity {
                     .add(R.id.common_linerarlayout,new OTPFragment(),"Total")
                     .addToBackStack(null)
                     .commit();
-            setTitle("数据列表");
+            setTitle("历史数据列表");
             }else{
             fragmentManager.beginTransaction()
                     .replace(R.id.common_linerarlayout,CountOTPFragment.newInstant(1),"Count")
@@ -88,7 +88,7 @@ public class OTPActivity extends AppCompatActivity {
         if(keyCode == KEYCODE_BACK){
             if(mode == 1) {
                 if (showDetails) {
-                    setTitle("数据列表");
+                    setTitle("历史数据列表");
                     showDetails = false;
                     OTPFragment fragment1 = (OTPFragment) getSupportFragmentManager().findFragmentByTag("Total");
                     fragment1.notifyDataChange();

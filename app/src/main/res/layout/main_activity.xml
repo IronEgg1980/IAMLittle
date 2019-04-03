@@ -121,16 +121,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="24dp"
                 android:background="@drawable/main_activity_calendar_shape"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:background="@drawable/calenda_title_shape"
+                    android:background="@drawable/today_schedule_title_shape"
                     android:gravity="center"
                     android:text="今日排班"
                     android:textColor="@android:color/white"
@@ -140,67 +140,74 @@
                     android:layout_margin="8dp"
                     android:id="@+id/activity_main_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="160dp" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal">
-
+                style="@style/main_button_group_shape"
+                android:layout_marginTop="48dp">
                 <Button
-                    android:id="@+id/person_manage"
-                    style="@style/NormalButtonStyle"
-                    android:drawableTop="@drawable/ic_person_indigo_600_24dp"
-                    android:text="@string/person_manage" />
-
-                <Button
-                    android:id="@+id/shift_manage"
-                    style="@style/NormalButtonStyle"
-                    android:drawableTop="@drawable/person_leave"
-                    android:text="@string/shift_manage" />
-
-                <Button
+                    android:layout_marginRight="8dp"
                     android:id="@+id/schedule_activity"
-                    style="@style/NormalButtonStyle"
-                    android:drawableTop="@drawable/person_onduty"
+                    style="@style/main_button_style"
+                    android:drawableLeft="@drawable/schedule_show"
                     android:text="@string/schedule" />
+                <Button
+                    android:id="@+id/schedule_input_activity"
+                    style="@style/main_button_style"
+                    android:drawableLeft="@drawable/schedule_input"
+                    android:text="开始排班" />
             </LinearLayout>
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                style="@style/main_button_group_shape"
+                android:layout_marginTop="16dp">
 
                 <Button
+                    android:layout_marginRight="8dp"
                     android:id="@+id/count_shift_list"
-                    style="@style/NormalButtonStyle"
-                    android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
+                    style="@style/main_button_style"
+                    android:drawableLeft="@drawable/money2"
                     android:text="加班费" />
 
                 <Button
                     android:id="@+id/count_shift"
-                    style="@style/NormalButtonStyle"
-                    android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
+                    style="@style/main_button_style"
+                    android:drawableLeft="@drawable/count_shift"
                     android:text="统计加班" />
             </LinearLayout>
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                style="@style/main_button_group_shape"
+                android:layout_marginTop="16dp">
+                <Button
+                    android:layout_marginRight="8dp"
+                    android:id="@+id/JXGZ"
+                    style="@style/main_button_style"
+                    android:drawableLeft="@drawable/money1"
+                    android:text="绩效工资" />
                 <Button
                     android:id="@+id/JXGZ_cal"
-                    style="@style/NormalButtonStyle"
-                    android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
+                    style="@style/main_button_style"
+                    android:drawableLeft="@drawable/ico_calprp"
                     android:text="计算绩效" />
+            </LinearLayout>
+            <LinearLayout
+                style="@style/main_button_group_shape"
+                android:layout_marginTop="16dp">
+
                 <Button
-                    android:id="@+id/JXGZ"
-                    style="@style/NormalButtonStyle"
-                    android:drawableTop="@drawable/ic_attach_money_amber_a700_24dp"
-                    android:text="绩效工资" />
+                    android:layout_marginRight="8dp"
+                    android:id="@+id/person_manage"
+                    style="@style/main_button_style"
+                    android:drawableLeft="@drawable/person_manage"
+                    android:text="@string/person_manage" />
+
+                <Button
+                    android:id="@+id/shift_manage"
+                    style="@style/main_button_style"
+                    android:drawableLeft="@drawable/shift"
+                    android:text="@string/shift_manage" />
+
+
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

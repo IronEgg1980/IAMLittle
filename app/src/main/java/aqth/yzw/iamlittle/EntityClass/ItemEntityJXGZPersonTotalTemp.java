@@ -3,6 +3,7 @@ package aqth.yzw.iamlittle.EntityClass;
 import java.util.ArrayList;
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.ItemType;
 import aqth.yzw.iamlittle.MyTool;
 
@@ -43,13 +44,13 @@ public class ItemEntityJXGZPersonTotalTemp extends ItemEntity {
             return "查无此人";
     }
     public String getAmountString(int flag){
-        return MyTool.doubleToString(getAmount(),flag)+"元";
+        return Arith.doubleToString(getAmount(),flag);
     }
 
     public double getAmount() {
         amount = 0;
         for (JXGZPersonDetailsTemp details : list){
-            amount += details.getJXGZAmount();
+            amount = Arith.add(amount,details.getJXGZAmount());
         }
         return amount;
     }

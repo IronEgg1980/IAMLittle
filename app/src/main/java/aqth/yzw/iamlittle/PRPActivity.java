@@ -23,7 +23,7 @@ public class PRPActivity extends AppCompatActivity {
         //finish();
         if(mode == 1) {
             if (isShowDetails) {
-                setTitle("绩效工资列表");
+                setTitle("历史数据列表");
                 isShowDetails = false;
                 PRPListFragment fragment1 = (PRPListFragment) getSupportFragmentManager().findFragmentByTag("List");
                 fragment1.notifyDataChange();
@@ -65,7 +65,7 @@ public class PRPActivity extends AppCompatActivity {
                     .add(R.id.common_linerarlayout,new PRPListFragment(),"List")
                     .addToBackStack(null)
                     .commit();
-            setTitle("绩效工资列表");
+            setTitle("历史数据列表");
         }
 //        else{
 //            PRPDetailsFragment fragment = new PRPDetailsFragment();

@@ -83,7 +83,7 @@ public class PersonSelectAdapter extends RecyclerView.Adapter {
             final ViewHolder holder = (ViewHolder)viewHolder;
             final ItemEntityPerson itemEntityPerson = (ItemEntityPerson)itemEntity;
             holder.nameTV.setText(itemEntityPerson.getName());
-            holder.ratioTV.setText(itemEntityPerson.getRatio()+"");
+            holder.ratioTV.setText(Double.toString(itemEntityPerson.getRatio()));
             holder.checkBox.setChecked(itemEntityPerson.isSelect());
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -9,7 +9,7 @@
         android:layout_weight="1"
         android:src="@drawable/ic_contact_phone_light_green_800_48dp"
         android:id="@+id/schedule_inputedit_bottom_item_imageview"
-        android:scaleType="centerInside"/>
+        android:scaleType="fitCenter"/>
     <TextView
         android:id="@+id/schedule_inputedit_bottom_item_textview"
         android:layout_width="match_parent"

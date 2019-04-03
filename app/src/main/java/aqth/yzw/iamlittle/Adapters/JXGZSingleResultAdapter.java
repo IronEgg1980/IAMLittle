@@ -1,5 +1,6 @@
 package aqth.yzw.iamlittle.Adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,9 +10,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.EntityClass.JXGZSingleResultTemp;
 import aqth.yzw.iamlittle.MyTool;
 import aqth.yzw.iamlittle.R;
+import aqth.yzw.iamlittle.SharedPreferencesHelper;
 
 public class JXGZSingleResultAdapter extends RecyclerView.Adapter<JXGZSingleResultAdapter.ViewHolder> {
     private List<JXGZSingleResultTemp> mList;
@@ -36,9 +39,10 @@ public class JXGZSingleResultAdapter extends RecyclerView.Adapter<JXGZSingleResu
     @Override
     public void onBindViewHolder( ViewHolder viewHolder, int i) {
         JXGZSingleResultTemp jxgzSingleResultTemp = mList.get(i);
+        int scale = jxgzSingleResultTemp.getScale();
         viewHolder.nameTV.setText(jxgzSingleResultTemp.getPersonName());
-        viewHolder.ratioTV.setText(jxgzSingleResultTemp.getRatio()+"");
-        String s = MyTool.doubleToString(jxgzSingleResultTemp.getAmount(),2);
+        viewHolder.ratioTV.setText(Double.toString(jxgzSingleResultTemp.getRatio()));
+        String s = Arith.doubleToString(jxgzSingleResultTemp.getAmount(),scale);
         viewHolder.amountTV.setText(s);
     }
 

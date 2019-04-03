@@ -9,6 +9,15 @@ public class JXGZPersonDetailsTemp extends LitePalSupport {
     private double JXGZAmount;
     private int JXGZType;
     private double thatRatio;
+    private int scale;
+
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
 
     public double getThatRatio() {
         return thatRatio;

@@ -19,7 +19,6 @@
         android:text="班次"/>
 
     <TextView
-        android:textColor="@android:color/white"
         android:id="@+id/today_schedule_item_person"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import org.litepal.LitePal;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -139,25 +140,25 @@ public class CalPRPDeduceFragment extends Fragment {
         });
         fragment.show(getFragmentManager(), "SelectPerson");
     }
-    private void calculate() {
+    private void calculate() {  // 4.3晚看到这里
         LitePal.deleteAll(JXGZSingleResultTemp.class);
         if (checkInput()) {
-            String s = "扣款人员：" + deducePersonName + "，扣款金额：" + MyTool.doubleToString(deduceAmount, amountFlag);
+            String s = "扣款人员：" + deducePersonName + "，扣款金额：" + Arith.doubleToString(deduceAmount, amountFlag);
             perAmount = 0;
             if (asignByRatio) {
                 double totalRatio = 0;
                 for (ItemEntityJXGZPersonDetailsTemp temp : othersList) {
                     if (temp.isSelect()) {
-                        totalRatio += temp.getJXGZPersonDetails().getThatRatio();
+                        totalRatio =Arith.add(totalRatio,temp.getJXGZPersonDetails().getThatRatio());
                     }
                 }
                 if (totalRatio == 0)
                     perAmount = 0;
                 else {
-                    perAmount = MyTool.getDouble(deduceAmount / totalRatio, amountFlag);
+                    perAmount = Arith.div(deduceAmount,totalRatio, amountFlag);
                 }
-                s += "\n分配方式：按系数分配，总系数：" + MyTool.doubleToString(totalRatio, amountFlag) +
-                        "，1.0系数分配金额：" + MyTool.doubleToString(perAmount, amountFlag) +
+                s += "\n分配方式：按系数分配，总系数：" + Double.toString(totalRatio) +
+                        "，1.0系数分配金额：" + Arith.doubleToString(perAmount, amountFlag) +
                         "\n\n分配明细如下：";
             } else {
                 int count = 0;
@@ -169,10 +170,10 @@ public class CalPRPDeduceFragment extends Fragment {
                 if (count == 0)
                     perAmount = 0;
                 else {
-                    perAmount = MyTool.getDouble(deduceAmount / count, amountFlag);
+                    perAmount = Arith.div(deduceAmount,count, amountFlag);
                 }
-                s += "\n分配方式：平均分配，分配人数：" + MyTool.doubleToString(count, 0) +
-                        "人，平均每人分配金额：" + MyTool.doubleToString(perAmount, amountFlag) +
+                s += "\n分配方式：平均分配，分配人数：" + Integer.toString(count) +
+                        "人，平均每人分配金额：" + Arith.doubleToString(perAmount, amountFlag) +
                         "\n\n分配明细如下：";
             }
             for (ItemEntityJXGZPersonDetailsTemp temp : othersList) {
@@ -181,12 +182,13 @@ public class CalPRPDeduceFragment extends Fragment {
                     double ratio = temp.getJXGZPersonDetails().getThatRatio();
                     double amount = perAmount;
                     if(asignByRatio){
-                        amount = MyTool.getDouble(ratio * perAmount,amountFlag);
+                        amount = Arith.mul(ratio , perAmount,amountFlag);
                     }
                     JXGZSingleResultTemp singleResultTemp = new JXGZSingleResultTemp();
                     singleResultTemp.setPersonName(name);
                     singleResultTemp.setRatio(ratio);
                     singleResultTemp.setAmount(amount);
+                    singleResultTemp.setScale(amountFlag);
                     singleResultTemp.save();
                 }
             }
@@ -209,12 +211,12 @@ public class CalPRPDeduceFragment extends Fragment {
             return false;
         }
         if (deduceByDays) {
-            day = Double.valueOf(inputET.getText().toString().trim());
-            if (day < 0) {
+            day = new BigDecimal(inputET.getText().toString().trim()).doubleValue();
+            if (Arith.sub(day,0) < 0) {
                 inputET.setError("请输入有效天数");
                 inputET.requestFocus();
                 return false;
-            } else if (day > maxDays) {
+            } else if (Arith.sub(day,maxDays)>0) {
                 inputET.setError("大于月份最大天数");
                 inputET.setText(maxDays+"");
                 inputET.selectAll();
@@ -224,17 +226,16 @@ public class CalPRPDeduceFragment extends Fragment {
             for (ItemEntityJXGZPersonDetailsTemp temp : deduceItemList) {
                 if (temp.isSelect()) {
                     b = true;
-                    deduceAmount += temp.getJXGZPersonDetails().getJXGZAmount();
+                    deduceAmount =Arith.add(deduceAmount,temp.getJXGZPersonDetails().getJXGZAmount());
                 }
             }
             if (!b) {
                 activity.showToast("没有选择扣款项目");
                 return false;
             }
-            deduceAmount = MyTool.getDouble(deduceAmount * day / maxDays, amountFlag);
-
+            deduceAmount = Arith.div(Arith.mul(deduceAmount ,day ), maxDays, amountFlag);
         } else {
-            deduceAmount = Double.valueOf(inputET.getText().toString().trim());
+            deduceAmount = new BigDecimal(inputET.getText().toString().trim()).doubleValue();
             if (deduceAmount < 0) {
                 inputET.setError("请输入有效金额");
                 inputET.requestFocus();
@@ -274,13 +275,14 @@ public class CalPRPDeduceFragment extends Fragment {
                         deduceName = inputDeduceNameET.getText().toString().trim();
                     }
                     // 保存
-                    deduceAmount = -deduceAmount;
+                    deduceAmount = Arith.mul(deduceAmount,-1.0);
                     JXGZPersonDetailsTemp temp = new JXGZPersonDetailsTemp();
                     temp.setPersonName(deducePersonName);
                     temp.setJXGZName(deduceName);
                     temp.setJXGZType(MyTool.JXGZ_DEDUCE);
                     temp.setJXGZAmount(deduceAmount);
                     temp.setThatRatio(thatRatio);
+                    temp.setScale(amountFlag);
                     temp.save();
                     for (ItemEntityJXGZPersonDetailsTemp item : othersList) {
                         if (item.isSelect()) {
@@ -291,10 +293,11 @@ public class CalPRPDeduceFragment extends Fragment {
                             temp2.setThatRatio(item.getJXGZPersonDetails().getThatRatio());
                             double amount = 0;
                             if (asignByRatio)
-                                amount = MyTool.getDouble(perAmount * item.getJXGZPersonDetails().getThatRatio(), amountFlag);
+                                amount = Arith.mul(perAmount ,item.getJXGZPersonDetails().getThatRatio(), amountFlag);
                             else
                                 amount = perAmount;
                             temp2.setJXGZAmount(amount);
+                            temp2.setScale(amountFlag);
                             temp2.save();
                         }
                     }
@@ -340,7 +343,7 @@ public class CalPRPDeduceFragment extends Fragment {
             deduceAmount = savedInstanceState.getDouble("DeduceAmount");
             deduceName = "扣款" + nameCount;
         }
-        amountFlag = 2;
+        amountFlag = (int)new SharedPreferencesHelper(getContext()).getValue("AmountFlag",2);
     }
 
     @Override

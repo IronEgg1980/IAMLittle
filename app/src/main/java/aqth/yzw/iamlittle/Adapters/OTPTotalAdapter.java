@@ -16,7 +16,7 @@ import aqth.yzw.iamlittle.EntityClass.OTPTotalEntity;
 import aqth.yzw.iamlittle.IItemClickListener;
 import aqth.yzw.iamlittle.ItemType;
 import aqth.yzw.iamlittle.R;
-
+// 4.2检查到了这里
 public class OTPTotalAdapter extends RecyclerView.Adapter {
     protected class ViewHolder extends RecyclerView.ViewHolder{
         private TextView recordTimeTV,startDayTV,endDayTV;
@@ -39,7 +39,7 @@ public class OTPTotalAdapter extends RecyclerView.Adapter {
 
     public OTPTotalAdapter(List<ItemEntity> list){
         mList = list;
-        recordFt = new SimpleDateFormat("统计时间：yyyy年M月d日 HH:mm");
+        recordFt = new SimpleDateFormat("记录时间：yyyy年M月d日 HH:mm");
         dayFt = new SimpleDateFormat("yyyy年M月d日");
     }
     @Override
@@ -57,7 +57,7 @@ public class OTPTotalAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
         if(getItemViewType(i) == 1){
             RecyclerviewEmptyViewHolder viewHolder1 = (RecyclerviewEmptyViewHolder)viewHolder;
-            viewHolder1.getTextView().setText("没有统计数据");
+            viewHolder1.getTextView().setText("没有历史数据");
         }else{
             ViewHolder viewHolder1 = (ViewHolder)viewHolder;
             OTPTotalEntity otpTotalEntity = (OTPTotalEntity)mList.get(i);

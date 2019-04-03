@@ -75,7 +75,7 @@ public class OTPFragment extends Fragment {
     }
     @Override
     public View onCreateView( LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle("数据列表");
+        getActivity().setTitle("历史数据列表");
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.show_total_fragment_layout,container,false);
         updateList();

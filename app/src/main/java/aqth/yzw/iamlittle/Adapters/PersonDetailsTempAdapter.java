@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonDetailsTemp;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonTotalTemp;
@@ -103,9 +104,10 @@ public class PersonDetailsTempAdapter extends RecyclerView.Adapter {
             case 1:// father
                 final FatherViewHolder holder2 = (FatherViewHolder)viewHolder;
                 final ItemEntityJXGZPersonTotalTemp personTotal = (ItemEntityJXGZPersonTotalTemp) itemEntity;
+                int scale = personTotal.getList().get(0).getScale();
                 holder2.nameTV.setText(personTotal.getPersonName());
-                holder2.totalAmountTV.setText(personTotal.getAmountString(2));
-                holder2.ratioTV.setText(personTotal.getThatRatio()+"");
+                holder2.totalAmountTV.setText(personTotal.getAmountString(scale));
+                holder2.ratioTV.setText(Double.toString(personTotal.getThatRatio()));
                 if(personTotal.isExpand()){
                     holder2.imageView.setImageResource(R.drawable.ic_arrow_up_grey_500_24dp);
                     holder2.bottom.setVisibility(View.VISIBLE);
@@ -127,16 +129,18 @@ public class PersonDetailsTempAdapter extends RecyclerView.Adapter {
             case 2:// child
                 ChildViewHolder holder3 = (ChildViewHolder)viewHolder;
                 ItemEntityJXGZPersonDetailsTemp personDetails = (ItemEntityJXGZPersonDetailsTemp) itemEntity;
+                int scale1 = personDetails.getJXGZPersonDetails().getScale();
                 holder3.nameTV.setText(personDetails.getJXGZPersonDetails().getJXGZName());
                 holder3.typeTV.setText(MyTool.getJXGZ_TypeString(personDetails.getJXGZPersonDetails().getJXGZType()));
-                holder3.amountTV.setText(MyTool.doubleToString(personDetails.getJXGZPersonDetails().getJXGZAmount(),2)+"元");
+                holder3.amountTV.setText(Arith.doubleToString(personDetails.getJXGZPersonDetails().getJXGZAmount(),scale1));
                 break;
             case 3:// details
                 DetailsViewHolder holder1 = (DetailsViewHolder)viewHolder;
                 ItemEntityJXGZTotalDetailsTemp totalDetails = (ItemEntityJXGZTotalDetailsTemp) itemEntity;
+                int scale2 = totalDetails.getDetails().getScale();
                 holder1.nameTV.setText(totalDetails.getDetails().getJXGZName());
                 holder1.typeTV.setText(MyTool.getJXGZ_TypeString(totalDetails.getDetails().getJXGZType()));
-                holder1.amountTV.setText(MyTool.doubleToString(totalDetails.getDetails().getJXGZAmount(),2)+"元");
+                holder1.amountTV.setText(Arith.doubleToString(totalDetails.getDetails().getJXGZAmount(),scale2));
                 break;
         }
     }

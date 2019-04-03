@@ -162,8 +162,8 @@ public class CountOTPFragment extends Fragment {
                     if (shift.isSelect()) {
                         String shiftName = shift.getShiftName();
                         double unitAmount = shift.getUnitAmount();
-                        int count = LitePal.where("personName = ? and shiftName = ? and date >= ? and date <= ?", personName, shiftName, s1, s2).count(Schedule.class);
-
+                        int count = LitePal.where("personName = ? and shiftName = ? and date >= ? and date <= ?",
+                                personName, shiftName, s1, s2).count(Schedule.class);
                         if (count > 0) {
                             OverTimePay overTimePay = new OverTimePay();
                             overTimePay.setPersonName(personName);
@@ -173,7 +173,8 @@ public class CountOTPFragment extends Fragment {
                             overTimePay.setStartDay(startDay);
                             overTimePay.setEndDay(endDay);
                             overTimePay.setRecordTime(recordTime);
-                            overTimePay.setAmount(count * unitAmount);
+                            overTimePay.setAmount(Arith.mul(count,unitAmount,2));
+                            overTimePay.setScale(2);
                             overTimePay.save();
                         }
                     }

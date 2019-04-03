@@ -47,7 +47,7 @@ public class CalculatePRP extends AppCompatActivity {
                 title = savedInstanceState.getString("Title");
             }
         }else{
-            title = "选择月份";
+            title = "计算绩效工资";
             Fragment fragment = new CalPRPSelectMonthFragment();
             fragmentManager.beginTransaction().add(R.id.calprp_activity_framlayout,fragment,"SelectMonth")
                     .addToBackStack(null)

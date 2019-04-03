@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonDetailsTemp;
 import aqth.yzw.iamlittle.MyTool;
 import aqth.yzw.iamlittle.R;
@@ -40,7 +41,6 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
             root = itemView.findViewById(R.id.select_person_root);
         }
     }
-    private int amountFlag = 2;
     private List<ItemEntityJXGZPersonDetailsTemp> mList;
     private int mode;
     public JXGZDeduceRecyclerViewAdapter(List<ItemEntityJXGZPersonDetailsTemp> list,int mode){
@@ -66,8 +66,9 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
         if(viewHolder !=null) {
             if (mode == MyTool.DEDUCE_ITEM_MODE){
                 DeduceItemViewHolder holder = (DeduceItemViewHolder)viewHolder;
+                int scale = temp.getJXGZPersonDetails().getScale();
                 holder.itemNameTV.setText(temp.getJXGZPersonDetails().getJXGZName());
-                holder.itemAmountTV.setText(MyTool.doubleToString(temp.getJXGZPersonDetails().getJXGZAmount(),amountFlag));
+                holder.itemAmountTV.setText(Arith.doubleToString(temp.getJXGZPersonDetails().getJXGZAmount(),scale));
                 holder.checkBox.setChecked(temp.isSelect());
                 holder.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -86,7 +87,7 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
             }else{
                 SelectOthersViewHolder holder = (SelectOthersViewHolder) viewHolder;
                 holder.personName.setText(temp.getJXGZPersonDetails().getPersonName());
-                holder.personRatio.setText(temp.getJXGZPersonDetails().getThatRatio()+"");
+                holder.personRatio.setText(Double.toString(temp.getJXGZPersonDetails().getThatRatio()));
                 holder.checkBox.setChecked(temp.isSelect());
                 holder.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override

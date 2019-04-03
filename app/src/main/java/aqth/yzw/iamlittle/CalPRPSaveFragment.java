@@ -39,7 +39,7 @@ public class CalPRPSaveFragment extends Fragment {
     private PersonDetailsTempAdapter totalAdapter, personAdapter;
     private TextView total;
     private SimpleDateFormat format;
-    private int amountFlag = 2;
+    private int amountFlag;
     private Button confirmBT;
     private Date recordTime;
     private void updateTotalList() {
@@ -50,13 +50,13 @@ public class CalPRPSaveFragment extends Fragment {
         List<JXGZDetailsTemp> temp1 = LitePal.order("JXGZType").find(JXGZDetailsTemp.class);
         if (temp1 != null && temp1.size() > 0) {
             for (JXGZDetailsTemp details : temp1) {
-                totalValue+=details.getJXGZAmount();
+                totalValue =Arith.add(totalValue,details.getJXGZAmount());
                 totalDetailsList.add(new ItemEntityJXGZTotalDetailsTemp(details));
             }
         }else{
             totalDetailsList.add(new ItemEntity());
         }
-        total.setText(format.format(activity.getDate())+"\n总金额："+MyTool.doubleToString(totalValue,amountFlag));
+        total.setText(format.format(activity.getDate())+"\n总金额："+Arith.doubleToString(totalValue,amountFlag));
     }
 
     private void updatePersonList() {
@@ -85,7 +85,6 @@ public class CalPRPSaveFragment extends Fragment {
         }
     }
     private void showChild(int position) {
-        //personAdapter.notifyItemChanged(position);
         ItemEntity itemEntity = personDetailsList.get(position);
         if (itemEntity.getType() == ItemType.JXGZ_PERSON_TOTAL) {
             ItemEntityJXGZPersonTotalTemp total = (ItemEntityJXGZPersonTotalTemp) itemEntity;
@@ -94,7 +93,6 @@ public class CalPRPSaveFragment extends Fragment {
             int tempPos = position + 1;
             for (int i = 0; i < count; i++) {
                 personDetailsList.add(tempPos + i, new ItemEntityJXGZPersonDetailsTemp(temp.get(i)));
-                //personAdapter.notifyItemChanged(tempPos + i);
             }
             personAdapter.notifyItemRangeChanged(position, personAdapter.getItemCount() - position);
         }
@@ -147,6 +145,7 @@ public class CalPRPSaveFragment extends Fragment {
                 details.setJXGZName(temp.getJXGZName());
                 details.setJXGZType(temp.getJXGZType());
                 details.setJXGZAmount(temp.getJXGZAmount());
+                details.setScale(temp.getScale());
                 details.save();
             }
             for(JXGZPersonDetailsTemp temp : LitePal.findAll(JXGZPersonDetailsTemp.class)){
@@ -158,6 +157,7 @@ public class CalPRPSaveFragment extends Fragment {
                 details.setJXGZAmount(temp.getJXGZAmount());
                 details.setPersonName(temp.getPersonName());
                 details.setThatRatio(temp.getThatRatio());
+                details.setScale(temp.getScale());
                 details.save();
             }
             LitePal.deleteAll(JXGZDetailsTemp.class);
@@ -177,6 +177,7 @@ public class CalPRPSaveFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (CalculatePRP)getActivity();
+        amountFlag =(int) new SharedPreferencesHelper(getContext()).getValue("AmountFlag",2);
         totalDetailsList = new ArrayList<>();
         personDetailsList = new ArrayList<>();
         format = new SimpleDateFormat("绩效工资月份：yyyy年M月份");

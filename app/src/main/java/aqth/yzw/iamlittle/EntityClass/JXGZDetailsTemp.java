@@ -6,6 +6,15 @@ public class JXGZDetailsTemp extends LitePalSupport {
     private String JXGZName;
     private double JXGZAmount;
     private int JXGZType;
+    private int scale;
+
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
 
     public String getJXGZName() {
         return JXGZName;

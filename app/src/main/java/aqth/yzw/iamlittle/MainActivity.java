@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
@@ -120,6 +121,19 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private long getUnScheduledWeek(long l){
+        long result = l;
+        Date date = new Date(l);
+        String[] dates = MyTool.getWeekStartEndString(date);
+        List<Schedule> temp = LitePal.order("personname")
+                .where("date >= ? and date <= ?",dates[0],dates[1]).find(Schedule.class);
+        if(temp != null && temp.size() >0){
+            result = result + MyTool.ONE_WEEK_MILLISECOND;
+            return getUnScheduledWeek(result);
+        }else {
+            return result;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         toolbarLayout.setExpandedTitleColor(Color.WHITE);
         toolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
         final android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_person_indigo_600_24dp);
+        toolbar.setNavigationIcon(R.drawable.icon_little);
         setSupportActionBar(toolbar);
         c =  new GregorianCalendar();
         yearMonthFt = new SimpleDateFormat("yyyy年M月");
@@ -161,6 +175,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,ScheduleActivity.class));
+            }
+        });
+        findViewById(R.id.schedule_input_activity).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long l = getUnScheduledWeek(c.getTimeInMillis());
+                Intent intent = new Intent();
+                intent.putExtra("IsAddMode",true);
+                intent.putExtra("Date",l);
+                intent.setClass(MainActivity.this,ScheduleInputEditActivity.class);
+                startActivity(intent);
             }
         });
         findViewById(R.id.person_manage).setOnClickListener(new View.OnClickListener() {

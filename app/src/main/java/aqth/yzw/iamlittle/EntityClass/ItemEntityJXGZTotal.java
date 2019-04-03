@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.ItemType;
 import aqth.yzw.iamlittle.MyTool;
 
@@ -35,26 +36,26 @@ public class ItemEntityJXGZTotal extends ItemEntity {
             return new GregorianCalendar().getTime();
     }
     public String getTAString(int flag){
-        return MyTool.doubleToString(getTotalAmount(),flag)+"元";
+        return Arith.doubleToString(getTotalAmount(),flag);
     }
     public String getRAString(int flag){
-        return MyTool.doubleToString(getRatioAmount(),flag)+"元";
+        return Arith.doubleToString(getRatioAmount(),flag);
     }
     public String getAAString(int flag){
-        return MyTool.doubleToString(getAverageAmount(),flag)+"元";
+        return Arith.doubleToString(getAverageAmount(),flag);
     }
     public String getDAString(int flag){
-        return MyTool.doubleToString(getDeduceAmount(),flag)+"元";
+        return Arith.doubleToString(getDeduceAmount(),flag);
     }
     public double getTotalAmount() {
-        return (getRatioAmount()+ getAverageAmount() + getDeduceAmount());
+        return Arith.add(Arith.add(getRatioAmount(), getAverageAmount()),getDeduceAmount());
     }
 
     public double getRatioAmount() {
         double d = 0;
         for(JXGZDetails details : list){
             if(details.getJXGZType() == MyTool.JXGZ_RATIO){
-                d += details.getJXGZAmount();
+                d =Arith.add(d,details.getJXGZAmount());
             }
         }
         return d;
@@ -64,7 +65,7 @@ public class ItemEntityJXGZTotal extends ItemEntity {
         double d = 0;
         for(JXGZDetails details : list){
             if(details.getJXGZType() == MyTool.JXGZ_AVERAGE){
-                d += details.getJXGZAmount();
+                d =Arith.add(d,details.getJXGZAmount());
             }
         }
         return d;
@@ -74,7 +75,7 @@ public class ItemEntityJXGZTotal extends ItemEntity {
         double d = 0;
         for(JXGZDetails details : list){
             if(details.getJXGZType() == MyTool.JXGZ_DEDUCE){
-                d += details.getJXGZAmount();
+                d = Arith.add(d, details.getJXGZAmount());
             }
         }
         return d;

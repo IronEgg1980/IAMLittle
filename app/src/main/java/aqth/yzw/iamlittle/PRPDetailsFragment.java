@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,6 +55,7 @@ public class PRPDetailsFragment extends Fragment {
             for (JXGZDetails details : temp1) {
                 totalDetailsList.add(new ItemEntityJXGZTotalDetails(details));
             }
+            updatePersonList();
         }else{
             totalDetailsList.add(new ItemEntity());
         }
@@ -65,17 +67,19 @@ public class PRPDetailsFragment extends Fragment {
         }
         personDetailsList.clear();
         List<String> people = new ArrayList<>();
-        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT personName FROM JXGZPersonDetails ORDER BY personName");
+        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT personName FROM JXGZPersonDetails");
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                people.add(cursor.getString(0));
+                String name = cursor.getString(0);
+                if(!TextUtils.isEmpty(name))
+                    people.add(name);
             } while (cursor.moveToNext());
         }
         if (people.size() > 0) {
             for (String s : people) {
                 List<JXGZPersonDetails> details = LitePal.where("personName = ? and recordTime = ?",
                         s, recordTime).find(JXGZPersonDetails.class);
-                if (details != null) {
+                if (details != null && details.size() > 0) {
                     personDetailsList.add(new ItemEntityJXGZPersonTotal(details));
                 }
             }
@@ -126,7 +130,7 @@ public class PRPDetailsFragment extends Fragment {
                         activity.finish();
                     }else{
                         activity.setShowDetails(false);
-                        activity.setTitle("绩效工资列表");
+                        activity.setTitle("历史数据列表");
                         PRPListFragment fragment =(PRPListFragment) getFragmentManager().findFragmentByTag("List");
                         if(fragment!=null){
                             fragment.notifyDataChange();
@@ -208,7 +212,6 @@ public class PRPDetailsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         updateTotalList();
-        updatePersonList();
     }
 
     @Override

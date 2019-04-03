@@ -61,16 +61,17 @@ public class PRPTotalAdapter extends RecyclerView.Adapter {
         ItemEntity itemEntity = mList.get(i);
         if(itemEntity.getType() == ItemType.EMPTY){
             RecyclerviewEmptyViewHolder holder = (RecyclerviewEmptyViewHolder)viewHolder;
-            holder.getTextView().setText("没有绩效工资数据");
+            holder.getTextView().setText("没有历史数据");
         }else{
             ViewHolder holder = (ViewHolder)viewHolder;
             final ItemEntityJXGZTotal total = (ItemEntityJXGZTotal)itemEntity;
             holder.dateTV.setText(format1.format(total.getDate()));
-            holder.recordTimeTV.setText(format2.format(total.getRecordTime()));
-            holder.totalAmountTV.setText(total.getTAString(2));
-            holder.ratioAmountTV.setText(total.getRAString(2));
-            holder.averageAmountTV.setText(total.getAAString(2));
-            holder.deducTV.setText(total.getDAString(2));
+            holder.recordTimeTV.setText("记录时间："+format2.format(total.getRecordTime()));
+            int scale = total.getList().get(0).getScale();
+            holder.totalAmountTV.setText(total.getTAString(scale));
+            holder.ratioAmountTV.setText(total.getRAString(scale));
+            holder.averageAmountTV.setText(total.getAAString(scale));
+            holder.deducTV.setText(total.getDAString(scale));
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

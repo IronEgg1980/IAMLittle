@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RadioButton;
 
 import org.litepal.LitePal;
 
@@ -26,7 +27,25 @@ public class CalPRPSelectMonthFragment extends Fragment {
     private DatePicker datePicker;
     private Calendar calendar;
     private SimpleDateFormat format;
-
+    private RadioButton radioButton1,radioButton2,radioButton3;
+    private SharedPreferencesHelper sharedPreferencesHelper;
+    private int amountFlag;
+    private void setRadioButtonChecked(int amountFlag){
+        if(amountFlag == 0)
+            radioButton1.setChecked(true);
+        if(amountFlag == 1)
+            radioButton2.setChecked(true);
+        if(amountFlag == 2)
+            radioButton3.setChecked(true);
+    }
+    private void setAmountFlag(){
+        if(radioButton1.isChecked())
+            sharedPreferencesHelper.put("AmountFlag",0);
+        if(radioButton2.isChecked())
+            sharedPreferencesHelper.put("AmountFlag",1);
+        if(radioButton3.isChecked())
+            sharedPreferencesHelper.put("AmountFlag",2);
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +53,8 @@ public class CalPRPSelectMonthFragment extends Fragment {
         activity = (CalculatePRP)getActivity();
         activity.setDate(calendar.getTime());
         format = new SimpleDateFormat("yyyy年M月份");
+        sharedPreferencesHelper = new SharedPreferencesHelper(getContext());
+        amountFlag = (int) sharedPreferencesHelper.getValue("AmountFlag",2);
     }
 
     @Nullable
@@ -48,6 +69,28 @@ public class CalPRPSelectMonthFragment extends Fragment {
                 calendar.set(year,monthOfYear,dayOfMonth);
             }
         });
+        radioButton1 = view.findViewById(R.id.calprp_select_amountFlag0);
+        radioButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAmountFlag();
+            }
+        });
+        radioButton2 = view.findViewById(R.id.calprp_select_amountFlag1);
+        radioButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAmountFlag();
+            }
+        });
+        radioButton3 = view.findViewById(R.id.calprp_select_amountFlag2);
+        radioButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAmountFlag();
+            }
+        });
+        setRadioButtonChecked(amountFlag);
         Button confirm = view.findViewById(R.id.calprp_selectmonth_fragment_confirm);
         final Button cancel = view.findViewById(R.id.calprp_selectmonth_fragment_cancel);
         confirm.setOnClickListener(new View.OnClickListener() {

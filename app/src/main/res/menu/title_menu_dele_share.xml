@@ -9,7 +9,7 @@
         app:showAsAction="always"/>
     <item
         android:id="@+id/title_menu_share"
-        android:icon="@drawable/ic_check_box_outline_blank_white_24dp"
+        android:icon="@drawable/ic_share_white_24dp"
         android:title="发送"
         app:showAsAction="always"/>
 </menu>

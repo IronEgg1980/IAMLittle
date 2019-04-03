@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.OTPDetails;
 import aqth.yzw.iamlittle.EntityClass.OTPPersonTotalEntity;
@@ -74,7 +75,7 @@ public class OTPDetailsAdapter extends RecyclerView.Adapter {
             PersonTotalVH holder = (PersonTotalVH)viewHolder;
             OTPPersonTotalEntity entity = (OTPPersonTotalEntity)itemEntity;
             holder.nameTV.setText(entity.getPersonName());
-            holder.amountTV.setText(entity.getTotalAmount()+"");
+            holder.amountTV.setText(Double.toString(entity.getTotalAmount()));
         }else{
             PersonDetailsVH holder = (PersonDetailsVH)viewHolder;
             OTPDetails entity = (OTPDetails)itemEntity;
@@ -86,9 +87,9 @@ public class OTPDetailsAdapter extends RecyclerView.Adapter {
                 holder.imageView.setImageResource(R.drawable.line1);
             }
             holder.shiftNameTV.setText(entity.getShiftName());
-            holder.unitAmountTV.setText(entity.getUniteAmount()+"元");
-            holder.amountTV.setText(entity.getAmount()+"");
-            holder.countTV.setText(entity.getCount()+"个");
+            holder.unitAmountTV.setText(Arith.doubleToString(entity.getUniteAmount()));
+            holder.amountTV.setText(Arith.doubleToString(entity.getAmount()));
+            holder.countTV.setText(Arith.intToString(entity.getCount()));
         }
     }
 

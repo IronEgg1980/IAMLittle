@@ -13,6 +13,16 @@ public class OverTimePay extends LitePalSupport {
     private double shiftUA;
     private int shiftCount;
     private double amount;
+    private int scale;
+
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
+
     public Date getStartDay() {
         return startDay;
     }

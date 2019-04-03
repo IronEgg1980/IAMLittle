@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityShift;
 import aqth.yzw.iamlittle.EntityClass.Shift;
@@ -111,7 +112,7 @@ public class ShiftManageAdapter extends RecyclerView.Adapter {
                 vieHolder2.typeColorTV.setBackground(new ColorDrawable(Color.GREEN));
                 vieHolder2.typeTextTV.setText("类型：统计");
                 vieHolder2.danweijine.setText("单位金额：");
-                vieHolder2.unitAmountTV.setText(shift.getUnitAmount()+"");
+                vieHolder2.unitAmountTV.setText(Arith.doubleToString(shift.getUnitAmount()));
             }
 //            vieHolder2.unitAmountTV.setOnClickListener(new View.OnClickListener() {
 //                @Override

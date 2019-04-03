@@ -11,10 +11,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.litepal.LitePal;
@@ -23,9 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import aqth.yzw.iamlittle.Adapters.SelectDeducePersonAdapter;
+import aqth.yzw.iamlittle.EntityClass.ItemEntity;
+import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonDetails;
+import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonDetailsTemp;
+import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
 
 public class SelectDeducePersonDialogFragment extends DialogFragment {
-    private List<String> list;
+    private List<ItemEntity> list;
     private String personName;
     private boolean flag;
     private RecyclerView recyclerView;
@@ -44,9 +50,17 @@ public class SelectDeducePersonDialogFragment extends DialogFragment {
         Cursor cursor = LitePal.findBySQL("SELECT DISTINCT personname FROM JXGZPersonDetailsTemp");
         if(cursor != null && cursor.moveToFirst()){
             do{
-                list.add(cursor.getString(0));
+                String name = cursor.getString(0);
+                if(TextUtils.isEmpty(name))
+                    continue;
+                JXGZPersonDetailsTemp temp = LitePal.where("personname = ?",name).findFirst(JXGZPersonDetailsTemp.class);
+                if(temp !=null) {
+                    list.add(new ItemEntityJXGZPersonDetailsTemp(temp));
+                }
             }while (cursor.moveToNext());
         }
+        if(list.size() == 0)
+            list.add(new ItemEntity());
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +72,7 @@ public class SelectDeducePersonDialogFragment extends DialogFragment {
         adapter.setItemClickListener(new IItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                personName = list.get(position);
+                personName =((ItemEntityJXGZPersonDetailsTemp) list.get(position)).getJXGZPersonDetails().getPersonName();
                 flag = true;
                 dismiss();
             }
@@ -96,7 +110,7 @@ public class SelectDeducePersonDialogFragment extends DialogFragment {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.6), ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.75), (int) (dm.heightPixels * 0.5));
         }
         fillData();
         adapter.notifyDataSetChanged();

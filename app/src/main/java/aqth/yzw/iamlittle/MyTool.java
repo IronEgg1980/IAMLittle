@@ -48,7 +48,7 @@ public final class MyTool {
                 typeText = "扣款";
                 break;
             case MyTool.JXGZ_ADD:
-                typeText = "分配他人扣款";
+                typeText = "他人扣款分配";
                 break;
             case MyTool.JXGZ_ADJUST:
                 typeText = "计算误差";
@@ -181,38 +181,6 @@ public final class MyTool {
         times[0] = String.valueOf(temp[0]);
         times[1] = String.valueOf(temp[1]);
         return times;
-    }
-    public static String doubleToString(double d,int flag){
-        if(flag<0)
-            return String.valueOf(d);
-        String s = "0.";
-        DecimalFormat format;
-        if(flag == 0){
-            format = new DecimalFormat("0");
-        }else{
-            for(int i = 0;i<flag;i++){
-                s+="0";
-            }
-            format = new DecimalFormat(s);
-        }
-        return format.format(d);
-    }
-    public static String intToString(int i){
-        DecimalFormat format = new DecimalFormat("0");
-        return format.format(i);
-    }
-    public static double getDouble(double d, int flag) {
-        double _d = 0;
-        if (flag < 0)
-            return _d;
-        int m = 1;
-        double n = 1.0;
-        for (int i = 0; i < flag; i++) {
-            n = n * 10;
-            m = m * 10;
-        }
-        _d = Math.round(d * m) / n;
-        return _d;
     }
 
     public static Date getMonday(Date date) {
