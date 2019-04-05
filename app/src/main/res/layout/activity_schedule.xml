@@ -92,11 +92,18 @@
                         style="@style/ScheduleTitleButtonStyle"
                         android:text="调整" />
                     <Button
+                        android:id="@+id/schedule_activity_importout"
+                        android:layout_marginRight="8dp"
+                        android:drawableTop="@drawable/ic_share_white_24dp"
+                        style="@style/ScheduleTitleButtonStyle"
+                        android:text="导出" />
+                    <Button
                         android:id="@+id/schedule_activity_deleschedule"
                         android:layout_marginRight="32dp"
                         android:drawableTop="@drawable/ic_delete_white_24dp"
                         style="@style/ScheduleTitleButtonStyle"
                         android:text="删除" />
+
                     <Button
                         android:id="@+id/schedule_activity_back"
                         android:drawableTop="@drawable/ic_close_white_24dp"

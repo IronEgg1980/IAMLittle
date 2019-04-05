@@ -1,12 +1,10 @@
 package aqth.yzw.iamlittle;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -49,18 +47,17 @@ import aqth.yzw.iamlittle.EntityClass.ScheduleTemplate;
 import aqth.yzw.iamlittle.EntityClass.Shift;
 
 public class ScheduleInputEditActivity extends AppCompatActivity {
-
     private TextView[] dateTVs;
     private TextView bottomTV;
     private Date[] dates;
     private Date today;
     private SimpleDateFormat format1,simpleDateFormat;
     private Calendar c;
-    private boolean showNongLi,isAddMode;
+    private boolean showNongLi,isAddMode,hasInputed;
+    private SharedPreferencesHelper helper;
     private List<ItemEntity> list;
     private RecyclerView recyclerView,bottomRecyclerView;
     private ScheduleShowAdapter adapter;
-    private SharedPreferences preference;
     private CheckBox showNongLiCB;
     private PersonShiftInputAdapter personAdapter,shiftAdapter;
     private List<ItemEntity> people,shifts;
@@ -167,6 +164,52 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         });
         popupMenu.show();
     }
+    private void onPauseSave(){
+        if(list.size() >=1 && list.get(0).getType() == ItemType.SCHEDULE_WEEK_VIEW){
+            for(int i = 0;i<list.size() -1;i++){
+                ItemEntity itemEntity = list.get(i);
+                if(itemEntity.getType() == ItemType.SCHEDULE_WEEK_VIEW){
+                    ScheduleTemplate template = new ScheduleTemplate();
+                    template.setName("OnPauseSaved");
+                    template.setRowNumber(i+1);
+                    ItemEntityScheduleInput input = (ItemEntityScheduleInput)itemEntity;
+                    template.setPersonName(input.getValues(0));
+                    template.setShift1(input.getValues(1));
+                    template.setShift2(input.getValues(2));
+                    template.setShift3(input.getValues(3));
+                    template.setShift4(input.getValues(4));
+                    template.setShift5(input.getValues(5));
+                    template.setShift6(input.getValues(6));
+                    template.setShift7(input.getValues(7));
+                    template.setNote(input.getValues(8));
+                    template.save();
+                }
+            }
+        }
+    }
+    private void onPauseResume(){
+        List<ScheduleTemplate> temp = LitePal.order("rownumber").where("name = 'OnPauseSaved'").find(ScheduleTemplate.class);
+        for(ScheduleTemplate template:temp){
+            ItemEntityScheduleInput input = new ItemEntityScheduleInput();
+            input.setValues(0,template.getPersonName());
+            input.setValues(1,template.getShift1());
+            input.setValues(2,template.getShift2());
+            input.setValues(3,template.getShift3());
+            input.setValues(4,template.getShift4());
+            input.setValues(5,template.getShift5());
+            input.setValues(6,template.getShift6());
+            input.setValues(7,template.getShift7());
+            input.setValues(8,template.getNote());
+            list.add(input);
+        }
+        list.add(new ItemEntity());
+        adapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(0);
+        adapter.setCurrentCell(0,0);
+        mX = 0;
+        mY = 0;
+        setBottomRecyclerViewAdapter(1);
+    }
     private void saveTemplate(){
         if(list.size() == 1){
             Toast toast = Toast.makeText(recyclerView.getContext(),"没有排班数据，无法保存模板！",Toast.LENGTH_SHORT);
@@ -251,13 +294,13 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         dialogFragment.show(getSupportFragmentManager(),"LoadTemplate");
     }
     private void saveData(){
-        saveBT.setEnabled(false);
         if(list.size() == 1){
             Toast toast = Toast.makeText(recyclerView.getContext(),"请先排班再保存！",Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER,0,0);
             toast.show();
             return;
         }
+        saveBT.setEnabled(false);
         final List<Integer> temp = new ArrayList<>();
         for (int k = 0;k<list.size();k++) {
             ItemEntity itemEntity = list.get(k);
@@ -292,6 +335,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
                             Toast toast = Toast.makeText(recyclerView.getContext(),"已清空数据，无需保存，请继续排班！",Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER,0,0);
                             toast.show();
+                            saveBT.setEnabled(true);
                         }else{
                             SaveData saveData = new SaveData();
                             saveData.execute();
@@ -306,6 +350,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
                         }
                         bottomRecyclerView.setAdapter(personAdapter);
                         appBarLayout.setExpanded(false);
+                        saveBT.setEnabled(true);
                     }
                 }
                 @Override
@@ -408,17 +453,75 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
             }
         }
     }
+    private void selectDate() {
+        SelectDateDialogFragment fragment = SelectDateDialogFragment.newInstant(c.getTimeInMillis());
+        fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+            @Override
+            public void onDissmiss(boolean flag) {
+
+            }
+
+            @Override
+            public void onDissmiss(boolean flag, Object object) {
+                if (flag) {
+                    long l = (long) object;
+                    c.setTimeInMillis(l);
+                    changeTitleText();
+                    String[] dates = MyTool.getWeekStartEndString(c.getTime());
+                    if(LitePal.isExist(Schedule.class,"date >= ? and date <= ?",dates[0],dates[1])){
+                        showDialog(dates,l);
+                    }else{
+                        updateList(dates,false);
+                    }
+                    fillPersonList();
+                }
+            }
+        });
+        fragment.show(getSupportFragmentManager(), "SelectDate");
+    }
+
+    private void showDialog(final String[] dates,long l){
+        MyDialogFragment fragment = MyDialogFragment.newInstant("已存在排班数据，是否重新排班？",
+                "调整","重排");
+        fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+            @Override
+            public void onDissmiss(boolean flag) {
+                if(flag){
+                    LitePal.deleteAll(Schedule.class,"date >= ? and date <= ?",dates[0],dates[1]);
+                    updateList(dates,false);
+                }else{
+                    updateList(dates,true);
+                }
+            }
+
+            @Override
+            public void onDissmiss(boolean flag, Object object) {
+
+            }
+        });
+        fragment.show(getSupportFragmentManager(),"ShowDialog");
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_input_edit);
         mX = -1;
         mY = -1;
-        final Intent intent = getIntent();
-        isAddMode = intent.getBooleanExtra("IsAddMode",true);
         c = new GregorianCalendar();
         today = c.getTime();
-        final long l = intent.getLongExtra("Date",c.getTimeInMillis());
+        Intent intent = getIntent();
+        helper = new SharedPreferencesHelper(ScheduleInputEditActivity.this);
+        hasInputed = false;
+        showNongLi =(boolean) helper.getValue("ShowNongLi",false);
+        isAddMode = intent.getBooleanExtra("IsAddMode",true);
+        long l = intent.getLongExtra("Date",c.getTimeInMillis());
+        if(savedInstanceState != null){
+            mX = savedInstanceState.getInt("mX");
+            mY = savedInstanceState.getInt("mY");
+            hasInputed = savedInstanceState.getBoolean("HasInputed");
+            isAddMode = savedInstanceState.getBoolean("IsAddMode");
+            l = savedInstanceState.getLong("CurrentMills");
+        }
         c.setTimeInMillis(l);
         list = new ArrayList<>();
         people = new ArrayList<>();
@@ -487,16 +590,12 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
 
             }
         });
-        preference = PreferenceManager.getDefaultSharedPreferences(ScheduleInputEditActivity.this);
-        showNongLi = preference.getBoolean("ShowNongLi",false);
         showNongLiCB = findViewById(R.id.schedule_inputedit_activity_showNongLiCheckBox);
         showNongLiCB.setChecked(showNongLi);
         showNongLiCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = preference.edit();
-                editor.putBoolean("ShowNongLi",isChecked);
-                editor.apply();
+                helper.put("ShowNongLi",isChecked);
                 showNongLi = isChecked;
                 changeTitleText();
             }
@@ -531,6 +630,12 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showSettingMenu(v);
+            }
+        });
+        findViewById(R.id.schedule_inputedit_activity_selectdate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectDate();
             }
         });
         dateTVs = new TextView[7];
@@ -654,9 +759,33 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(ScheduleInputEditActivity.this));
-        updateList(MyTool.getWeekStartEndString(c.getTime()),!isAddMode);
+        if(hasInputed){
+            onPauseResume();
+            adapter.setCurrentCell(mX,mY);
+            adapter.notifyItemChanged(mX);
+            if(mY == 0){
+                setBottomRecyclerViewAdapter(1);
+                appBarLayout.setExpanded(false);
+            }else{
+                setBottomRecyclerViewAdapter(2);
+                appBarLayout.setExpanded(false);
+            }
+        }else {
+            updateList(MyTool.getWeekStartEndString(c.getTime()), !isAddMode);
+        }
         fillShiftList();
         changeTitleText();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        onPauseSave();
+        outState.putInt("mX",mX);
+        outState.putInt("mY",mY);
+        outState.putBoolean("HasInputed",hasInputed);
+        outState.putBoolean("IsAddMode",isAddMode);
+        outState.putLong("CurrentMills",c.getTimeInMillis());
     }
 
     protected class SaveData extends AsyncTask<Void,Integer,Boolean>{
