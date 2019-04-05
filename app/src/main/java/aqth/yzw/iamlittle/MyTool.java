@@ -77,7 +77,7 @@ public final class MyTool {
         return c.getTimeInMillis();
     }
     public static String getDayStartString(Date date){
-        return String.valueOf(getDayStart(date));
+        return Long.toString(getDayStart(date));
     }
     public static long getDayEnd(Date date){
         Calendar c = new GregorianCalendar();
@@ -89,18 +89,12 @@ public final class MyTool {
         return c.getTimeInMillis();
     }
     public static String getDayEndString(Date date){
-        return String.valueOf(getDayEnd(date));
+        return Long.toString(getDayEnd(date));
     }
     public static long[] getDayStartEnd(Date date) {
         long[] times = new long[2];
-        Calendar c = new GregorianCalendar();
-        c.setTime(date);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long start = c.getTimeInMillis();
-        long end = start - 1 + ONE_DAY_MILLISECOND;
+        long start = getDayStart(date);
+        long end = getDayEnd(date);
         times[0] = start;
         times[1] = end;
         return times;
@@ -109,7 +103,7 @@ public final class MyTool {
     public static long[] getWeekStartEnd(Date date) {
         long[] times = new long[2];
         Calendar c = new GregorianCalendar();
-        c.setTime(date);
+        c.setTime(getMonday(date));
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
@@ -125,6 +119,7 @@ public final class MyTool {
         long[] times = new long[2];
         Calendar c = new GregorianCalendar();
         c.setTime(date);
+        c.set(Calendar.DAY_OF_MONTH,1);
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
@@ -140,6 +135,8 @@ public final class MyTool {
         long[] times = new long[2];
         Calendar c = new GregorianCalendar();
         c.setTime(date);
+        c.set(Calendar.MONTH,0);
+        c.set(Calendar.DAY_OF_MONTH,1);
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
@@ -154,32 +151,32 @@ public final class MyTool {
     public static String[] getMonthStartAndEndString(Date date) {
         String[] times = new String[2];
         long[] temp = getMonthStartEnd(date);
-        times[0] = String.valueOf(temp[0]);
-        times[1] = String.valueOf(temp[1]);
+        times[0] = Long.toString(temp[0]);
+        times[1] = Long.toString(temp[1]);
         return times;
     }
 
     public static String[] getDayStartEndString(Date date) {
         String[] times = new String[2];
         long[] temp = getDayStartEnd(date);
-        times[0] = String.valueOf(temp[0]);
-        times[1] = String.valueOf(temp[1]);
+        times[0] = Long.toString(temp[0]);
+        times[1] = Long.toString(temp[1]);
         return times;
     }
 
     public static String[] getWeekStartEndString(Date date) {
         String[] times = new String[2];
         long[] temp = getWeekStartEnd(date);
-        times[0] = String.valueOf(temp[0]);
-        times[1] = String.valueOf(temp[1]);
+        times[0] = Long.toString(temp[0]);
+        times[1] = Long.toString(temp[1]);
         return times;
     }
 
     public static String[] getYearStartEndString(Date date) {
         String[] times = new String[2];
         long[] temp = getYearStartEnd(date);
-        times[0] = String.valueOf(temp[0]);
-        times[1] = String.valueOf(temp[1]);
+        times[0] = Long.toString(temp[0]);
+        times[1] = Long.toString(temp[1]);
         return times;
     }
 
@@ -187,7 +184,6 @@ public final class MyTool {
         Calendar calendar = new GregorianCalendar(Locale.CHINA);
         calendar.setTime(date);
         int day = calendar.get(Calendar.DAY_OF_WEEK);
-        Log.d("殷宗旺", "getMonday: "+day);
         int i = (day +5) % 7;
         calendar.add(Calendar.DAY_OF_MONTH,-i);
         return calendar.getTime();

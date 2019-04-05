@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -35,6 +37,12 @@ import android.widget.Toast;
 
 import org.litepal.LitePal;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +54,9 @@ import aqth.yzw.iamlittle.Adapters.ScheduleShowAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityScheduleInput;
 import aqth.yzw.iamlittle.EntityClass.Schedule;
+import jxl.Workbook;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 public class ScheduleActivity extends AppCompatActivity {
     private TextView[] dateTVs;
@@ -73,6 +84,37 @@ public class ScheduleActivity extends AppCompatActivity {
             return getUnScheduledWeek(result);
         }else {
             return result;
+        }
+    }
+    private void shareSchedule(){
+
+    }
+    private void getExecelFile(){
+        try {
+            File tempFile = new File(getFilesDir()+"schedule_template.xls");
+            if(!tempFile.exists()) {
+                AssetManager assetManager = getAssets();
+                InputStream inputStream = assetManager.open("schedule_template.xls");
+                OutputStream os = new FileOutputStream(tempFile);
+                int bytes = 0;
+                byte[] buffer = new byte[1024];
+                while ((bytes = inputStream.read(buffer,0,1024))!= -1){
+                    os.write(buffer,0,bytes);
+                }
+                os.close();
+                inputStream.close();
+            }
+            String outPath = Environment.getExternalStorageDirectory()+"/MySchedule/schedule.xls";
+            FileOutputStream fos = new FileOutputStream(outPath);
+            Workbook workbook = Workbook.getWorkbook(tempFile);
+            WritableWorkbook wwb = Workbook.createWorkbook(fos,workbook);
+            WritableSheet sheet = wwb.getSheet(0);
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(ScheduleActivity.this,"导出EXCEL文件失败\n"+e.getMessage(),Toast.LENGTH_SHORT).show();
         }
     }
     private void updateList(){
