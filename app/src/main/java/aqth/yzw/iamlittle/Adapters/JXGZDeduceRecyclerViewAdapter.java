@@ -13,6 +13,7 @@ import java.util.List;
 
 import aqth.yzw.iamlittle.Arith;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonDetailsTemp;
+import aqth.yzw.iamlittle.IItemClickListener;
 import aqth.yzw.iamlittle.MyTool;
 import aqth.yzw.iamlittle.R;
 
@@ -42,6 +43,12 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
     private List<ItemEntityJXGZPersonDetailsTemp> mList;
+    private IItemClickListener clickListener;
+
+    public void setClickListener(IItemClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
     private int mode;
     public JXGZDeduceRecyclerViewAdapter(List<ItemEntityJXGZPersonDetailsTemp> list,int mode){
         this.mode = mode;
@@ -59,7 +66,6 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
         }
         return null;
     }
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
         final ItemEntityJXGZPersonDetailsTemp temp = mList.get(i);
@@ -94,6 +100,7 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
                     public void onClick(View v) {
                         temp.setSelect(!temp.isSelect());
                         notifyItemChanged(i);
+                        clickListener.onClick(v,i);
                     }
                 });
                 holder.root.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +108,7 @@ public class JXGZDeduceRecyclerViewAdapter extends RecyclerView.Adapter {
                     public void onClick(View v) {
                         temp.setSelect(!temp.isSelect());
                         notifyItemChanged(i);
+                        clickListener.onClick(v,i);
                     }
                 });
             }

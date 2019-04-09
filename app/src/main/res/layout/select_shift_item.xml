@@ -9,7 +9,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="1.5"
+        android:layout_weight="1.4"
         android:layout_height="match_parent"
         android:id="@+id/select_shift_name"
         android:gravity="center_vertical"

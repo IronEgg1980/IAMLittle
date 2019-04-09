@@ -146,7 +146,7 @@ public class CountOTPFragment extends Fragment {
 
     private void cancel() {
         if (mode == 0) {
-            getActivity().setTitle("数据列表");
+            getActivity().setTitle("历史数据列表");
             ((OTPActivity) getActivity()).setShowDetails(false);
             getFragmentManager().popBackStackImmediate();
         } else {

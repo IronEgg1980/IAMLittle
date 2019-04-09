@@ -16,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
 
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Random;
 
 import aqth.yzw.iamlittle.Adapters.TodayScheduleAdapter;
+import aqth.yzw.iamlittle.EntityClass.AppSetup;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.Schedule;
 import aqth.yzw.iamlittle.EntityClass.TodaySchedule;
@@ -43,25 +45,28 @@ public class MainActivity extends AppCompatActivity {
     private Calendar c;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout toolbarLayout;
-    private SimpleDateFormat yearMonthFt,weekFt,dayFt;
-    private TextView yearMonthTV,dayTV,weekTV,nongliTV;
+    private SimpleDateFormat format;
+    private TextView calendarTV;
     private ImageView titleIV;
-    private void showDate(){
-        yearMonthTV.setText(yearMonthFt.format(c.getTime()));
-        if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-            dayTV.setTextColor(Color.RED);
-            weekTV.setTextColor(Color.RED);
-        }else if(c.get(Calendar.DAY_OF_WEEK)== Calendar.SATURDAY){
-            dayTV.setTextColor(Color.GREEN);
-            weekTV.setTextColor(Color.GREEN);
-        }else {
-            dayTV.setTextColor(Color.WHITE);
-            weekTV.setTextColor(Color.WHITE);
-        }
-        dayTV.setText(dayFt.format(c.getTime()));
-        weekTV.setText(weekFt.format(c.getTime()));
-        nongliTV.setText(MyTool.getNongLi(c.getTime()));
-    }
+    private boolean isFirstRun;
+    private long firstRunTime;
+//    private void showDate(){
+//        calendarTV.setText(format.format(c.getTime())+"农历："+MyTool.getNongLi(c.getTime()));
+//        yearMonthTV.setText(yearMonthFt.format(c.getTime()));
+//        if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+//            dayTV.setTextColor(Color.RED);
+//            weekTV.setTextColor(Color.RED);
+//        }else if(c.get(Calendar.DAY_OF_WEEK)== Calendar.SATURDAY){
+//            dayTV.setTextColor(Color.GREEN);
+//            weekTV.setTextColor(Color.GREEN);
+//        }else {
+//            dayTV.setTextColor(Color.WHITE);
+//            weekTV.setTextColor(Color.WHITE);
+//        }
+//        dayTV.setText(dayFt.format(c.getTime()));
+//        weekTV.setText(weekFt.format(c.getTime()));
+//        nongliTV.setText(MyTool.getNongLi(c.getTime()));
+//    }
     private void updateTodayList(){
         if(list == null){
             list = new ArrayList<>();
@@ -154,16 +159,17 @@ public class MainActivity extends AppCompatActivity {
         final android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.icon_little);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SetupActivity.class));
+            }
+        });
         c =  new GregorianCalendar();
-        yearMonthFt = new SimpleDateFormat("yyyy年M月");
-        dayFt = new SimpleDateFormat("d");
-        weekFt = new SimpleDateFormat("EEEE");
-        yearMonthTV = findViewById(R.id.activity_main_yearmonthTV);
-        dayTV =findViewById(R.id.activity_main_dayTV);
-        weekTV = findViewById(R.id.activity_main_weekTV);
-        nongliTV = findViewById(R.id.activity_main_nongliTV);
+        format = new SimpleDateFormat("今天是：yyyy年M月d日   EEEE");
         titleIV = findViewById(R.id.activity_main_title_image);
-        showDate();
+        calendarTV = findViewById(R.id.main_activity_canlendarTV);
+        calendarTV.setText(format.format(c.getTime())+"    农历："+MyTool.getNongLi(c.getTime()));
         showTitleImage();
         findViewById(R.id.shift_manage).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,7 +256,17 @@ public class MainActivity extends AppCompatActivity {
                 appBarLayout.setExpanded(false);
             }
         });
-        //recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this,RecyclerView.VERTICAL));
+        isFirstRun = !LitePal.isExist(AppSetup.class,"key = ?","isFirstRun");
+        if(isFirstRun){
+            AppSetup appSetup = new AppSetup();
+            appSetup.setKey("isFirstRun");
+            appSetup.setValue("no");
+            appSetup.save();
+            AppSetup firstRunTime = new AppSetup();
+            firstRunTime.setKey("firstruntime");
+            firstRunTime.setValue(Long.toString(c.getTimeInMillis()));
+            firstRunTime.save();
+        }
     }
 
     @Override

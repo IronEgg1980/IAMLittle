@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="56dp"
     android:layout_margin="4dp"
     android:orientation="vertical"
     >
@@ -26,37 +26,25 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="bottom"
-            android:text="班次名称"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/shift_recyclerview_item_danweijine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:paddingLeft="12dp"
-            android:text="单位金额："
-            android:textSize="12sp" />
-
+            android:text="名称"
+            android:textSize="20sp" />
         <TextView
             android:id="@+id/shift_recyclerview_item_unitAmountTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            android:paddingRight="16dp"
             android:text="1000"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="16sp" />
-
         <TextView
             android:id="@+id/shift_recyclerview_item_typeTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
             android:gravity="bottom|right"
-            android:paddingLeft="8dp"
             android:text="类型"
             android:textSize="12sp" />
     </LinearLayout>

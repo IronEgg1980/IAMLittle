@@ -165,6 +165,10 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         popupMenu.show();
     }
     private void onPauseSave(){
+        List<ScheduleTemplate> temp = LitePal.where("name = 'OnPauseSaved'").find(ScheduleTemplate.class);
+        for(ScheduleTemplate template:temp) {
+            template.delete();
+        }
         if(list.size() >=1 && list.get(0).getType() == ItemType.SCHEDULE_WEEK_VIEW){
             for(int i = 0;i<list.size() -1;i++){
                 ItemEntity itemEntity = list.get(i);
@@ -479,7 +483,6 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         });
         fragment.show(getSupportFragmentManager(), "SelectDate");
     }
-
     private void showDialog(final String[] dates,long l){
         MyDialogFragment fragment = MyDialogFragment.newInstant("已存在排班数据，是否重新排班？",
                 "调整","重排");
@@ -501,6 +504,39 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         });
         fragment.show(getSupportFragmentManager(),"ShowDialog");
     }
+    private void exit(){
+        if(list.size() > 0 && list.get(0).getType() == ItemType.SCHEDULE_WEEK_VIEW){
+            MyDialogFragment dialogFragment = MyDialogFragment.newInstant("排班数据未保存，确认关闭当前页面吗？","取消","确认");
+            dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                @Override
+                public void onDissmiss(boolean flag) {
+                    if(flag){
+                        Intent result = new Intent();
+                        result.putExtra("IsSaved",false);
+                        setResult(1001,result);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onDissmiss(boolean flag, Object object) {
+
+                }
+            });
+            dialogFragment.show(getSupportFragmentManager(),"Exit");
+        }else{
+            Intent result = new Intent();
+            result.putExtra("IsSaved",false);
+            setResult(1001,result);
+            finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        exit();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -604,10 +640,7 @@ public class ScheduleInputEditActivity extends AppCompatActivity {
         findViewById(R.id.schedule_inputedit_activity_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent result = new Intent();
-                result.putExtra("IsSaved",false);
-                setResult(1001,result);
-                finish();
+                exit();
             }
         });
         // 保存

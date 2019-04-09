@@ -72,10 +72,12 @@ public class MyDialogFragmentInput extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_input_fragment,container,false);
         editText = view.findViewById(R.id.dialog_input_edittext);
-        if(!"".equals(mText))
-            editText.setText(mText);
+//        if(!"".equals(mText))
+//            editText.setText(mText);
         if(isTemplateInput){
             editText.setHint("请输入模板名称");
+        }else if(!"".equals(mText)){
+            editText.setHint(mText);
         }else{
             editText.setHint("请输入文字");
         }

@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,7 +27,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import aqth.yzw.iamlittle.Adapters.JXGZDeduceRecyclerViewAdapter;
+import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonDetailsTemp;
+import aqth.yzw.iamlittle.EntityClass.ItemEntityPerson;
 import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
 import aqth.yzw.iamlittle.EntityClass.JXGZSingleResultTemp;
 import aqth.yzw.iamlittle.EntityClass.Person;
@@ -44,7 +47,7 @@ public class CalPRPDeduceFragment extends Fragment {
     private RecyclerView deduceItemRLV, selectPersonRLV;
     private TextView deducePersonTV, deduceModeTV;
     private EditText inputET, inputDeduceNameET;
-
+    private CheckBox selectAllCB;
     private void initialFragment() {
         deduceByDaysRB.setChecked(deduceByDays);
         deduceByAmountRB.setChecked(!deduceByDays);
@@ -87,6 +90,7 @@ public class CalPRPDeduceFragment extends Fragment {
         deduceItemAdapter.notifyDataSetChanged();
         othersList.clear();
         selectPersonAdapter.notifyDataSetChanged();
+        selectAllCB.setChecked(false);
     }
 
     private void updateDeduceItemRLV(String personName) {
@@ -116,6 +120,7 @@ public class CalPRPDeduceFragment extends Fragment {
                 } while (cursor.moveToNext());
             }
         }
+        selectAllCB.setChecked(false);
     }
 
     private void selectPerson() {
@@ -326,6 +331,17 @@ public class CalPRPDeduceFragment extends Fragment {
         othersList = new ArrayList<>();
         deduceItemAdapter = new JXGZDeduceRecyclerViewAdapter(deduceItemList, MyTool.DEDUCE_ITEM_MODE);
         selectPersonAdapter = new JXGZDeduceRecyclerViewAdapter(othersList, MyTool.SELECT_OTHERSPERSON_MODE);
+        selectPersonAdapter.setClickListener(new IItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                selectAll();
+            }
+
+            @Override
+            public void onClick(View view, int x, int y) {
+
+            }
+        });
         if (savedInstanceState == null) {
             nameCount = 1;
             deducePersonName = "";
@@ -433,6 +449,20 @@ public class CalPRPDeduceFragment extends Fragment {
                 calculate();
             }
         });
+        selectAllCB = view.findViewById(R.id.select_all_checkbox);
+        selectAllCB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(ItemEntity itemEntity:othersList){
+                    if(itemEntity.getType() == ItemType.EMPTY)
+                        continue;
+                    ItemEntityJXGZPersonDetailsTemp person = (ItemEntityJXGZPersonDetailsTemp)itemEntity;
+                    person.setSelect(selectAllCB.isChecked());
+                    selectPersonAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        selectAll();
         return view;
     }
 
@@ -440,5 +470,19 @@ public class CalPRPDeduceFragment extends Fragment {
     public void onStart() {
         super.onStart();
         initialFragment();
+    }
+    private void selectAll(){
+        if(othersList.size() == 0) {
+            selectAllCB.setChecked(false);
+            return;
+        }
+        boolean b = true;
+        for(ItemEntityJXGZPersonDetailsTemp itemEntity:othersList){
+            if(!itemEntity.isSelect()){
+                b = false;
+                break;
+            }
+        }
+        selectAllCB.setChecked(b);
     }
 }

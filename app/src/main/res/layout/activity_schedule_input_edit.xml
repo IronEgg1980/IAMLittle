@@ -289,6 +289,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:scrollbarSize="2dp"
+        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     <View
         android:layout_width="match_parent"
@@ -310,6 +312,9 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scrollbarSize="1dp"
+            android:scrollbars="horizontal"
+            android:fadeScrollbars="false"
             android:id="@+id/schedule_inputedit_activity_recyclerview2"/>
     </LinearLayout>
 </LinearLayout>

@@ -1,6 +1,7 @@
 package aqth.yzw.iamlittle.Adapters;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -32,8 +33,7 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
 
     public void setItemClickListener(IItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
-    }
-    public PersonManageAdapter(List<ItemEntity> list){
+    }    public PersonManageAdapter(List<ItemEntity> list){
         this.mList = list;
     }
     @NonNull
@@ -69,7 +69,11 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
                 final Person p = itemEntityPerson.getPerson();
                 personViewHolder.nameTextView.setText(p.getName());
                 personViewHolder.ratioTextView.setText(Double.toString(p.getRatio()));
-                personViewHolder.statusTextView.setText(p.getStatus() == MyTool.PERSON_STATUS_ONDUTY?"在岗":"离开");
+                if(p.getStatus() == MyTool.PERSON_STATUS_ONDUTY){
+                    personViewHolder.statusTextView.setText("在岗");
+                }else{
+                    personViewHolder.statusTextView.setText("离开");
+                }
                 personViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -92,11 +96,10 @@ public class PersonManageAdapter extends RecyclerView.Adapter {
             return NORMAL_TYPE;
     }
     protected class PersonViewHolder extends RecyclerView.ViewHolder{
-        private TextView nameTextView,ratioTextView,statusTextView,JXXS;
+        private TextView nameTextView,ratioTextView,statusTextView;
         private LinearLayout cardView;
         public PersonViewHolder(@NonNull View itemView) {
             super(itemView);
-            JXXS = itemView.findViewById(R.id.recyclerview_item_person_JXXS);
             nameTextView = itemView.findViewById(R.id.recyclerview_item_person_name);
             ratioTextView = itemView.findViewById(R.id.recyclerview_item_person_ratio);
             statusTextView = itemView.findViewById(R.id.person_status_textview);

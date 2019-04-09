@@ -46,6 +46,7 @@ import aqth.yzw.iamlittle.Adapters.ScheduleShowAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityScheduleInput;
 import aqth.yzw.iamlittle.EntityClass.Schedule;
+import jxl.Sheet;
 import jxl.Workbook;
 import jxl.format.CellFormat;
 import jxl.write.Label;
@@ -103,7 +104,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
         PermissionUtils.verifyStoragePermissions(this);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            String outPath = Environment.getExternalStorageDirectory() + "/MySchedule/";
+            String outPath = Environment.getExternalStorageDirectory() + "/IAmLittle/Schedule/";
             File dir = new File(outPath);
             try {
                 File tempFile = new File(getFilesDir() + "/schedule_template.xls");
@@ -126,20 +127,20 @@ public class ScheduleActivity extends AppCompatActivity {
                     if(!file.isDirectory())
                         file.delete();
                 }
-                int pages = (list.size() / 20) + 1;
+                int pages = (list.size()-1 )/ 20 + 1;
+                int _year = _c.get(Calendar.YEAR);
+                int _weekofyear = _c.get(Calendar.WEEK_OF_YEAR);
+                String weekOfYear = _year + " 年度 第 " + _weekofyear + " 周";
+                String title = "排班表";
                 for (int m = 1; m <= pages; m++) {
                     int start = 0 + 20 * (m - 1);
                     FileOutputStream fos = new FileOutputStream(outPath + "ScheduleExportFile"+m+".xls");
                     Workbook workbook = Workbook.getWorkbook(tempFile);
                     WritableWorkbook wwb = Workbook.createWorkbook(fos, workbook);
                     WritableSheet sheet = wwb.getSheet(0);
-                    String title = "排班表";
                     CellFormat titleFmt = sheet.getCell(0, 0).getCellFormat();
                     Label titleLb = new Label(0, 0, title, titleFmt);// 标题
                     sheet.addCell(titleLb);
-                    int _year = _c.get(Calendar.YEAR);
-                    int _weekofyear = _c.get(Calendar.WEEK_OF_YEAR);
-                    String weekOfYear = _year + " 年度 第 " + _weekofyear + " 周";
                     CellFormat woyFmt = sheet.getCell(0, 1).getCellFormat();
                     Label weekOfYearLb = new Label(0, 1, weekOfYear, woyFmt);// 年度第几周
                     sheet.addCell(weekOfYearLb);
@@ -203,7 +204,7 @@ public class ScheduleActivity extends AppCompatActivity {
                     fos.close();
                     workbook.close();
                 }
-                Toast.makeText(ScheduleActivity.this, "导出EXCEL文件成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ScheduleActivity.this, "导出EXCEL文件成功\n文件目录："+dir.getAbsolutePath(), Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(ScheduleActivity.this, "导出EXCEL文件失败\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -214,9 +215,9 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
     private void getZipFile(){
-        String excelPath = Environment.getExternalStorageDirectory() + "/MySchedule/";
+        String excelPath = Environment.getExternalStorageDirectory() + "/IAmLittle/Schedule/";
         File dir = new File(excelPath);
-        File outZipFile = new File(getCacheDir()+"/schedule.zip");
+        File outZipFile = new File(getCacheDir()+"/schedule_"+MyTool.getRandomString(6)+".zip");
         ZipOutputStream zos = null;
         FileInputStream fis = null;
         try{

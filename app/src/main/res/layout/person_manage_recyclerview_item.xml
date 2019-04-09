@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/recyclerview_item_rootview"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="56dp"
     android:paddingBottom="1dp"
     android:background="@color/half_translate">
 
@@ -24,35 +24,26 @@
             android:id="@+id/recyclerview_item_person_name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="center_vertical"
             android:text="姓名"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/person_status_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="状态：在岗"
-            android:textSize="12sp" />
-
-        <TextView
-            android:paddingLeft="32dp"
-            android:id="@+id/recyclerview_item_person_JXXS"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="绩效系数："
-            android:textSize="12sp" />
-
+            android:textSize="20sp" />
         <TextView
             android:id="@+id/recyclerview_item_person_ratio"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="1.2"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="24sp" />
+        <TextView
+            android:id="@+id/person_status_textview"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="在岗"
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

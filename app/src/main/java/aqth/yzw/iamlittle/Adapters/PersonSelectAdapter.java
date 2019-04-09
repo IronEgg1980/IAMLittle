@@ -42,6 +42,12 @@ public class PersonSelectAdapter extends RecyclerView.Adapter {
     }
 
     private IItemClickListener iItemClickListener;
+
+    public void setCheckBoxClickListener(IItemClickListener checkBoxClickListener) {
+        this.checkBoxClickListener = checkBoxClickListener;
+    }
+
+    private IItemClickListener checkBoxClickListener;
     public PersonSelectAdapter(List<ItemEntity> list){
         this.mList = list;
     }
@@ -88,7 +94,7 @@ public class PersonSelectAdapter extends RecyclerView.Adapter {
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemEntityPerson.setSelect(holder.checkBox.isChecked());
+                    checkBoxClickListener.onClick(v,i);
                 }
             });
             holder.root.setOnClickListener(new View.OnClickListener() {

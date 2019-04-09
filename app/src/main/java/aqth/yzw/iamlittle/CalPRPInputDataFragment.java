@@ -11,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import org.litepal.LitePal;
 
@@ -49,6 +52,21 @@ public class CalPRPInputDataFragment extends Fragment {
     private int type;
     private int amountFlag;
     private double perAmount;
+    private CheckBox selectAllCB;
+
+    private void selectAll(){
+        boolean b = true;
+        for(ItemEntity itemEntity:list){
+            if(itemEntity.getType() == ItemType.EMPTY)
+                continue;
+            ItemEntityPerson person = (ItemEntityPerson)itemEntity;
+            if(!person.isSelect()){
+                b = false;
+                break;
+            }
+        }
+        selectAllCB.setChecked(b);
+    }
     private void updatePersonList() {
         String[] dates = MyTool.getMonthStartAndEndString(date);
         if (list == null) {
@@ -62,6 +80,7 @@ public class CalPRPInputDataFragment extends Fragment {
             list.add(new ItemEntityPerson(name, ratio));
         }
         list.add(new ItemEntity());
+        selectAllCB.setChecked(false);
     }
 
     private boolean checkInput() {
@@ -103,6 +122,7 @@ public class CalPRPInputDataFragment extends Fragment {
     }
 
     private void initialInput() {
+        selectAllCB.setChecked(false);
         itemNameET.setText("");
         itemNameET.setHint("系数分配项目" + ratioCount);
         totalAmountET.setText("");
@@ -295,6 +315,20 @@ public class CalPRPInputDataFragment extends Fragment {
         date = activity.getDate();
         list = new ArrayList<>();
         adapter = new PersonSelectAdapter(list);
+        adapter.setCheckBoxClickListener(new IItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ItemEntityPerson person = (ItemEntityPerson)list.get(position);
+                person.setSelect(!person.isSelect());
+                adapter.notifyItemChanged(position);
+                selectAll();
+            }
+
+            @Override
+            public void onClick(View view, int x, int y) {
+
+            }
+        });
         adapter.setiItemClickListener(new IItemClickListener() {
             @Override
             public void onClick(View view, final int position) {
@@ -324,6 +358,7 @@ public class CalPRPInputDataFragment extends Fragment {
                                     person.setSelect(true);
                                 }
                                 adapter.notifyDataSetChanged();
+                                selectAll();
                                 recyclerView.smoothScrollToPosition(list.size() - 1);
                             }
                         }
@@ -400,6 +435,20 @@ public class CalPRPInputDataFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 calculate();
+            }
+        });
+        selectAllCB = view.findViewById(R.id.select_all_checkbox);
+        selectAllCB.setChecked(false);
+        selectAllCB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(ItemEntity itemEntity:list){
+                    if(itemEntity.getType() == ItemType.EMPTY)
+                        continue;
+                    ItemEntityPerson person = (ItemEntityPerson)itemEntity;
+                    person.setSelect(selectAllCB.isChecked());
+                }
+                adapter.notifyDataSetChanged();
             }
         });
         isAsignRB.setChecked(true);

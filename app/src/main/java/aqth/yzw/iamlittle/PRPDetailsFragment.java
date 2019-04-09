@@ -1,11 +1,17 @@
 package aqth.yzw.iamlittle;
 
+import android.content.Intent;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -20,7 +26,12 @@ import android.widget.Toast;
 
 import org.litepal.LitePal;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import aqth.yzw.iamlittle.Adapters.PRPDetailsAdapter;
@@ -30,15 +41,22 @@ import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZPersonTotal;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityJXGZTotalDetails;
 import aqth.yzw.iamlittle.EntityClass.JXGZDetails;
 import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetails;
+import aqth.yzw.iamlittle.EntityClass.OTPDetails;
+import aqth.yzw.iamlittle.EntityClass.OTPPersonTotalEntity;
+import jxl.Workbook;
+import jxl.format.CellFormat;
+import jxl.write.Label;
+import jxl.write.Number;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 public class PRPDetailsFragment extends Fragment {
     private List<ItemEntity> totalDetailsList, personDetailsList;
     private RecyclerView totalRecyclerView, personRecyclerView;
     private PRPDetailsAdapter totalAdapter, personAdapter;
     private int mode;
-    private String recordTime;
+    private String recordTime,dateString;
     private PRPActivity activity;
-
     private void showToast(String content) {
         Toast toast = Toast.makeText(getContext(), content, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -46,12 +64,16 @@ public class PRPDetailsFragment extends Fragment {
     }
 
     private void updateTotalList() {
+        dateString = "no_data";
         if (totalDetailsList == null)
             totalDetailsList = new ArrayList<>();
         totalDetailsList.clear();
         List<JXGZDetails> temp1 = LitePal.order("JXGZType")
                 .where("recordTime = ?", recordTime).find(JXGZDetails.class);
         if (temp1 != null && temp1.size() > 0) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
+            Date date = temp1.get(0).getDate();
+            dateString = format.format(date);
             for (JXGZDetails details : temp1) {
                 totalDetailsList.add(new ItemEntityJXGZTotalDetails(details));
             }
@@ -87,7 +109,6 @@ public class PRPDetailsFragment extends Fragment {
     }
 
     private void showChild(int position) {
-        //personAdapter.notifyItemChanged(position);
         ItemEntity itemEntity = personDetailsList.get(position);
         if (itemEntity.getType() == ItemType.JXGZ_PERSON_TOTAL) {
             ItemEntityJXGZPersonTotal total = (ItemEntityJXGZPersonTotal) itemEntity;
@@ -96,7 +117,6 @@ public class PRPDetailsFragment extends Fragment {
             int tempPos = position + 1;
             for (int i = 0; i < count; i++) {
                 personDetailsList.add(tempPos + i, new ItemEntityJXGZPersonDetails(temp.get(i)));
-                //personAdapter.notifyItemChanged(tempPos + i);
             }
             personAdapter.notifyItemRangeChanged(position, personAdapter.getItemCount() - position);
             personRecyclerView.smoothScrollToPosition(position + count);
@@ -117,7 +137,7 @@ public class PRPDetailsFragment extends Fragment {
     }
 
     private void dele() {
-        MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除该月份的所有数据？\n注意：删除后不能回复！","取消","删除",
+        MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除该月份的所有数据？\n注意：删除后不能恢复！","取消","删除",
                 Color.BLACK,Color.RED);
         dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
             @Override
@@ -150,9 +170,130 @@ public class PRPDetailsFragment extends Fragment {
     }
 
     private void share() {
-        showToast("分享功能暂未启用，正在更新中！");
+        File sharedFile = getExcelFile();
+        if (sharedFile != null) {
+            Uri uri = null;
+            if (Build.VERSION.SDK_INT >= 24) {
+                uri = FileProvider.getUriForFile(getContext(), "th.yzw.iamlittle.fileprovider", sharedFile);
+            } else {
+                uri = Uri.fromFile(sharedFile);
+            }
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("application/*");
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(Intent.createChooser(intent, dateString+"绩效工资表"));
+        }
     }
-
+    private File getExcelFile(){
+        if(totalDetailsList.size()==1 && totalDetailsList.get(0).getType() == ItemType.EMPTY){
+            Toast.makeText(getContext(),"当前列表没有数据",Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        if(personDetailsList.size() == 0) {
+            Toast.makeText(getContext(),"当前列表没有数据或者数据错误",Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        PermissionUtils.verifyStoragePermissions(getActivity());
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            String outPath = Environment.getExternalStorageDirectory() + "/IAmLittle/PRP/";
+            File dir = new File(outPath);
+            try{
+                File tempFile = new File(getContext().getFilesDir() + "/jxgz_template.xls");
+                if (!tempFile.exists()) {
+                    AssetManager assetManager = getContext().getAssets();
+                    InputStream inputStream = assetManager.open("jxgz_template.xls");
+                    FileOutputStream os = new FileOutputStream(tempFile);
+                    int bytes = 0;
+                    byte[] buffer = new byte[1024];
+                    while ((bytes = inputStream.read(buffer, 0, 1024)) != -1) {
+                        os.write(buffer, 0, bytes);
+                    }
+                    os.close();
+                    inputStream.close();
+                }
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                for(File file:dir.listFiles()){
+                    if(!file.isDirectory())
+                        file.delete();
+                }
+                double totalRatio = 0;
+                double total = 0;
+                FileOutputStream fos = new FileOutputStream(outPath +"prp"+dateString+".xls");
+                Workbook workbook = Workbook.getWorkbook(tempFile);
+                WritableWorkbook wwb = Workbook.createWorkbook(fos, workbook);
+                WritableSheet sheet = wwb.getSheet(0);
+                CellFormat titleFmt = sheet.getCell(0,0).getCellFormat();
+                Label titleLb = new Label(0,0,"时间："+dateString,titleFmt);
+                sheet.addCell(titleLb);
+                int totalRow = 3; // 从第四行开始填充
+                int detailsRow = 3; // 从第四行开始填充
+                for(ItemEntity itemEntity:personDetailsList){
+                    if(itemEntity.getType() == ItemType.JXGZ_PERSON_TOTAL){
+                        ItemEntityJXGZPersonTotal entity = (ItemEntityJXGZPersonTotal)itemEntity;
+                        String name = entity.getPersonName();
+                        double totalAmount = entity.getAmount();
+                        double ratio = entity.getThatRatio();
+                        total = Arith.add(total,totalAmount);
+                        totalRatio = Arith.add(totalRatio,ratio);
+                        int childcount = entity.getChildCount();
+                        CellFormat nameFmt = sheet.getCell(0,totalRow).getCellFormat();
+                        sheet.mergeCells(0,totalRow,0,totalRow+childcount-1);
+                        Label nameLb = new Label(0,totalRow,name,nameFmt);
+                        sheet.addCell(nameLb);
+                        CellFormat ratioFmt = sheet.getCell(1,totalRow).getCellFormat();
+                        sheet.mergeCells(1,totalRow,1,totalRow+childcount-1);
+                        Number ratioLb = new Number(1,totalRow,ratio,ratioFmt);
+                        sheet.addCell(ratioLb);
+                        CellFormat totalAmountFmt = sheet.getCell(2,totalRow).getCellFormat();
+                        sheet.mergeCells(2,totalRow,2,totalRow+childcount-1);
+                        Number totalAmountLb = new Number(2,totalRow,totalAmount,totalAmountFmt);
+                        sheet.addCell(totalAmountLb);
+                        totalRow +=childcount;
+                        for(JXGZPersonDetails details:entity.getList()){
+                            String jxgzName = details.getJXGZName();
+                            double amount = details.getJXGZAmount();
+                            String type = MyTool.getJXGZ_TypeString(details.getJXGZType());
+                            CellFormat jxgzNameFmt = sheet.getCell(3,detailsRow).getCellFormat();
+                            CellFormat amountFmt = sheet.getCell(4,detailsRow).getCellFormat();
+                            CellFormat typeFmt = sheet.getCell(5,detailsRow).getCellFormat();
+                            Label jxgzNameLb = new Label(3,detailsRow,jxgzName,jxgzNameFmt);
+                            Number amountLb = new Number(4,detailsRow,amount,amountFmt);
+                            Label typeLb = new Label(5,detailsRow,type,typeFmt);
+                            sheet.addCell(jxgzNameLb);
+                            sheet.addCell(amountLb);
+                            sheet.addCell(typeLb);
+                            detailsRow++;
+                        }
+                    }
+                }
+                CellFormat cellFormat = sheet.getCell(0,totalRow+2).getCellFormat();
+                Label sumText = new Label(0,totalRow+2,"合计：",cellFormat);
+                sheet.addCell(sumText);
+                CellFormat sumRatioCellFormat = sheet.getCell(1,totalRow+2).getCellFormat();
+                Number sumRatioCell = new Number(1,totalRow+2,totalRatio,sumRatioCellFormat);
+                sheet.addCell(sumRatioCell);
+                CellFormat sumAmountCellFormat = sheet.getCell(2,totalRow+2).getCellFormat();
+                Number sumAmountCell = new Number(2,totalRow+2,total,sumAmountCellFormat);
+                sheet.addCell(sumAmountCell);
+                wwb.write();
+                wwb.close();;
+                fos.close();
+                workbook.close();
+                Toast.makeText(getContext(),"生成Excel文件成功\n文件目录："+dir.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                return new File(outPath+"prp"+dateString+".xls");
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(getContext(),"生成Excel文件失败\n"+e.getMessage(),Toast.LENGTH_LONG).show();
+                return null;
+            }
+        }else{
+            MyDialogFragmenSingleButton dialogFragment = MyDialogFragmenSingleButton.newInstant("您已拒绝本程序存储文件，不能进行分享操作！", "关闭");
+            dialogFragment.show(getFragmentManager(), "NotAllowWriteSD");
+            return null;
+        }
+    }
     public static PRPDetailsFragment newInstant(int mode, String recordTime) {
         PRPDetailsFragment fragment = new PRPDetailsFragment();
         Bundle bundle = new Bundle();

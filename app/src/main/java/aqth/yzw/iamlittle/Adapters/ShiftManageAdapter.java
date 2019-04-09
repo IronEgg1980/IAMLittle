@@ -32,7 +32,7 @@ public class ShiftManageAdapter extends RecyclerView.Adapter {
 
     protected class ShiftViewHolder extends RecyclerView.ViewHolder{
         LinearLayout rootView;
-        TextView typeColorTV,typeTextTV,nameTV,unitAmountTV,danweijine,emptyTV;
+        TextView typeColorTV,typeTextTV,nameTV,unitAmountTV,danweijine;
         public ShiftViewHolder(@NonNull View itemView) {
             super(itemView);
             rootView = itemView.findViewById(R.id.shift_recyclerview_item_root);
@@ -40,7 +40,6 @@ public class ShiftManageAdapter extends RecyclerView.Adapter {
             typeTextTV = itemView.findViewById(R.id.shift_recyclerview_item_typeTextView);
             nameTV = itemView.findViewById(R.id.shift_recyclerview_item_nameTextView);
             unitAmountTV = itemView.findViewById(R.id.shift_recyclerview_item_unitAmountTextView);
-            danweijine = itemView.findViewById(R.id.shift_recyclerview_item_danweijine);
         }
     }
     public ShiftManageAdapter(List<ItemEntity> list){
@@ -100,18 +99,15 @@ public class ShiftManageAdapter extends RecyclerView.Adapter {
             int type = shift.getType();
             if(type == MyTool.SHIFT_NORMAL){
                 vieHolder2.typeColorTV.setBackground(new ColorDrawable(Color.BLUE));
-                vieHolder2.typeTextTV.setText("类型：常规");
-                vieHolder2.danweijine.setText("");
+                vieHolder2.typeTextTV.setText("常规");
                 vieHolder2.unitAmountTV.setText("");
             }else if(type == MyTool.SHIFT_LEAVEOFF){
                 vieHolder2.typeColorTV.setBackground(new ColorDrawable(Color.RED));
-                vieHolder2.typeTextTV.setText("类型：缺勤");
-                vieHolder2.danweijine.setText("");
+                vieHolder2.typeTextTV.setText("缺勤");
                 vieHolder2.unitAmountTV.setText("");
             }else{
                 vieHolder2.typeColorTV.setBackground(new ColorDrawable(Color.GREEN));
-                vieHolder2.typeTextTV.setText("类型：统计");
-                vieHolder2.danweijine.setText("单位金额：");
+                vieHolder2.typeTextTV.setText("统计");
                 vieHolder2.unitAmountTV.setText(Arith.doubleToString(shift.getUnitAmount()));
             }
 //            vieHolder2.unitAmountTV.setOnClickListener(new View.OnClickListener() {

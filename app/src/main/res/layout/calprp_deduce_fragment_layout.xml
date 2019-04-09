@@ -188,7 +188,6 @@
                     android:background="@android:color/white"
                     android:text="平均" />
             </RadioGroup>
-
             <LinearLayout
                 android:id="@+id/linearLayout17"
                 android:layout_width="match_parent"
@@ -199,19 +198,60 @@
                 android:layout_marginBottom="8dp"
                 android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="分配人员：" />
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="分配人员：" />
+                    <CheckBox
+                        android:id="@+id/select_all_checkbox"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="全选"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/calprp_deduce_fragment_selectPersonRecyclerview"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:background="@android:color/white" />
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.6"
+                            android:text="姓名"
+                            android:paddingLeft="48dp"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_marginRight="16dp"
+                            android:id="@+id/select_person_ratio"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.4"
+                            android:text="分配系数"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_marginTop="4dp"
+                        android:id="@+id/calprp_deduce_fragment_selectPersonRecyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/white" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -79,18 +79,6 @@ public class CalPRPCheckoutFragment extends Fragment {
             if(TextUtils.isEmpty(name))
                 continue;
             List<JXGZPersonDetailsTemp> tempList = new ArrayList<>();
-//            Cursor cursor1 = LitePal.findBySQL("SELECT * FROM JXGZPersonDetailsTemp WHERE personname = ?",name);
-//            if(cursor1 !=null && cursor1.moveToFirst()){
-//                do{
-//                    JXGZPersonDetailsTemp temp = new JXGZPersonDetailsTemp();
-//                    temp.setPersonName(name);
-//                    temp.setJXGZName(cursor1.getString(cursor1.getColumnIndex("jxgzname")));
-//                    temp.setThatRatio(cursor1.getDouble(cursor1.getColumnIndex("thatratio")));
-//                    temp.setJXGZType(cursor1.getInt(cursor1.getColumnIndex("jxgztype")));
-//                    temp.setJXGZAmount(cursor1.getDouble(cursor1.getColumnIndex("jxgzamount")));
-//                    tempList.add(temp);
-//                }while (cursor1.moveToNext());
-//            }
             tempList.addAll(LitePal.where("personname = ?",name).find(JXGZPersonDetailsTemp.class));
             if(tempList.size() > 0)
                 list.add(new ItemEntityJXGZPersonTotalTemp(tempList));
@@ -165,6 +153,7 @@ public class CalPRPCheckoutFragment extends Fragment {
                 if(diffValue == 0.00){
                     activity.setHasCheckouted(true);
                     activity.showToast("调整成功");
+                    activity.showAndSave();
                 }else{
                     activity.setHasCheckouted(false);
                 }
@@ -186,8 +175,10 @@ public class CalPRPCheckoutFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        fillData();
-        adapter.notifyDataSetChanged();
-        calculateAndShow();
+        if(!hidden) {
+            fillData();
+            adapter.notifyDataSetChanged();
+            calculateAndShow();
+        }
     }
 }

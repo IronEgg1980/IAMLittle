@@ -74,19 +74,32 @@
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
+        android:id="@+id/linearLayout99"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="注：“应发总金额”为的绩效工资实际总金额，“实发总金额”为下表各人员总金额之和，差额=应发总金额-实发总金额。因计算时有四舍五入，所以存在计算误差。请通过调整人员总金额，使差额等于0"
-        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout14" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/info2"/>
+        <TextView
+            android:layout_marginLeft="8dp"
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    “应发总金额”为的绩效工资实际总金额，“实发总金额”为下表各人员总金额之和，差额=应发总金额-实发总金额。因计算时有四舍五入，所以存在计算误差。请通过调整人员总金额，使差额等于0"
+            android:textSize="12sp"
+            />
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/linearLayout21"
@@ -98,7 +111,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout99">
 
         <TextView
             android:layout_width="0dp"
@@ -125,6 +138,9 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:scrollbarSize="2dp"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
         android:id="@+id/calprp_checkout_fragment_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
