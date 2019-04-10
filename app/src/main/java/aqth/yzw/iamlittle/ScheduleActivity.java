@@ -43,10 +43,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import aqth.yzw.iamlittle.Adapters.ScheduleShowAdapter;
+import aqth.yzw.iamlittle.EntityClass.AppSetup;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityScheduleInput;
 import aqth.yzw.iamlittle.EntityClass.Schedule;
-import jxl.Sheet;
 import jxl.Workbook;
 import jxl.format.CellFormat;
 import jxl.write.Label;
@@ -131,7 +131,11 @@ public class ScheduleActivity extends AppCompatActivity {
                 int _year = _c.get(Calendar.YEAR);
                 int _weekofyear = _c.get(Calendar.WEEK_OF_YEAR);
                 String weekOfYear = _year + " 年度 第 " + _weekofyear + " 周";
-                String title = "排班表";
+                String title = "";
+                AppSetup appSetup = LitePal.where("key = 'organizename'").findFirst(AppSetup.class);
+                if (appSetup!=null){
+                    title = appSetup.getValue();
+                }
                 for (int m = 1; m <= pages; m++) {
                     int start = 0 + 20 * (m - 1);
                     FileOutputStream fos = new FileOutputStream(outPath + "ScheduleExportFile"+m+".xls");
@@ -141,8 +145,11 @@ public class ScheduleActivity extends AppCompatActivity {
                     CellFormat titleFmt = sheet.getCell(0, 0).getCellFormat();
                     Label titleLb = new Label(0, 0, title, titleFmt);// 标题
                     sheet.addCell(titleLb);
-                    CellFormat woyFmt = sheet.getCell(0, 1).getCellFormat();
-                    Label weekOfYearLb = new Label(0, 1, weekOfYear, woyFmt);// 年度第几周
+                    CellFormat pbbFmt = sheet.getCell(0, 1).getCellFormat();
+                    Label pbbLb = new Label(0, 1, "排班表", pbbFmt);// 排班表
+                    sheet.addCell(pbbLb);
+                    CellFormat woyFmt = sheet.getCell(0, 2).getCellFormat();
+                    Label weekOfYearLb = new Label(0, 2, weekOfYear, woyFmt);// 年度第几周
                     sheet.addCell(weekOfYearLb);
                     Calendar _calendar = new GregorianCalendar();
                     int _month = 0;
@@ -156,18 +163,18 @@ public class ScheduleActivity extends AppCompatActivity {
                         _month = _calendar.get(Calendar.MONTH);
                         int _day = _calendar.get(Calendar.DAY_OF_MONTH);
                         if (i == 0) {
-                            Label mondayLb = new Label(2, 2, Integer.toString(_month + 1), dateFmt);
+                            Label mondayLb = new Label(2, 3, Integer.toString(_month + 1), dateFmt);
                             sheet.addCell(mondayLb);
                         } else if (pre_month != _month) {
-                            Label monthLb = new Label(2 + i, 2, Integer.toString(_month + 1), dateFmt);
+                            Label monthLb = new Label(2 + i, 3, Integer.toString(_month + 1), dateFmt);
                             sheet.addCell(monthLb);
                         } // 月份列
-                        Label dateLb = new Label(2 + i, 3, Integer.toString(_day), dateFmt);// 日期列
+                        Label dateLb = new Label(2 + i, 4, Integer.toString(_day), dateFmt);// 日期列
                         sheet.addCell(dateLb);
                         if (showNongLi) {//填充农历
-                            CellFormat nlFmt = sheet.getCell(2, 5).getCellFormat();
+                            CellFormat nlFmt = sheet.getCell(2, 6).getCellFormat();
                             String nongli = MyTool.getNongLiNoYear(mDates[i]);
-                            Label nongliLb = new Label(2 + i, 5, nongli, nlFmt);
+                            Label nongliLb = new Label(2 + i, 6, nongli, nlFmt);
                             sheet.addCell(nongliLb);
                         }
                     }
@@ -178,7 +185,7 @@ public class ScheduleActivity extends AppCompatActivity {
                             break;
                         ItemEntity item = list.get(position);
                         if (item.getType() == ItemType.SCHEDULE_WEEK_VIEW) {
-                            int row = 6 + k;
+                            int row = 7 + k;
                             ItemEntityScheduleInput _item = (ItemEntityScheduleInput) item;
                             CellFormat nameFmt = sheet.getCell(0, row).getCellFormat();
                             Label nameLb = new Label(0, row, _item.getValues(0), nameFmt);
@@ -193,11 +200,11 @@ public class ScheduleActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    CellFormat footFmt1 = sheet.getCell(0, 26).getCellFormat();
-                    Label footLb1 = new Label(0, 26, "页码："+m+"/"+pages, footFmt1);
+                    CellFormat footFmt1 = sheet.getCell(0, 27).getCellFormat();
+                    Label footLb1 = new Label(0, 27, "页码："+m+"/"+pages, footFmt1);
                     sheet.addCell(footLb1);
-                    CellFormat footFmt2 = sheet.getCell(8,26).getCellFormat();
-                    Label footLb2 = new Label(8, 26, "By:YZW",footFmt2);
+                    CellFormat footFmt2 = sheet.getCell(8,27).getCellFormat();
+                    Label footLb2 = new Label(8, 27, "By:YZW",footFmt2);
                     sheet.addCell(footLb2);
                     wwb.write();
                     wwb.close();

@@ -125,7 +125,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
-            android:text="本月系数"
+            android:text="分配系数"
             android:textSize="11sp" />
 
         <TextView
