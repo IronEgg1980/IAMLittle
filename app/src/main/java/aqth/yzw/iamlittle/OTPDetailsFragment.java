@@ -139,6 +139,7 @@ public class OTPDetailsFragment extends Fragment {
             intent.setType("application/*");
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             startActivity(Intent.createChooser(intent, "加班费表"));
+            ((OTPActivity)getActivity()).setShowDetails(false);
         }
     }
     private File getExcelFile(){

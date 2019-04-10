@@ -156,7 +156,7 @@ public class ScheduleActivity extends AppCompatActivity {
                     int pre_month = 0;
 //                WritableFont dateFt = new WritableFont(WritableFont.createFont("黑体"),
 //                        12,WritableFont.NO_BOLD,false, UnderlineStyle.NO_UNDERLINE);
-                    CellFormat dateFmt = sheet.getCell(2, 2).getCellFormat();
+                    CellFormat dateFmt = sheet.getCell(2, 3).getCellFormat();
                     for (int i = 0; i < 7; i++) {
                         _calendar.setTime(mDates[i]);
                         pre_month = _month;

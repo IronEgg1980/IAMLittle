@@ -182,6 +182,7 @@ public class PRPDetailsFragment extends Fragment {
             intent.setType("application/*");
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             startActivity(Intent.createChooser(intent, dateString+"绩效工资表"));
+            ((PRPActivity)getActivity()).setShowDetails(false);
         }
     }
     private File getExcelFile(){

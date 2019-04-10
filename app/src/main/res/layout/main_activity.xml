@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="72dp"
+                android:layout_marginBottom="160dp"
                 android:background="@color/half_translate"
                 android:text="开始使用"
                 android:textColor="@android:color/white"

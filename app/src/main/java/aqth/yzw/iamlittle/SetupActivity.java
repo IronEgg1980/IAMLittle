@@ -1,8 +1,11 @@
 package aqth.yzw.iamlittle;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,7 +25,7 @@ import java.util.GregorianCalendar;
 import aqth.yzw.iamlittle.EntityClass.AppSetup;
 
 public class SetupActivity extends AppCompatActivity {
-    private TextView versionTV,contentTV,organizeNameTV,inputOrganizeNameTV;
+    private TextView versionTV,contentTV,organizeNameTV,inputOrganizeNameTV,sendEmailTV;
     private Button backBT,restoreBT,closeBT;
 
 
@@ -33,6 +36,19 @@ public class SetupActivity extends AppCompatActivity {
         versionTV = findViewById(R.id.setup_activity_versionTV);
         versionTV.setText("版本："+MyTool.packageName(SetupActivity.this));
         contentTV = findViewById(R.id.setup_activity_contentTV);
+        sendEmailTV = findViewById(R.id.setup_input_sendEmail);
+        sendEmailTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    sendEmail();
+                }catch (Exception e){
+                    Toast toast = Toast.makeText(SetupActivity.this,"找不到发送邮件的App ≡(▔﹏▔)≡",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                }
+            }
+        });
         long now = new GregorianCalendar().getTimeInMillis();
         AppSetup temp = LitePal.where("key = 'firstruntime'").findFirst(AppSetup.class);
         long l = Long.parseLong(temp.getValue());
@@ -51,10 +67,12 @@ public class SetupActivity extends AppCompatActivity {
         if(hour > 0){
             s += hour+"小时";
         }
-        if(minute > 0){
+        if(minute > 1){
             s += minute+"分钟。";
+        }else{
+            s+="1分钟。";
         }
-        s+="\n\n感谢您对我的信任，祝您生活愉快！";
+        s+="\n\n\n感谢您的信任，祝您生活愉快！";
         contentTV.setText(s);
         organizeNameTV = findViewById(R.id.setup_organizenameTV);
         String organizeName ="您还没有设置科室或团队名称";
@@ -81,7 +99,21 @@ public class SetupActivity extends AppCompatActivity {
         restoreBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                restore();
+                MyDialogFragment dialogFragment = MyDialogFragment.newInstant("该操作将清除现有数据，并恢复已备份的数据。是否继续？","否","是");
+                dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                    @Override
+                    public void onDissmiss(boolean flag) {
+                        if (flag){
+                            restore();
+                        }
+                    }
+
+                    @Override
+                    public void onDissmiss(boolean flag, Object object) {
+
+                    }
+                });
+               dialogFragment.show(getSupportFragmentManager(),"Restore");
             }
         });
         closeBT = findViewById(R.id.setup_close);
@@ -91,6 +123,11 @@ public class SetupActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    private void sendEmail(){
+        Uri uri = Uri.parse ("mailto: yinzongwang@163.com");
+        Intent intent = new Intent (Intent.ACTION_SENDTO, uri);
+        this.startActivity(intent);
     }
     private void inputOrganizeNameClick(){
         MyDialogFragmentInput input = MyDialogFragmentInput.newInstant("请输入科室、团队或组织的名称");
@@ -121,22 +158,16 @@ public class SetupActivity extends AppCompatActivity {
         PermissionUtils.verifyStoragePermissions(this);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             File database_file = new File(LitePal.getDatabase().getPath());
-            File another_file = new File(database_file.getParent() + "/database_iamlittle.db-journal");
             File backUpPath = new File(Environment.getExternalStorageDirectory() + "/IAmLittle/Backup");
             if (!backUpPath.exists()) {
                 backUpPath.mkdirs();
             }
             File backFile1 = new File(backUpPath + "/database.bak");
-            File backFile2 = new File(backUpPath + "/database-journal.bak");
             try {
                 if (backFile1.exists())
                     backFile1.delete();
-                if (backFile2.exists())
-                    backFile2.delete();
                 InputStream inputStream1 = new FileInputStream(database_file);
                 OutputStream outputStream1 = new FileOutputStream(backFile1);
-                InputStream inputStream2 = new FileInputStream(another_file);
-                OutputStream outputStream2 = new FileOutputStream(backFile2);
                 byte[] bt = new byte[1024];
                 int b;
                 while ((b = inputStream1.read(bt)) > 0) {
@@ -144,12 +175,6 @@ public class SetupActivity extends AppCompatActivity {
                 }
                 inputStream1.close();
                 outputStream1.close();
-                b = -1;
-                while ((b = inputStream2.read(bt)) > 0) {
-                    outputStream2.write(bt, 0, b);
-                }
-                inputStream2.close();
-                outputStream2.close();
                 Toast.makeText(SetupActivity.this, "备份成功！\n备份路径：" + backUpPath.getAbsolutePath(), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -160,45 +185,38 @@ public class SetupActivity extends AppCompatActivity {
         }
     }
     private void restore(){
-        File database_file = new File(LitePal.getDatabase().getPath());
-        if(database_file.exists())
-            database_file.delete();
-        File another_file = new File(database_file.getParent() + "/database_iamlittle.db-journal");
-        if(another_file.exists())
-            another_file.delete();
-        File backUpPath = new File(Environment.getExternalStorageDirectory() + "/IAmLittle/Backup");
-        if (!backUpPath.exists()) {
-            Toast.makeText(SetupActivity.this, "未找到备份文件，不能还原数据库。" , Toast.LENGTH_LONG).show();
-            return;
-        }
-        File backFile1 = new File(backUpPath + "/database.bak");
-        File backFile2 = new File(backUpPath + "/database-journal.bak");
-        if ((!backFile1.exists()) || (!backFile2.exists() )){
-            Toast.makeText(SetupActivity.this, "未找到备份文件，不能还原数据库。" , Toast.LENGTH_LONG).show();
-            return;
-        }
-        try {
-            InputStream inputStream1 = new FileInputStream(backFile1);
-            OutputStream outputStream1 = new FileOutputStream(database_file);
-            InputStream inputStream2 = new FileInputStream(backFile2);
-            OutputStream outputStream2 = new FileOutputStream(another_file);
-            byte[] bt = new byte[1024];
-            int b;
-            while ((b = inputStream1.read(bt)) > 0) {
-                outputStream1.write(bt, 0, b);
+        PermissionUtils.verifyStoragePermissions(this);
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File database_file = new File(LitePal.getDatabase().getPath());
+            File backUpPath = new File(Environment.getExternalStorageDirectory() + "/IAmLittle/Backup");
+            File another_file = new File(database_file.getParent() + "/database_iamlittle.db-journal");
+            if (!backUpPath.exists()) {
+                Toast.makeText(SetupActivity.this, "未找到备份文件，不能还原数据库。", Toast.LENGTH_LONG).show();
+                return;
             }
-            inputStream1.close();
-            outputStream1.close();
-            b = -1;
-            while ((b = inputStream2.read(bt)) > 0) {
-                outputStream2.write(bt, 0, b);
+            File backFile1 = new File(backUpPath + "/database.bak");
+            if (!backFile1.exists()) {
+                Toast.makeText(SetupActivity.this, "未找到备份文件，不能还原数据库。", Toast.LENGTH_LONG).show();
+                return;
             }
-            inputStream2.close();
-            outputStream2.close();
-            Toast.makeText(SetupActivity.this, "还原成功！" , Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(SetupActivity.this, "还原失败！\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+            LitePal.deleteDatabase("database_iamlittle");
+            if (another_file.exists())
+                another_file.delete();
+            try {
+                InputStream inputStream1 = new FileInputStream(backFile1);
+                OutputStream outputStream1 = new FileOutputStream(database_file);
+                byte[] bt = new byte[1024];
+                int b;
+                while ((b = inputStream1.read(bt)) > 0) {
+                    outputStream1.write(bt, 0, b);
+                }
+                inputStream1.close();
+                outputStream1.close();
+                Toast.makeText(SetupActivity.this, "还原成功！", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(SetupActivity.this, "还原失败！\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 }
