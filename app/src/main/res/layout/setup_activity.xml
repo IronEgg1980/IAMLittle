@@ -84,18 +84,14 @@
                     android:paddingLeft="8dp"
                     android:gravity="center_vertical"
                     android:text="暂未设置科室或团队名称"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="12sp"
-                    app:autoSizeMaxTextSize="16sp"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:paddingLeft="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="科室或者团队名称，用于打印排班表标题"
-                    android:textColor="@color/half_translate"
-                    android:textSize="10sp" />
+                    android:textSize="11sp" />
             </LinearLayout>
 
 
@@ -134,15 +130,14 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="本App由YZW开发，有意见或者建议，请与他联系。"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:paddingLeft="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Email：yinzongwang@163.com"
-                    android:textColor="@color/half_translate"
-                    android:textSize="10sp" />
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <TextView

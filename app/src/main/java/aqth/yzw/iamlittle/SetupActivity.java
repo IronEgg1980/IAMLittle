@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +18,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import aqth.yzw.iamlittle.EntityClass.AppSetup;
@@ -53,27 +51,30 @@ public class SetupActivity extends MyActivity {
         long now = new GregorianCalendar().getTimeInMillis();
         AppSetup temp = LitePal.where("key = 'firstruntime'").findFirst(AppSetup.class);
         long l = Long.parseLong(temp.getValue());
-        Calendar firstRunTime = new GregorianCalendar();
-        firstRunTime.setTimeInMillis(l);
-        long diff = now - l;
+        int[] values = MyTool.getValues(l,now);
+//        long diff = now - l;
         SimpleDateFormat format = new SimpleDateFormat("yyyy年M月d日 HH:mm");
-        String firstTimeString = format.format(firstRunTime.getTime());
-        String s = "从 "+firstTimeString+" 这一刻开始，我已为您服务了";
-        long day = diff / MyTool.ONE_DAY_MILLISECOND;
-        long hour = diff % MyTool.ONE_DAY_MILLISECOND / MyTool.ONE_HOUR_MILLISECOND;
-        long minute = diff % MyTool.ONE_HOUR_MILLISECOND/MyTool.ONE_MINUTE_MILLIISECOND;
-        if(day > 0){
-            s +=day +" 天 ";
+        String firstTimeString = format.format(new Date(l));
+        String s = "从 "+firstTimeString+" 这一刻开始，我已为您服务了 ";
+//        long day = diff / MyTool.ONE_DAY_MILLISECOND;
+//        long hour = diff % MyTool.ONE_DAY_MILLISECOND / MyTool.ONE_HOUR_MILLISECOND;
+//        long minute = diff % MyTool.ONE_HOUR_MILLISECOND/MyTool.ONE_MINUTE_MILLIISECOND;
+        if(values[0] > 0){
+            s +=values[0] +" 年 ";
         }
-        if(hour > 0){
-            s += hour+" 小时 ";
+        if(values[1] > 0)
+            s+=values[1] + " 个月 ";
+        if(values[2] >0)
+            s+=values[2] + " 天 ";
+        if(values[3] > 0){
+            s += values[3]+" 小时 ";
         }
-        if(minute > 1){
-            s += minute+" 分钟。";
+        if(values[4] > 1){
+            s += values[4]+" 分钟。";
         }else{
             s+=" 1 分钟。";
         }
-        s+="\n\n\n感谢您的信任，祝您生活愉快！";
+//        s+="\n\n\n感谢您的信任，祝您生活愉快！";
         contentTV.setText(s);
         organizeNameTV = findViewById(R.id.setup_organizenameTV);
         String organizeName ="您还没有设置科室或团队名称";

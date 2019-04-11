@@ -5,10 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,7 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -51,6 +50,7 @@ public class MainActivity extends MyActivity {
     private ImageView titleIV;
     private boolean isFirstRun;
     private Button beginBT;
+    private long firstTime;
 //    private void showDate(){
 //        calendarTV.setText(format.format(c.getTime())+"农历："+MyTool.getNongLi(c.getTime()));
 //        yearMonthTV.setText(yearMonthFt.format(c.getTime()));
@@ -167,6 +167,7 @@ public class MainActivity extends MyActivity {
             }
         });
         c =  new GregorianCalendar();
+        firstTime = c.getTimeInMillis();
         format = new SimpleDateFormat("今天是：yyyy年M月d日   EEEE");
         titleIV = findViewById(R.id.activity_main_title_image);
         calendarTV = findViewById(R.id.main_activity_canlendarTV);
@@ -271,6 +272,19 @@ public class MainActivity extends MyActivity {
             firstRunTime.setKey("firstruntime");
             firstRunTime.setValue(Long.toString(c.getTimeInMillis()));
             firstRunTime.save();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Calendar calendar = new GregorianCalendar();
+        long secondTime = calendar.getTimeInMillis();
+        if(secondTime - firstTime < 2000){
+            finish();
+            System.exit(0);
+        }else{
+            Toast.makeText(MainActivity.this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
+            firstTime = secondTime;
         }
     }
 
