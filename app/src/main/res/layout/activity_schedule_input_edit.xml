@@ -15,7 +15,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="56dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <LinearLayout
@@ -27,7 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="56dp"
+                    android:layout_marginBottom="60dp"
                     android:orientation="horizontal">
                     <Button
                         android:id="@+id/schedule_inputedit_activity_save"
@@ -63,22 +63,22 @@
                     <CheckBox
                         style="@style/CustomCheckboxTheme"
                         android:textColor="@android:color/white"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:text="显示农历"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:id="@+id/schedule_inputedit_activity_showNongLiCheckBox"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:paddingBottom="1dp"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="56dp"
                 android:layout_gravity="bottom"
                 android:orientation="horizontal"
                 app:layout_collapseMode="pin">
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/schedule_item_rowNumberTV"
                     android:background="@android:color/white"
                     android:gravity="center"
@@ -86,6 +86,9 @@
                     android:layout_marginRight="1dp"
                     android:layout_width="20dp"
                     android:layout_height="match_parent"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="6sp"
+                    app:autoSizeMaxTextSize="12sp"
                     />
                 <TextView
                     android:id="@+id/schedule_item_title_nameTV"
@@ -105,8 +108,11 @@
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:textSize="12sp"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeMaxTextSize="12sp"
                         android:id="@+id/schedule_item_title_date1"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -129,8 +135,11 @@
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:textSize="12sp"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeMaxTextSize="12sp"
                         android:id="@+id/schedule_item_title_date2"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -153,8 +162,11 @@
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:textSize="12sp"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeMaxTextSize="12sp"
                         android:id="@+id/schedule_item_title_date3"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -177,8 +189,11 @@
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:textSize="12sp"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeMaxTextSize="12sp"
                         android:id="@+id/schedule_item_title_date4"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -201,8 +216,11 @@
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:textSize="12sp"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeMaxTextSize="12sp"
                         android:id="@+id/schedule_item_title_date5"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -225,8 +243,11 @@
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:textSize="12sp"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeMaxTextSize="12sp"
                         android:id="@+id/schedule_item_title_date6"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -250,8 +271,11 @@
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:textSize="12sp"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeMaxTextSize="12sp"
                         android:id="@+id/schedule_item_title_date7"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -300,11 +324,15 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal">
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
+            android:textSize="12sp"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeMaxTextSize="12sp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:background="@color/scheduleItemTextViewBG"
-            android:layout_width="wrap_content"
+            android:layout_width="64dp"
             android:layout_height="match_parent"
             android:id="@+id/schedule_inputedit_activity_bottomTV"
             android:gravity="center"
@@ -315,6 +343,7 @@
             android:scrollbarSize="1dp"
             android:scrollbars="horizontal"
             android:fadeScrollbars="false"
+            android:scrollbarStyle="outsideInset"
             android:id="@+id/schedule_inputedit_activity_recyclerview2"/>
     </LinearLayout>
 </LinearLayout>

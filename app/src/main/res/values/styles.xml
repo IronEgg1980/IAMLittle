@@ -18,6 +18,11 @@
     </style>
     <style name="ScheduleItemTextViewStyle">
         <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:textColor">@color/colorText</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
@@ -28,16 +33,18 @@
         <item name="android:button">@drawable/checkbox_button_selector</item>
     </style>
     <style name="ScheduleTitleButtonStyle">
-        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">12sp</item>
         <item name="android:background">@drawable/button_normal_selector</item>
     </style>
     <style name="ScheduleInputEditButtonStyle" parent="ScheduleTitleButtonStyle">
-        <item name="android:layout_width">96dp</item>
-        <item name="android:layout_height">32dp</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:paddingLeft">8dp</item>
     </style>
     <style name="NormalButtonStyle">
@@ -76,7 +83,7 @@
         <item name="android:layout_marginRight">8dp</item>
     </style>
     <style name="main_button_style">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorText</item>
         <item name="android:background">@drawable/main_button_selector</item>
         <item name="android:layout_height">match_parent</item>

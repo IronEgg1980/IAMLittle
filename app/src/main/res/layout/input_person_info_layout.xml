@@ -20,6 +20,7 @@
             android:gravity="center"
             android:textSize="12sp"/>
         <EditText
+            android:hint="姓名"
             android:layout_marginLeft="8dp"
             android:id="@+id/input_person_name_edittext"
             android:layout_width="0dp"
@@ -79,7 +80,6 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:orientation="horizontal">
@@ -92,32 +92,40 @@
             android:textSize="12sp" />
 
         <EditText
+            android:hint="年龄"
             android:id="@+id/input_person_info_age"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:layout_marginLeft="8dp"
-            android:gravity="right|center_vertical"
+            android:gravity="center_vertical"
             android:inputType="number"
             android:maxLength="3"
             android:maxLines="1" />
-
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout80"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="12dp"
             android:gravity="center"
-            android:text="绩效系数"
+            android:text="分配系数"
             android:textSize="12sp" />
 
         <EditText
+            android:hint="系数"
             android:id="@+id/input_person_info_ratio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="8dp"
-            android:gravity="right|center_vertical"
+            android:gravity="center_vertical"
             android:inputType="numberDecimal"
             android:maxLength="6"
             android:maxLines="1" />
@@ -137,6 +145,7 @@
             android:gravity="center"
             android:textSize="12sp"/>
         <EditText
+            android:hint="手机号码"
             android:id="@+id/input_person_info_phone"
             android:layout_marginLeft="8dp"
             android:layout_width="match_parent"
@@ -145,12 +154,13 @@
             android:maxLength="25"
             android:inputType="phone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:orientation="horizontal">
@@ -163,6 +173,7 @@
 
 
         <EditText
+            android:hint="备注"
             android:id="@+id/input_person_info_note"
             android:layout_marginLeft="8dp"
             android:layout_width="match_parent"

@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
+<LinearLayout android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dialog_shape">
-
-    <TextView
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_shape"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.AppCompatTextView
         android:text="测试文字"
         android:id="@+id/dialog_info_textView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_margin="20dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center_vertical"
+        android:layout_margin="16dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeMaxTextSize="16sp"
         android:textSize="16sp" />
-
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"

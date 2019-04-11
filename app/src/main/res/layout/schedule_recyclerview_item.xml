@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:background="@color/colorPrimary"
-    >
-    <TextView
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary">
+    <android.support.v7.widget.AppCompatTextView
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="6sp"
+        app:autoSizeMaxTextSize="10sp"
         android:layout_marginRight="1dp"
         android:id="@+id/schedule_item_rowNumberTV"
         android:background="@color/scheduleItemTextViewBG"
@@ -16,7 +21,13 @@
         android:layout_width="20dp"
         android:layout_height="match_parent"
         />
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="14sp"
+        android:textSize="14sp"
         android:background="@android:color/white"
         android:layout_marginRight="1dp"
         android:layout_width="0dp"
@@ -25,71 +36,75 @@
         android:id="@+id/schedule_item_nameTV"
         android:gravity="center"
         android:textColor="@color/colorText"
-        android:textSize="16sp"
         android:text="人员姓名"/>
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV1"
         style="@style/ScheduleItemTextViewStyle"
         android:text="星期一"/>
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
         style="@style/ScheduleItemTextViewStyle"
         android:id="@+id/schedule_item_shiftTV2"
         android:text="星期二"/>
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV3"
         android:text="星期三"/>
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV4"
         android:text="星期四"/>
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV5"
         android:text="星期五"/>
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV6"
         android:text="星期六"/>
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
         android:id="@+id/schedule_item_shiftTV7"
         android:text="星期日"/>
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="12sp"
+        android:textSize="12sp"
         android:background="@android:color/white"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="match_parent"
         android:id="@+id/schedule_item_noteTV"
-        android:textSize="12sp"
         android:maxLines="2"
         android:ellipsize="end"
         android:paddingLeft="4dp"

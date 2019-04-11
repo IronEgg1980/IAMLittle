@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView calendarTV;
     private ImageView titleIV;
     private boolean isFirstRun;
-    private long firstRunTime;
+    private Button beginBT;
 //    private void showDate(){
 //        calendarTV.setText(format.format(c.getTime())+"农历："+MyTool.getNongLi(c.getTime()));
 //        yearMonthTV.setText(yearMonthFt.format(c.getTime()));
@@ -239,21 +240,25 @@ public class MainActivity extends AppCompatActivity {
         adapter = new TodayScheduleAdapter(list);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        beginBT = findViewById(R.id.main_activity_title_button);
+        beginBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appBarLayout.setExpanded(false);
+            }
+        });
         appBarLayout = findViewById(R.id.appbarlayout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
                 if(i == 0){
                     toolbarLayout.setTitle(" ");
+                    beginBT.setVisibility(View.VISIBLE);
+
                 }else{
                     toolbarLayout.setTitle("小小的助手");
+                    beginBT.setVisibility(View.INVISIBLE);
                 }
-            }
-        });
-        findViewById(R.id.main_activity_title_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                appBarLayout.setExpanded(false);
             }
         });
         isFirstRun = !LitePal.isExist(AppSetup.class,"key = ?","isFirstRun");

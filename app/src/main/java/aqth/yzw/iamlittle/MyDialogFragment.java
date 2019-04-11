@@ -91,7 +91,9 @@ public class MyDialogFragment extends DialogFragment {
         if (dialog != null) {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
+            int width = dm.widthPixels>dm.heightPixels?(int)(dm.heightPixels*0.75):(int) (dm.widthPixels * 0.75);
+//            int height = dm.widthPixels>dm.heightPixels?(int)(dm.widthPixels*0.3):(int) (dm.heightPixels *0.3);
+            dialog.getWindow().setLayout(width,600);
         }
     }
 

@@ -43,7 +43,7 @@ public class SetupActivity extends AppCompatActivity {
                 try {
                     sendEmail();
                 }catch (Exception e){
-                    Toast toast = Toast.makeText(SetupActivity.this,"找不到发送邮件的App ≡(▔﹏▔)≡",Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(SetupActivity.this,"找不到可以发送邮件的App",Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                 }
