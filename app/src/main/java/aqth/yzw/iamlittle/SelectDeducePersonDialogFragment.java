@@ -110,7 +110,9 @@ public class SelectDeducePersonDialogFragment extends DialogFragment {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.getWindow().setLayout((int) (dm.widthPixels * 0.75), (int) (dm.heightPixels * 0.5));
+            int width = (int)(Math.min(dm.widthPixels,dm.heightPixels)*0.8);
+            int height = (int)(Math.max(dm.widthPixels,dm.heightPixels)*0.5);
+            dialog.getWindow().setLayout(width,height);
         }
         fillData();
         adapter.notifyDataSetChanged();

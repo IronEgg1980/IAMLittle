@@ -93,7 +93,8 @@
                     android:paddingLeft="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="排班表表头"
+                    android:text="科室或者团队名称，用于打印排班表标题"
+                    android:textColor="@color/half_translate"
                     android:textSize="10sp" />
             </LinearLayout>
 
@@ -106,10 +107,7 @@
                 android:text="点击更改"
                 android:textSize="16sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_navigate_next_orange_500_24dp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -130,11 +128,12 @@
 
                 <TextView
                     android:paddingLeft="8dp"
+                    android:paddingRight="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="作者：YZW"
+                    android:text="本App由YZW开发，有意见或者建议，请与他联系。"
                     android:textSize="16sp" />
 
                 <TextView
@@ -142,23 +141,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Email：yinzongwang@163.com"
+                    android:textColor="@color/half_translate"
                     android:textSize="10sp" />
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/setup_input_sendEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="联系作者"
+                android:text="发送邮件"
                 android:textSize="16sp" />
-
-            <ImageView
-                android:paddingLeft="4dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_email_orange_500_24dp" />
         </LinearLayout>
         <Button
             android:id="@+id/setup_backup"

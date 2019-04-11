@@ -46,10 +46,10 @@ public class CalPRPCheckoutFragment extends Fragment {
         for(JXGZDetailsTemp temp:LitePal.findAll(JXGZDetailsTemp.class)){
             total = Arith.add(total,temp.getJXGZAmount());
         }
-        diffValue = Arith.sub(total, infactTotal);
-        infactTotalAmountTV.setText(Arith.doubleToString(infactTotal,amountFlag));
-        totalAmountTV.setText(Arith.doubleToString(total,amountFlag));
-        if(diffValue == 0){
+        diffValue =Arith.sub(total, infactTotal);
+        infactTotalAmountTV.setText(Double.toString(infactTotal));
+        totalAmountTV.setText(Double.toString(total));
+        if(Arith.round(diffValue,0) == 0){
             diffTV.setTextColor(Color.GREEN);
             activity.setHasCheckouted(true);
         }else if(diffValue > 0){
@@ -57,7 +57,7 @@ public class CalPRPCheckoutFragment extends Fragment {
         }else{
             diffTV.setTextColor(Color.RED);
         }
-        diffTV.setText(Arith.doubleToString(diffValue,amountFlag));
+        diffTV.setText(Double.toString(diffValue));
     }
 
     private void fillData() {

@@ -38,7 +38,7 @@ import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.Schedule;
 import aqth.yzw.iamlittle.EntityClass.TodaySchedule;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MyActivity {
     private String TAG = "殷宗旺";
     private RecyclerView recyclerView;
     private TodayScheduleAdapter adapter;

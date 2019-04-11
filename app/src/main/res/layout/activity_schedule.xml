@@ -14,7 +14,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="56dp"
+            android:minHeight="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways|snap">
 
             <LinearLayout
@@ -56,7 +56,7 @@
                         android:layout_marginRight="8dp"
                         android:drawableTop="@drawable/ic_arrow_back_white_24dp"
                         style="@style/ScheduleTitleButtonStyle"
-                        android:text="上一周" />
+                        android:text="上周" />
 
                     <Button
                         android:id="@+id/schedule_activity_thisWeek"
@@ -69,7 +69,7 @@
                         android:layout_marginRight="8dp"
                         android:drawableTop="@drawable/ic_arrow_forward_white_24dp"
                         style="@style/ScheduleTitleButtonStyle"
-                        android:text="下一周" />
+                        android:text="下周" />
                     <Button
                         android:id="@+id/schedule_activity_selectDate"
                         android:layout_marginRight="32dp"
@@ -117,7 +117,7 @@
 
                         <TextView
                             android:text="2019年度"
-                            android:textSize="11sp"
+                            android:textSize="11dp"
                             android:textColor="@android:color/white"
                             android:id="@+id/schedule_activity_year"
                             android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
                             android:gravity="center"/>
                         <TextView
                             android:text="第20周"
-                            android:textSize="11sp"
+                            android:textSize="11dp"
                             android:textColor="@android:color/white"
                             android:id="@+id/schedule_activity_weekofyear"
                             android:layout_width="match_parent"
@@ -139,7 +139,7 @@
             <LinearLayout
                 android:paddingBottom="1dp"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_gravity="bottom"
                 android:orientation="horizontal"
                 app:layout_collapseMode="pin">

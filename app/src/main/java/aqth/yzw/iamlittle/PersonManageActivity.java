@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
-public class PersonManageActivity extends AppCompatActivity {
+public class PersonManageActivity extends MyActivity {
     public interface IOnBackPress{
         public void onBackPress();
     }

@@ -42,8 +42,7 @@ public class JXGZSingleResultAdapter extends RecyclerView.Adapter<JXGZSingleResu
         int scale = jxgzSingleResultTemp.getScale();
         viewHolder.nameTV.setText(jxgzSingleResultTemp.getPersonName());
         viewHolder.ratioTV.setText(Double.toString(jxgzSingleResultTemp.getRatio()));
-        String s = Arith.doubleToString(jxgzSingleResultTemp.getAmount(),scale);
-        viewHolder.amountTV.setText(s);
+        viewHolder.amountTV.setText(Double.toString(jxgzSingleResultTemp.getAmount()));
     }
 
     @Override

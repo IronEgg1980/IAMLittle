@@ -160,7 +160,7 @@ public class CalPRPDeduceFragment extends Fragment {
                 if (totalRatio == 0)
                     perAmount = 0;
                 else {
-                    perAmount = Arith.div(deduceAmount,totalRatio, amountFlag);
+                    perAmount = Arith.div(deduceAmount,totalRatio);
                 }
                 s += "\n分配方式：按系数分配，总系数：" + Double.toString(totalRatio) +
                         "，1.0系数分配金额：" + Arith.doubleToString(perAmount, amountFlag) +
@@ -175,7 +175,7 @@ public class CalPRPDeduceFragment extends Fragment {
                 if (count == 0)
                     perAmount = 0;
                 else {
-                    perAmount = Arith.div(deduceAmount,count, amountFlag);
+                    perAmount = Arith.div(deduceAmount,count);
                 }
                 s += "\n分配方式：平均分配，分配人数：" + Integer.toString(count) +
                         "人，平均每人分配金额：" + Arith.doubleToString(perAmount, amountFlag) +
@@ -187,7 +187,7 @@ public class CalPRPDeduceFragment extends Fragment {
                     double ratio = temp.getJXGZPersonDetails().getThatRatio();
                     double amount = perAmount;
                     if(asignByRatio){
-                        amount = Arith.mul(ratio , perAmount,amountFlag);
+                        amount = Arith.mul(ratio, perAmount,amountFlag);
                     }
                     JXGZSingleResultTemp singleResultTemp = new JXGZSingleResultTemp();
                     singleResultTemp.setPersonName(name);
@@ -238,7 +238,7 @@ public class CalPRPDeduceFragment extends Fragment {
                 activity.showToast("没有选择扣款项目");
                 return false;
             }
-            deduceAmount = Arith.div(Arith.mul(deduceAmount ,day ), maxDays, amountFlag);
+            deduceAmount = Arith.div(Arith.mul(deduceAmount ,day ), maxDays);
         } else {
             deduceAmount = new BigDecimal(inputET.getText().toString().trim()).doubleValue();
             if (deduceAmount < 0) {
@@ -280,12 +280,11 @@ public class CalPRPDeduceFragment extends Fragment {
                         deduceName = inputDeduceNameET.getText().toString().trim();
                     }
                     // 保存
-                    deduceAmount = Arith.mul(deduceAmount,-1.0);
                     JXGZPersonDetailsTemp temp = new JXGZPersonDetailsTemp();
                     temp.setPersonName(deducePersonName);
                     temp.setJXGZName(deduceName);
                     temp.setJXGZType(MyTool.JXGZ_DEDUCE);
-                    temp.setJXGZAmount(deduceAmount);
+                    temp.setJXGZAmount(Arith.mul(deduceAmount,-1.0,amountFlag));
                     temp.setThatRatio(thatRatio);
                     temp.setScale(amountFlag);
                     temp.save();
@@ -298,9 +297,9 @@ public class CalPRPDeduceFragment extends Fragment {
                             temp2.setThatRatio(item.getJXGZPersonDetails().getThatRatio());
                             double amount = 0;
                             if (asignByRatio)
-                                amount = Arith.mul(perAmount ,item.getJXGZPersonDetails().getThatRatio(), amountFlag);
+                                amount = Arith.mul(perAmount,item.getJXGZPersonDetails().getThatRatio(), amountFlag);
                             else
-                                amount = perAmount;
+                                amount = Arith.mul(perAmount,1.0,amountFlag);
                             temp2.setJXGZAmount(amount);
                             temp2.setScale(amountFlag);
                             temp2.save();

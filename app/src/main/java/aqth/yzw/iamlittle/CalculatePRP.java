@@ -18,7 +18,7 @@ import java.util.Date;
 import aqth.yzw.iamlittle.EntityClass.JXGZDetailsTemp;
 import aqth.yzw.iamlittle.EntityClass.JXGZPersonDetailsTemp;
 
-public class CalculatePRP extends AppCompatActivity {
+public class CalculatePRP extends MyActivity {
 
     @Override
     public void onBackPressed() {

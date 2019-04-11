@@ -10,7 +10,7 @@ import android.view.View;
 
 import static android.view.KeyEvent.KEYCODE_BACK;
 
-public class OTPActivity extends AppCompatActivity {
+public class OTPActivity extends MyActivity {
     private final int OTP_MODE = 1;
     private Toolbar toolbar;
 

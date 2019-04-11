@@ -9,8 +9,8 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="6sp"
-        app:autoSizeMaxTextSize="10sp"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="12sp"
         android:layout_marginRight="1dp"
         android:id="@+id/schedule_item_rowNumberTV"
         android:background="@color/scheduleItemTextViewBG"
@@ -25,7 +25,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="14sp"
         android:textSize="14sp"
         android:background="@android:color/white"
@@ -37,9 +37,9 @@
         android:gravity="center"
         android:textColor="@color/colorText"
         android:text="人员姓名"/>
-    <android.support.v7.widget.AppCompatTextView
+    <TextView
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         android:id="@+id/schedule_item_shiftTV1"
@@ -47,7 +47,7 @@
         android:text="星期一"/>
     <android.support.v7.widget.AppCompatTextView
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
@@ -55,7 +55,7 @@
         android:text="星期二"/>
     <android.support.v7.widget.AppCompatTextView
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
@@ -63,7 +63,7 @@
         android:text="星期三"/>
     <android.support.v7.widget.AppCompatTextView
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
@@ -71,7 +71,7 @@
         android:text="星期四"/>
     <android.support.v7.widget.AppCompatTextView
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
@@ -79,7 +79,7 @@
         android:text="星期五"/>
     <android.support.v7.widget.AppCompatTextView
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
@@ -87,7 +87,7 @@
         android:text="星期六"/>
     <android.support.v7.widget.AppCompatTextView
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="14sp"
         android:layout_marginRight="1dp"
         style="@style/ScheduleItemTextViewStyle"
@@ -97,9 +97,9 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8sp"
-        app:autoSizeMaxTextSize="12sp"
-        android:textSize="12sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeMaxTextSize="14sp"
+        android:textSize="14sp"
         android:background="@android:color/white"
         android:layout_width="0dp"
         android:layout_weight="2"

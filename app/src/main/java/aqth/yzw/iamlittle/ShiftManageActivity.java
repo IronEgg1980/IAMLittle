@@ -31,7 +31,7 @@ import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityShift;
 import aqth.yzw.iamlittle.EntityClass.Shift;
 
-public class ShiftManageActivity extends AppCompatActivity {
+public class ShiftManageActivity extends MyActivity {
     private String TAG = "殷宗旺";
     private RecyclerView recyclerView;
     private ShiftManageAdapter adapter;

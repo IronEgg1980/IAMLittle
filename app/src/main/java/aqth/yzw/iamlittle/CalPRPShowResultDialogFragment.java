@@ -101,7 +101,8 @@ public class CalPRPShowResultDialogFragment extends DialogFragment {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             int width = (int)(Math.min(dm.widthPixels,dm.heightPixels)*0.9);
-            dialog.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int height = (int)(Math.max(dm.widthPixels,dm.heightPixels)*0.8);
+            dialog.getWindow().setLayout(width, height);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }

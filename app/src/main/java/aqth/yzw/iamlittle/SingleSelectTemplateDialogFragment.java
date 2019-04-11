@@ -106,7 +106,9 @@ public class SingleSelectTemplateDialogFragment extends DialogFragment {
         if (dialog != null) {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            dialog.getWindow().setLayout(600, (int)(dm.heightPixels*0.75));
+            int width = 750;
+            int height = (int)(Math.min(dm.widthPixels,dm.heightPixels)*0.8);
+            dialog.getWindow().setLayout(width,height);
         }
     }
 }

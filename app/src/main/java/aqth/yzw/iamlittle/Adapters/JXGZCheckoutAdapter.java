@@ -50,9 +50,7 @@ public class JXGZCheckoutAdapter extends RecyclerView.Adapter<JXGZCheckoutAdapte
         ItemEntityJXGZPersonTotalTemp temp = mList.get(i);
         viewHolder.nameTV.setText(temp.getPersonName());
         viewHolder.ratioTV.setText(Double.toString(temp.getThatRatio()));
-        int scale = temp.getList().get(0).getScale();
-        String s = temp.getAmountString(scale);
-        viewHolder.amountTV.setText(s);
+        viewHolder.amountTV.setText(Double.toString(temp.getAmount()));
         viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

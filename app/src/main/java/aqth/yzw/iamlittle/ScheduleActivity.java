@@ -53,7 +53,7 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
-public class ScheduleActivity extends AppCompatActivity {
+public class ScheduleActivity extends MyActivity {
     private TextView[] dateTVs;
     private Date[] mDates;
     private Date today;

@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="    “应发总金额”为的绩效工资实际总金额，“实发总金额”为下表各人员总金额之和，差额=应发总金额-实发总金额。因计算时有四舍五入，所以存在计算误差。请通过调整人员总金额，使差额等于0"
-            android:textSize="12sp"
+            android:textSize="12dp"
             />
     </LinearLayout>
 
@@ -119,14 +119,14 @@
             android:layout_weight="1.2"
             android:paddingRight="4dp"
             android:text="人员"
-            android:textSize="11sp" />
+            android:textSize="11dp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:text="分配系数"
-            android:textSize="11sp" />
+            android:textSize="11dp" />
 
         <TextView
             android:layout_width="0dp"
@@ -134,7 +134,7 @@
             android:layout_weight="0.8"
             android:gravity="end"
             android:text="总金额"
-            android:textSize="11sp" />
+            android:textSize="11dp" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

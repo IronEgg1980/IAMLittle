@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,10 +25,10 @@ import java.util.GregorianCalendar;
 
 import aqth.yzw.iamlittle.EntityClass.AppSetup;
 
-public class SetupActivity extends AppCompatActivity {
-    private TextView versionTV,contentTV,organizeNameTV,inputOrganizeNameTV,sendEmailTV;
+public class SetupActivity extends MyActivity {
+    private TextView versionTV,contentTV,organizeNameTV,inputOrganizeNameTV;
     private Button backBT,restoreBT,closeBT;
-
+    private TextView sendEmailTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +58,20 @@ public class SetupActivity extends AppCompatActivity {
         long diff = now - l;
         SimpleDateFormat format = new SimpleDateFormat("yyyy年M月d日 HH:mm");
         String firstTimeString = format.format(firstRunTime.getTime());
-        String s = "从"+firstTimeString+"这一刻开始，我已为您服务了";
+        String s = "从 "+firstTimeString+" 这一刻开始，我已为您服务了";
         long day = diff / MyTool.ONE_DAY_MILLISECOND;
         long hour = diff % MyTool.ONE_DAY_MILLISECOND / MyTool.ONE_HOUR_MILLISECOND;
         long minute = diff % MyTool.ONE_HOUR_MILLISECOND/MyTool.ONE_MINUTE_MILLIISECOND;
         if(day > 0){
-            s +=day +"天";
+            s +=day +" 天 ";
         }
         if(hour > 0){
-            s += hour+"小时";
+            s += hour+" 小时 ";
         }
         if(minute > 1){
-            s += minute+"分钟。";
+            s += minute+" 分钟。";
         }else{
-            s+="1分钟。";
+            s+=" 1 分钟。";
         }
         s+="\n\n\n感谢您的信任，祝您生活愉快！";
         contentTV.setText(s);

@@ -46,7 +46,7 @@ import aqth.yzw.iamlittle.EntityClass.Schedule;
 import aqth.yzw.iamlittle.EntityClass.ScheduleTemplate;
 import aqth.yzw.iamlittle.EntityClass.Shift;
 
-public class ScheduleInputEditActivity extends AppCompatActivity {
+public class ScheduleInputEditActivity extends MyActivity {
     private TextView[] dateTVs;
     private TextView bottomTV;
     private Date[] dates;

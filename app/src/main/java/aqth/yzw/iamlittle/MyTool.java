@@ -65,7 +65,7 @@ public final class MyTool {
                 typeText = "扣款";
                 break;
             case MyTool.JXGZ_ADD:
-                typeText = "他人扣款分配";
+                typeText = "二次分配";
                 break;
             case MyTool.JXGZ_ADJUST:
                 typeText = "计算误差";

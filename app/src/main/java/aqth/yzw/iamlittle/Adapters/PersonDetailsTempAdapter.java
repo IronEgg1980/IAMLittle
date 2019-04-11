@@ -132,7 +132,7 @@ public class PersonDetailsTempAdapter extends RecyclerView.Adapter {
                 int scale1 = personDetails.getJXGZPersonDetails().getScale();
                 holder3.nameTV.setText(personDetails.getJXGZPersonDetails().getJXGZName());
                 holder3.typeTV.setText(MyTool.getJXGZ_TypeString(personDetails.getJXGZPersonDetails().getJXGZType()));
-                holder3.amountTV.setText(Arith.doubleToString(personDetails.getJXGZPersonDetails().getJXGZAmount(),scale1));
+                holder3.amountTV.setText(Double.toString(personDetails.getJXGZPersonDetails().getJXGZAmount()));
                 break;
             case 3:// details
                 DetailsViewHolder holder1 = (DetailsViewHolder)viewHolder;
@@ -140,7 +140,7 @@ public class PersonDetailsTempAdapter extends RecyclerView.Adapter {
                 int scale2 = totalDetails.getDetails().getScale();
                 holder1.nameTV.setText(totalDetails.getDetails().getJXGZName());
                 holder1.typeTV.setText(MyTool.getJXGZ_TypeString(totalDetails.getDetails().getJXGZType()));
-                holder1.amountTV.setText(Arith.doubleToString(totalDetails.getDetails().getJXGZAmount(),scale2));
+                holder1.amountTV.setText(Double.toString(totalDetails.getDetails().getJXGZAmount()));
                 break;
         }
     }
