@@ -15,6 +15,15 @@ public class Person extends LitePalSupport {
     private int status;
     private String phone;
     private String note;
+    private double remaningLeave;
+
+    public double getRemaningLeave() {
+        return remaningLeave;
+    }
+
+    public void setRemaningLeave(double remaningLeave) {
+        this.remaningLeave = remaningLeave;
+    }
 
     public String getName() {
         return name;

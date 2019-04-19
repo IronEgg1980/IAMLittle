@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:orientation="horizontal"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="32dp">
+    <TextView
+        android:id="@+id/person_name_textview"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textSize="14dp"
+        android:hint="点击选择人员"
+        />
+
+    <TextView
+        android:id="@+id/assign_bed_textview"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textSize="14dp"
+        android:hint="输入分管床位"/>
+</LinearLayout>

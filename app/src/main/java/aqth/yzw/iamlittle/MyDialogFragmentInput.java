@@ -22,10 +22,11 @@ import org.litepal.LitePal;
 import aqth.yzw.iamlittle.EntityClass.ScheduleTemplate;
 
 public class MyDialogFragmentInput extends DialogFragment {
-    public static MyDialogFragmentInput newInstant(String text){
+    public static MyDialogFragmentInput newInstant(String text,String hint){
         MyDialogFragmentInput fragmentInput = new MyDialogFragmentInput();
         Bundle bundle = new Bundle();
         bundle.putString("Text",text);
+        bundle.putString("Hint",hint);
         fragmentInput.setArguments(bundle);
         return fragmentInput;
     }
@@ -39,7 +40,7 @@ public class MyDialogFragmentInput extends DialogFragment {
     }
     private EditText editText;
     private boolean flag;
-    private String returnText,mText;
+    private String returnText,mText,mHint;
     private boolean isTemplateInput;
 
     public void setOnDialogFragmentDismiss(OnDialogFragmentDismiss onDialogFragmentDismiss) {
@@ -60,10 +61,12 @@ public class MyDialogFragmentInput extends DialogFragment {
         flag = false;
         returnText = "";
         mText = "";
+        mHint = "";
         isTemplateInput = false;
         if(getArguments()!=null ){
             isTemplateInput = getArguments().getBoolean("IsTemplateInput");
             mText = getArguments().getString("Text");
+            mHint = getArguments().getString("Hint");
         }
     }
 
@@ -74,10 +77,13 @@ public class MyDialogFragmentInput extends DialogFragment {
         editText = view.findViewById(R.id.dialog_input_edittext);
 //        if(!"".equals(mText))
 //            editText.setText(mText);
+        if(!"".equals(mText)) {
+            editText.setText(mText);
+        }
         if(isTemplateInput){
             editText.setHint("请输入模板名称");
-        }else if(!"".equals(mText)){
-            editText.setHint(mText);
+        }else if(!"".equals(mHint)){
+            editText.setHint(mHint);
         }else{
             editText.setHint("请输入文字");
         }

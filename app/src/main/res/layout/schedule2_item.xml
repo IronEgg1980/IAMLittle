@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="32dp"
+    android:orientation="horizontal"
+    android:id="@+id/root">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/assign_bedTV"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="分管床位"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:id="@+id/divide1"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/remaning_leaveTV"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="余假"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:id="@+id/divide2"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shift1"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shift2"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shift3"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shift4"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shift5"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shift6"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shift7"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="9sp"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/half_translate" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/noteTV"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="备注"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeTextType="uniform" />
+</LinearLayout>

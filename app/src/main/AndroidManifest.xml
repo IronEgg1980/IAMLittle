@@ -14,8 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SetupActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".ScheduleActivity2"></activity>
+        <activity
+            android:name=".SetupActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -59,7 +61,6 @@
         <activity
             android:name=".OTPActivity"
             android:screenOrientation="portrait" />
-
     </application>
 
 </manifest>

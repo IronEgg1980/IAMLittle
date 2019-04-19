@@ -51,23 +51,6 @@ public class MainActivity extends MyActivity {
     private boolean isFirstRun;
     private Button beginBT;
     private long firstTime;
-//    private void showDate(){
-//        calendarTV.setText(format.format(c.getTime())+"农历："+MyTool.getNongLi(c.getTime()));
-//        yearMonthTV.setText(yearMonthFt.format(c.getTime()));
-//        if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-//            dayTV.setTextColor(Color.RED);
-//            weekTV.setTextColor(Color.RED);
-//        }else if(c.get(Calendar.DAY_OF_WEEK)== Calendar.SATURDAY){
-//            dayTV.setTextColor(Color.GREEN);
-//            weekTV.setTextColor(Color.GREEN);
-//        }else {
-//            dayTV.setTextColor(Color.WHITE);
-//            weekTV.setTextColor(Color.WHITE);
-//        }
-//        dayTV.setText(dayFt.format(c.getTime()));
-//        weekTV.setText(weekFt.format(c.getTime()));
-//        nongliTV.setText(MyTool.getNongLi(c.getTime()));
-//    }
     private void updateTodayList(){
         if(list == null){
             list = new ArrayList<>();
@@ -182,7 +165,8 @@ public class MainActivity extends MyActivity {
         findViewById(R.id.schedule_activity).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,ScheduleActivity.class));
+               // startActivity(new Intent(MainActivity.this,ScheduleActivity.class));
+                startActivity(new Intent( MainActivity.this,ScheduleActivity2.class));
             }
         });
         findViewById(R.id.schedule_input_activity).setOnClickListener(new View.OnClickListener() {

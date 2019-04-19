@@ -25,7 +25,6 @@ public class ScheduleTemplateAdapter extends RecyclerView.Adapter<ScheduleTempla
         }
     }
     private List<ItemEntityScheduleTemplate> mList;
-    private List<Integer> selectedList;
     private boolean isMultiSelect;
     private Context mContext;
     public void setItemClickListener(IItemClickListener itemClickListener) {
@@ -37,7 +36,6 @@ public class ScheduleTemplateAdapter extends RecyclerView.Adapter<ScheduleTempla
         mContext = context;
         mList = list;
         this.isMultiSelect = isMultiSelect;
-        selectedList = new ArrayList<>();
     }
     @NonNull
     @Override
