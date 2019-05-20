@@ -1,5 +1,6 @@
 package aqth.yzw.iamlittle;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -23,6 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 
 import org.litepal.LitePal;
 
@@ -55,8 +60,9 @@ public class PRPDetailsFragment extends Fragment {
     private RecyclerView totalRecyclerView, personRecyclerView;
     private PRPDetailsAdapter totalAdapter, personAdapter;
     private int mode;
-    private String recordTime,dateString;
+    private String recordTime, dateString;
     private PRPActivity activity;
+
     private void showToast(String content) {
         Toast toast = Toast.makeText(getContext(), content, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -78,7 +84,7 @@ public class PRPDetailsFragment extends Fragment {
                 totalDetailsList.add(new ItemEntityJXGZTotalDetails(details));
             }
             updatePersonList();
-        }else{
+        } else {
             totalDetailsList.add(new ItemEntity());
         }
     }
@@ -93,7 +99,7 @@ public class PRPDetailsFragment extends Fragment {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 String name = cursor.getString(0);
-                if(!TextUtils.isEmpty(name))
+                if (!TextUtils.isEmpty(name))
                     people.add(name);
             } while (cursor.moveToNext());
         }
@@ -129,30 +135,30 @@ public class PRPDetailsFragment extends Fragment {
             ItemEntityJXGZPersonTotal total = (ItemEntityJXGZPersonTotal) itemEntity;
             int count = total.getChildCount();
             for (int i = count; i > 0; i--) {
-                personDetailsList.remove(position+i);
-                personAdapter.notifyItemRemoved(position+i);
+                personDetailsList.remove(position + i);
+                personAdapter.notifyItemRemoved(position + i);
             }
             personAdapter.notifyItemRangeChanged(position, personAdapter.getItemCount() - position);
         }
     }
 
     private void dele() {
-        MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除该月份的所有数据？\n注意：删除后不能恢复！","取消","删除",
-                Color.BLACK,Color.RED);
+        MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除该月份的所有数据？\n注意：删除后不能恢复！", "取消", "删除",
+                Color.BLACK, Color.RED);
         dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
             @Override
             public void onDissmiss(boolean flag) {
-                if(flag){
-                    LitePal.deleteAll(JXGZDetails.class,"recordTime = ?",recordTime);
-                    LitePal.deleteAll(JXGZPersonDetails.class,"recordTime = ?",recordTime);
+                if (flag) {
+                    LitePal.deleteAll(JXGZDetails.class, "recordTime = ?", recordTime);
+                    LitePal.deleteAll(JXGZPersonDetails.class, "recordTime = ?", recordTime);
                     showToast("已删除");
-                    if(mode == 0){
+                    if (mode == 0) {
                         activity.finish();
-                    }else{
+                    } else {
                         activity.setShowDetails(false);
                         activity.setTitle("历史数据列表");
-                        PRPListFragment fragment =(PRPListFragment) getFragmentManager().findFragmentByTag("List");
-                        if(fragment!=null){
+                        PRPListFragment fragment = (PRPListFragment) getFragmentManager().findFragmentByTag("List");
+                        if (fragment != null) {
                             fragment.notifyDataChange();
                         }
                         getFragmentManager().popBackStackImmediate();
@@ -165,11 +171,16 @@ public class PRPDetailsFragment extends Fragment {
 
             }
         });
-        dialogFragment.show(getFragmentManager(),"Delete");
+        dialogFragment.show(getFragmentManager(), "Delete");
 
     }
 
     private void share() {
+        if (!MyTool.isAppInstall(getContext(), "com.tencent.mm")) {
+            Toast.makeText(getContext(),"您没有安装微信，不能执行该操作！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        MyTool.checkFileUriExposure();
         File sharedFile = getExcelFile();
         if (sharedFile != null) {
             Uri uri = null;
@@ -179,26 +190,28 @@ public class PRPDetailsFragment extends Fragment {
                 uri = Uri.fromFile(sharedFile);
             }
             Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("application/*");
+            intent.setType("*/*");
             intent.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(intent, dateString+"绩效工资表"));
-            ((PRPActivity)getActivity()).setShowDetails(false);
+            intent.setComponent(new ComponentName("com.tencent.mm","com.tencent.mm.ui.tools.ShareImgUI"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(Intent.createChooser(intent, dateString + "绩效工资表"));
         }
+        ((PRPActivity) getActivity()).setShowDetails(false);
     }
-    private File getExcelFile(){
-        if(totalDetailsList.size()==1 && totalDetailsList.get(0).getType() == ItemType.EMPTY){
-            Toast.makeText(getContext(),"当前列表没有数据",Toast.LENGTH_SHORT).show();
+
+    private File getExcelFile() {
+        if (totalDetailsList.size() == 1 && totalDetailsList.get(0).getType() == ItemType.EMPTY) {
+            Toast.makeText(getContext(), "当前列表没有数据", Toast.LENGTH_SHORT).show();
             return null;
         }
-        if(personDetailsList.size() == 0) {
-            Toast.makeText(getContext(),"当前列表没有数据或者数据错误",Toast.LENGTH_SHORT).show();
+        if (personDetailsList.size() == 0) {
+            Toast.makeText(getContext(), "当前列表没有数据或者数据错误", Toast.LENGTH_SHORT).show();
             return null;
         }
-        PermissionUtils.verifyStoragePermissions(getActivity());
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        if (XXPermissions.isHasPermission(getContext(), Permission.Group.STORAGE)) {
             String outPath = Environment.getExternalStorageDirectory() + "/IAmLittle/PRP/";
             File dir = new File(outPath);
-            try{
+            try {
                 File tempFile = new File(getContext().getFilesDir() + "/jxgz_template.xls");
                 if (!tempFile.exists()) {
                     AssetManager assetManager = getContext().getAssets();
@@ -215,53 +228,53 @@ public class PRPDetailsFragment extends Fragment {
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                for(File file:dir.listFiles()){
-                    if(!file.isDirectory())
+                for (File file : dir.listFiles()) {
+                    if (!file.isDirectory())
                         file.delete();
                 }
                 double totalRatio = 0;
                 double total = 0;
-                FileOutputStream fos = new FileOutputStream(outPath +"prp"+dateString+".xls");
+                FileOutputStream fos = new FileOutputStream(outPath + "prp" + dateString + ".xls");
                 Workbook workbook = Workbook.getWorkbook(tempFile);
                 WritableWorkbook wwb = Workbook.createWorkbook(fos, workbook);
                 WritableSheet sheet = wwb.getSheet(0);
-                CellFormat titleFmt = sheet.getCell(0,0).getCellFormat();
-                Label titleLb = new Label(0,0,"时间："+dateString,titleFmt);
+                CellFormat titleFmt = sheet.getCell(0, 0).getCellFormat();
+                Label titleLb = new Label(0, 0, "时间：" + dateString, titleFmt);
                 sheet.addCell(titleLb);
                 int totalRow = 3; // 从第四行开始填充
                 int detailsRow = 3; // 从第四行开始填充
-                for(ItemEntity itemEntity:personDetailsList){
-                    if(itemEntity.getType() == ItemType.JXGZ_PERSON_TOTAL){
-                        ItemEntityJXGZPersonTotal entity = (ItemEntityJXGZPersonTotal)itemEntity;
+                for (ItemEntity itemEntity : personDetailsList) {
+                    if (itemEntity.getType() == ItemType.JXGZ_PERSON_TOTAL) {
+                        ItemEntityJXGZPersonTotal entity = (ItemEntityJXGZPersonTotal) itemEntity;
                         String name = entity.getPersonName();
                         double totalAmount = entity.getAmount();
                         double ratio = entity.getThatRatio();
-                        total = Arith.add(total,totalAmount);
-                        totalRatio = Arith.add(totalRatio,ratio);
+                        total = Arith.add(total, totalAmount);
+                        totalRatio = Arith.add(totalRatio, ratio);
                         int childcount = entity.getChildCount();
-                        CellFormat nameFmt = sheet.getCell(0,totalRow).getCellFormat();
-                        sheet.mergeCells(0,totalRow,0,totalRow+childcount-1);
-                        Label nameLb = new Label(0,totalRow,name,nameFmt);
+                        CellFormat nameFmt = sheet.getCell(0, totalRow).getCellFormat();
+                        sheet.mergeCells(0, totalRow, 0, totalRow + childcount - 1);
+                        Label nameLb = new Label(0, totalRow, name, nameFmt);
                         sheet.addCell(nameLb);
-                        CellFormat ratioFmt = sheet.getCell(1,totalRow).getCellFormat();
-                        sheet.mergeCells(1,totalRow,1,totalRow+childcount-1);
-                        Number ratioLb = new Number(1,totalRow,ratio,ratioFmt);
+                        CellFormat ratioFmt = sheet.getCell(1, totalRow).getCellFormat();
+                        sheet.mergeCells(1, totalRow, 1, totalRow + childcount - 1);
+                        Number ratioLb = new Number(1, totalRow, ratio, ratioFmt);
                         sheet.addCell(ratioLb);
-                        CellFormat totalAmountFmt = sheet.getCell(2,totalRow).getCellFormat();
-                        sheet.mergeCells(2,totalRow,2,totalRow+childcount-1);
-                        Number totalAmountLb = new Number(2,totalRow,totalAmount,totalAmountFmt);
+                        CellFormat totalAmountFmt = sheet.getCell(2, totalRow).getCellFormat();
+                        sheet.mergeCells(2, totalRow, 2, totalRow + childcount - 1);
+                        Number totalAmountLb = new Number(2, totalRow, totalAmount, totalAmountFmt);
                         sheet.addCell(totalAmountLb);
-                        totalRow +=childcount;
-                        for(JXGZPersonDetails details:entity.getList()){
+                        totalRow += childcount;
+                        for (JXGZPersonDetails details : entity.getList()) {
                             String jxgzName = details.getJXGZName();
                             double amount = details.getJXGZAmount();
                             String type = MyTool.getJXGZ_TypeString(details.getJXGZType());
-                            CellFormat jxgzNameFmt = sheet.getCell(3,detailsRow).getCellFormat();
-                            CellFormat amountFmt = sheet.getCell(4,detailsRow).getCellFormat();
-                            CellFormat typeFmt = sheet.getCell(5,detailsRow).getCellFormat();
-                            Label jxgzNameLb = new Label(3,detailsRow,jxgzName,jxgzNameFmt);
-                            Number amountLb = new Number(4,detailsRow,amount,amountFmt);
-                            Label typeLb = new Label(5,detailsRow,type,typeFmt);
+                            CellFormat jxgzNameFmt = sheet.getCell(3, detailsRow).getCellFormat();
+                            CellFormat amountFmt = sheet.getCell(4, detailsRow).getCellFormat();
+                            CellFormat typeFmt = sheet.getCell(5, detailsRow).getCellFormat();
+                            Label jxgzNameLb = new Label(3, detailsRow, jxgzName, jxgzNameFmt);
+                            Number amountLb = new Number(4, detailsRow, amount, amountFmt);
+                            Label typeLb = new Label(5, detailsRow, type, typeFmt);
                             sheet.addCell(jxgzNameLb);
                             sheet.addCell(amountLb);
                             sheet.addCell(typeLb);
@@ -269,32 +282,51 @@ public class PRPDetailsFragment extends Fragment {
                         }
                     }
                 }
-                CellFormat cellFormat = sheet.getCell(0,totalRow+2).getCellFormat();
-                Label sumText = new Label(0,totalRow+2,"合计：",cellFormat);
+                CellFormat cellFormat = sheet.getCell(0, totalRow + 2).getCellFormat();
+                Label sumText = new Label(0, totalRow + 2, "合计：", cellFormat);
                 sheet.addCell(sumText);
-                CellFormat sumRatioCellFormat = sheet.getCell(1,totalRow+2).getCellFormat();
-                Number sumRatioCell = new Number(1,totalRow+2,totalRatio,sumRatioCellFormat);
+                CellFormat sumRatioCellFormat = sheet.getCell(1, totalRow + 2).getCellFormat();
+                Number sumRatioCell = new Number(1, totalRow + 2, totalRatio, sumRatioCellFormat);
                 sheet.addCell(sumRatioCell);
-                CellFormat sumAmountCellFormat = sheet.getCell(2,totalRow+2).getCellFormat();
-                Number sumAmountCell = new Number(2,totalRow+2,total,sumAmountCellFormat);
+                CellFormat sumAmountCellFormat = sheet.getCell(2, totalRow + 2).getCellFormat();
+                Number sumAmountCell = new Number(2, totalRow + 2, total, sumAmountCellFormat);
                 sheet.addCell(sumAmountCell);
                 wwb.write();
-                wwb.close();;
+                wwb.close();
+                ;
                 fos.close();
                 workbook.close();
-                Toast.makeText(getContext(),"生成Excel文件成功\n文件目录："+dir.getAbsolutePath(),Toast.LENGTH_SHORT).show();
-                return new File(outPath+"prp"+dateString+".xls");
-            }catch (Exception e){
+                Toast.makeText(getContext(), "生成Excel文件成功\n文件目录：" + dir.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                return new File(outPath + "prp" + dateString + ".xls");
+            } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(),"生成Excel文件失败\n"+e.getMessage(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "生成Excel文件失败\n" + e.getMessage(), Toast.LENGTH_LONG).show();
                 return null;
             }
-        }else{
-            MyDialogFragmenSingleButton dialogFragment = MyDialogFragmenSingleButton.newInstant("您已拒绝本程序存储文件，不能进行分享操作！", "关闭");
-            dialogFragment.show(getFragmentManager(), "NotAllowWriteSD");
+        } else {
+            XXPermissions.with(getActivity())
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            if(isAll)
+                                share();
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            if (quick) {
+                                showToast("已被永久拒绝使用外置存储权限，请手动授予权限");
+                                //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                XXPermissions.gotoPermissionSettings(getActivity());
+                            } else {
+                                showToast("您已拒绝使用外置存储权限，不能使用该功能！");
+                            }
+                        }
+                    });
             return null;
         }
     }
+
     public static PRPDetailsFragment newInstant(int mode, String recordTime) {
         PRPDetailsFragment fragment = new PRPDetailsFragment();
         Bundle bundle = new Bundle();
@@ -333,7 +365,7 @@ public class PRPDetailsFragment extends Fragment {
 
             }
         });
-        activity = (PRPActivity)getActivity();
+        activity = (PRPActivity) getActivity();
     }
 
     @Nullable

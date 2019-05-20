@@ -2,6 +2,7 @@ package aqth.yzw.iamlittle;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -40,19 +41,12 @@ public class SingleSelectTemplateDialogFragment extends DialogFragment {
         if(list == null)
             list = new ArrayList<>();
         list.clear();
-        List<ScheduleTemplate> temp = LitePal.select("name").find(ScheduleTemplate.class);
-        if(temp != null && temp.size() > 0){
-            String pre = temp.get(0).getName();
-            if(!"OnPauseSaved".equals(pre)) {
-                list.add(new ItemEntityScheduleTemplate(pre));
-                for (int i = 1; i < temp.size(); i++) {
-                    String current = temp.get(i).getName();
-                    if (current.equals(pre)||"OnPauseSaved".equals(current))
-                        continue;
-                    pre = current;
-                    list.add(new ItemEntityScheduleTemplate(pre));
-                }
-            }
+        Cursor cursor = LitePal.findBySQL("SELECT DISTINCT name FROM ScheduleTemplate WHERE name != 'OnPauseSaved' ORDER BY name");
+        if(cursor != null && cursor.moveToFirst()){
+            do{
+                String name = cursor.getString(0);
+                list.add(new ItemEntityScheduleTemplate(name));
+            }while (cursor.moveToNext());
         }
     }
     @Override

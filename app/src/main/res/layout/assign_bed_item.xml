@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:orientation="horizontal"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
     android:layout_width="match_parent"
-    android:layout_height="32dp">
+    android:layout_height="wrap_content">
     <TextView
         android:id="@+id/person_name_textview"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textSize="14dp"
+        android:textSize="16dp"
         android:hint="点击选择人员"
+        android:textColor="@color/colorPrimary"
         />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/assign_bed_textview"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textSize="14dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="9dp"
+        app:autoSizeMaxTextSize="16dp"
+        android:textColor="@color/colorPrimary"
         android:hint="输入分管床位"/>
 </LinearLayout>

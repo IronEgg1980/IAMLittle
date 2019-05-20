@@ -86,7 +86,7 @@ public class ScheduleActivity2Adapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
-        ScheduleActivity2ItemEntity itemEntity = mList.get(i);
+        final ScheduleActivity2ItemEntity itemEntity = mList.get(i);
         if(mode == 1){
             ViewHolder2 holder = (ViewHolder2)viewHolder;
             holder.textView.setText(itemEntity.getName());
@@ -102,6 +102,13 @@ public class ScheduleActivity2Adapter extends RecyclerView.Adapter{
                 holder.assignBedTV.setVisibility(View.VISIBLE);
                 holder.divid1.setVisibility(View.VISIBLE);
                 holder.assignBedTV.setText(itemEntity.getBedAssign());
+                holder.assignBedTV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        v.setTag(itemEntity.getBedAssign());
+                        clickListener.onClick(v,i);
+                    }
+                });
             }else {
                 holder.assignBedTV.setVisibility(View.GONE);
                 holder.divid1.setVisibility(View.GONE);
@@ -118,6 +125,7 @@ public class ScheduleActivity2Adapter extends RecyclerView.Adapter{
             holder.noteTV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    v.setTag(itemEntity.getNote());
                     clickListener.onClick(v,i);
                 }
             });

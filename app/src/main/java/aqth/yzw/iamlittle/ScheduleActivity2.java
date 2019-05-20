@@ -1,5 +1,6 @@
 package aqth.yzw.iamlittle;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -20,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,6 +34,10 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 
 import org.litepal.LitePal;
 
@@ -52,6 +58,7 @@ import java.util.zip.ZipOutputStream;
 import aqth.yzw.iamlittle.Adapters.ScheduleActivity2Adapter;
 import aqth.yzw.iamlittle.EntityClass.AppSetup;
 import aqth.yzw.iamlittle.EntityClass.BedAssign;
+import aqth.yzw.iamlittle.EntityClass.Person;
 import aqth.yzw.iamlittle.EntityClass.Schedule;
 import aqth.yzw.iamlittle.EntityClass.ScheduleActivity2ItemEntity;
 import jxl.Workbook;
@@ -65,7 +72,7 @@ public class ScheduleActivity2 extends AppCompatActivity {
     private LinearLayout assignBedTitleGroup, remaningLeaveTitleGroup;
     private AppCompatTextView[] titleTVs;
     private View divide1, divide2;
-    private TextView weekOfYearTV, emptyTV;
+    private TextView weekOfYearTV, emptyTV, assignBedTV, remaningLeaveTV;
     private boolean showAssignBed, showRemaningLeave, showNongLi;
     private Calendar calendar;
     private SimpleDateFormat format;
@@ -95,13 +102,16 @@ public class ScheduleActivity2 extends AppCompatActivity {
         for (String s : person) {
             ScheduleActivity2ItemEntity itemEntity = new ScheduleActivity2ItemEntity();
             itemEntity.setName(s);
-            BedAssign bedAssign = LitePal.where("number = ? and personname = ?",String.valueOf(number),s).findFirst(BedAssign.class);
+            BedAssign bedAssign = LitePal.where("number = ? and personname = ?", String.valueOf(number), s).findFirst(BedAssign.class);
             String assignBed = "";
-            if(bedAssign != null)
+            if (bedAssign != null)
                 assignBed = bedAssign.getAssign();
             itemEntity.setBedAssign(assignBed);
-
-            itemEntity.setRemaningLeaveValue(0);
+            double remaningLeave = 0;
+            Person p = LitePal.where("name = ?", s).findFirst(Person.class);
+            if (p != null)
+                remaningLeave = p.getRemaningLeave();
+            itemEntity.setRemaningLeaveValue(remaningLeave);
             temp.clear();
             temp.addAll(LitePal.order("date")
                     .where("personname = ? and date >= ? and date <= ?", s, dates[0], dates[1]).find(Schedule.class));
@@ -120,6 +130,7 @@ public class ScheduleActivity2 extends AppCompatActivity {
             rightRLV.smoothScrollToPosition(0);
             emptyTV.setVisibility(View.GONE);
         }
+        horizontalScrollView.scrollTo(0, 0);
     }
 
     private boolean hasData() {
@@ -168,9 +179,27 @@ public class ScheduleActivity2 extends AppCompatActivity {
                 assignBed(calendar.getTimeInMillis());
                 break;
             case R.id.leave_manage:
-                toast.show();
+                remaningLeaveManage();
                 break;
         }
+    }
+
+    private void remaningLeaveManage() {
+        RemaningLeaveDialogFragment fragment = new RemaningLeaveDialogFragment();
+        fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+            @Override
+            public void onDissmiss(boolean flag) {
+                if (flag) {
+                    updateList(calendar.getTime());
+                }
+            }
+
+            @Override
+            public void onDissmiss(boolean flag, Object object) {
+
+            }
+        });
+        fragment.show(getSupportFragmentManager(), "RemaningLeaveManage");
     }
 
     private void assignBed(long l) {
@@ -200,7 +229,7 @@ public class ScheduleActivity2 extends AppCompatActivity {
             divide1.setVisibility(View.GONE);
         }
         shiftAdapter.setShowAssignedBed(flag);
-        horizontalScrollView.smoothScrollTo(0,0);
+        horizontalScrollView.scrollTo(0, 0);
     }
 
     private void setShowRemaningLeave(boolean flag) {
@@ -212,7 +241,7 @@ public class ScheduleActivity2 extends AppCompatActivity {
             divide2.setVisibility(View.GONE);
         }
         shiftAdapter.setShowRemaningLeave(flag);
-        horizontalScrollView.smoothScrollTo(0,0);
+        horizontalScrollView.scrollTo(0, 0);
     }
 
     private void setScheduleTitle(Date date) {
@@ -221,7 +250,7 @@ public class ScheduleActivity2 extends AppCompatActivity {
         _c.setTime(aWeekDates[6]);
         int _year = _c.get(Calendar.YEAR);
         int _weekofyear = _c.get(Calendar.WEEK_OF_YEAR);
-        number = _year*100 + _weekofyear;
+        number = _year * 100 + _weekofyear;
         weekOfYearTV.setText(_year + " 年度 第 " + _weekofyear + " 周");
         for (int i = 0; i < 7; i++) {
             if (showNongLi) {
@@ -260,47 +289,45 @@ public class ScheduleActivity2 extends AppCompatActivity {
     }
 
     private void deleSchedule() {
-        if (list.size() == 1) {
-            Toast toast = Toast.makeText(ScheduleActivity2.this, "本周没有排班", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-            return;
-        }
-        MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除本周排班？", "取消", "删除",
-                Color.BLACK, Color.RED);
-        dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
-            @Override
-            public void onDissmiss(boolean flag) {
-                if (flag) {
-                    String[] _dates = MyTool.getWeekStartEndString(calendar.getTime());
-                    LitePal.deleteAll(Schedule.class, "date >= ? and date <= ?", _dates[0], _dates[1]);
-                    updateList(calendar.getTime());
+        if(hasData()) {
+            MyDialogFragment dialogFragment = MyDialogFragment.newInstant("是否删除本周排班？", "取消", "删除",
+                    Color.BLACK, Color.RED);
+            dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                @Override
+                public void onDissmiss(boolean flag) {
+                    if (flag) {
+                        String[] _dates = MyTool.getWeekStartEndString(calendar.getTime());
+                        LitePal.deleteAll(Schedule.class, "date >= ? and date <= ?", _dates[0], _dates[1]);
+                        LitePal.deleteAll(BedAssign.class, "number = ?", String.valueOf(number));
+                        updateList(calendar.getTime());
+                    }
                 }
-            }
 
-            @Override
-            public void onDissmiss(boolean flag, Object object) {
+                @Override
+                public void onDissmiss(boolean flag, Object object) {
 
-            }
-        });
-        dialogFragment.show(getSupportFragmentManager(), "DelSchedule");
+                }
+            });
+            dialogFragment.show(getSupportFragmentManager(), "DelSchedule");
+        }
     }
 
     private void editSchedule() {
-        if (list.size() == 1) {
-            Toast toast = Toast.makeText(ScheduleActivity2.this, "本周没有排班", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-            return;
+        if(hasData()) {
+            Intent intent = new Intent();
+            intent.putExtra("IsAddMode", false);
+            intent.putExtra("Date", calendar.getTimeInMillis());
+            intent.setClass(ScheduleActivity2.this, ScheduleInputEditActivity.class);
+            startActivityForResult(intent, 1000);
         }
-        Intent intent = new Intent();
-        intent.putExtra("IsAddMode", false);
-        intent.putExtra("Date", calendar.getTimeInMillis());
-        intent.setClass(ScheduleActivity2.this, ScheduleInputEditActivity.class);
-        startActivityForResult(intent, 1000);
     }
 
     private void shareSchedule() {
+        if (!MyTool.isAppInstall(ScheduleActivity2.this, "com.tencent.mm")) {
+            Toast.makeText(ScheduleActivity2.this,"您没有安装微信，不能执行该操作！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        MyTool.checkFileUriExposure();
         SelectPrintLayoutFragment fragment = new SelectPrintLayoutFragment();
         fragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
             @Override
@@ -322,44 +349,52 @@ public class ScheduleActivity2 extends AppCompatActivity {
     }
 
     private void shareSchedule1() {
-        getExecelFilePortrait(); // 竖版
-        getZipFile();
-        File outZipFile = new File(getCacheDir() + "/schedule_portrait.zip");
-        Uri uri = null;
-        if (Build.VERSION.SDK_INT >= 24) {
-            uri = FileProvider.getUriForFile(ScheduleActivity2.this, "th.yzw.iamlittle.fileprovider", outZipFile);
-        } else {
-            uri = Uri.fromFile(outZipFile);
+        if(getExecelFilePortrait()) { // 竖版
+            File outZipFile = getZipFile();
+            if (outZipFile != null) {
+                Uri uri = null;
+                if (Build.VERSION.SDK_INT >= 24) {
+                    uri = FileProvider.getUriForFile(ScheduleActivity2.this, "th.yzw.iamlittle.fileprovider", outZipFile);
+                } else {
+                    uri = Uri.fromFile(outZipFile);
+                }
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+                intent.setComponent(new ComponentName("com.tencent.mm","com.tencent.mm.ui.tools.ShareImgUI"));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent,"发送给："));
+            }
         }
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("application/x-zip-compressed");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(intent, "排班表分享"));
     }
 
     private void shareSchedule2() {
-        getExecelFileLandscape();// 横版
-        getZipFile();
-        File outZipFile = new File(getCacheDir() + "/schedule_landscape.zip");
-        Uri uri = null;
-        if (Build.VERSION.SDK_INT >= 24) {
-            uri = FileProvider.getUriForFile(ScheduleActivity2.this, "th.yzw.iamlittle.fileprovider", outZipFile);
-        } else {
-            uri = Uri.fromFile(outZipFile);
+        if(getExecelFileLandscape()) {// 横版
+            File outZipFile = getZipFile();
+            if (outZipFile != null) {
+                Uri uri = null;
+                if (Build.VERSION.SDK_INT >= 24) {
+                    uri = FileProvider.getUriForFile(ScheduleActivity2.this, "th.yzw.iamlittle.fileprovider", outZipFile);
+                } else {
+                    uri = Uri.fromFile(outZipFile);
+                }
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+                intent.setComponent(new ComponentName("com.tencent.mm","com.tencent.mm.ui.tools.ShareImgUI"));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent,"发送给："));
+            }
         }
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("application/x-zip-compressed");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(intent, "排班表分享"));
     }
 
-    private void getExecelFilePortrait() {
+    private boolean getExecelFilePortrait() {
         if (list.size() == 0)
-            return;
+            return false;
         Calendar _c = new GregorianCalendar();
         Date[] mDates = MyTool.getAWeekDates(calendar.getTime());
         _c.setTime(mDates[6]);
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        if (XXPermissions.isHasPermission(ScheduleActivity2.this, Permission.Group.STORAGE)) {
             String outPath = Environment.getExternalStorageDirectory() + "/IAmLittle/Schedule/";
             File dir = new File(outPath);
             try {
@@ -450,23 +485,6 @@ public class ScheduleActivity2 extends AppCompatActivity {
                             Label lb = new Label(j, row, entity.getShifts()[j - 2], shiftFmt);
                             sheet.addCell(lb);
                         }
-
-//                        ItemEntity item = list.get(position);
-//                        if (item.getType() == ItemType.SCHEDULE_WEEK_VIEW) {
-//                            int row = 7 + k;
-//                            ItemEntityScheduleInput _item = (ItemEntityScheduleInput) item;
-//                            CellFormat nameFmt = sheet.getCell(0, row).getCellFormat();
-//                            Label nameLb = new Label(0, row, _item.getValues(0), nameFmt);
-//                            sheet.addCell(nameLb);
-//                            for (int j = 1; j < 9; j++) { //循环添加
-//                                if (j == 8) {// j = 8为备注，如要改字体，需要加代码在这里
-//
-//                                }
-//                                CellFormat shiftFmt = sheet.getCell(j + 1, row).getCellFormat();
-//                                Label lb = new Label(j + 1, row, _item.getValues(j), shiftFmt);
-//                                sheet.addCell(lb);
-//                            }
-//                        }
                     }
                     CellFormat footFmt1 = sheet.getCell(0, 27).getCellFormat();
                     Label footLb1 = new Label(0, 27, "页码：" + m + "/" + pages, footFmt1);
@@ -480,24 +498,42 @@ public class ScheduleActivity2 extends AppCompatActivity {
                     workbook.close();
                 }
                 Toast.makeText(ScheduleActivity2.this, "导出EXCEL文件成功\n文件目录：" + dir.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(ScheduleActivity2.this, "导出EXCEL文件失败\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                return false;
             }
         } else {
-            PermissionUtils.verifyStoragePermissions(this);
-//            MyDialogFragmenSingleButton dialogFragment = MyDialogFragmenSingleButton.newInstant("您已拒绝本程序存储文件，不能进行导出操作！", "关闭");
-//            dialogFragment.show(getSupportFragmentManager(), "NotAllowWriteSD");
+            XXPermissions.with(this)
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            if(isAll)
+                                shareSchedule1();
+                        }
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            if (quick) {
+                                Toast.makeText(ScheduleActivity2.this,"已被永久拒绝使用外置存储权限，请手动授予权限",Toast.LENGTH_SHORT).show();
+                                //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                XXPermissions.gotoPermissionSettings(ScheduleActivity2.this);
+                            } else {
+                                Toast.makeText(ScheduleActivity2.this,"您已拒绝使用外置存储权限，不能使用该功能！",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            return false;
         }
     }
 
-    private void getExecelFileLandscape() {
+    private boolean getExecelFileLandscape() {
         if (list.size() == 0)
-            return;
+            return false;
         Calendar _c = new GregorianCalendar();
         Date[] mDates = MyTool.getAWeekDates(calendar.getTime());
         _c.setTime(mDates[6]);
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        if (XXPermissions.isHasPermission(ScheduleActivity2.this, Permission.Group.STORAGE)) {
             String outPath = Environment.getExternalStorageDirectory() + "/IAmLittle/Schedule/";
             File dir = new File(outPath);
             try {
@@ -562,10 +598,10 @@ public class ScheduleActivity2 extends AppCompatActivity {
                         ScheduleActivity2ItemEntity entity = list.get(position);
                         int row = 6 + k;//从第七行开始填充
                         CellFormat assignBedFmt = sheet.getCell(0, row).getCellFormat();
-                        Label assignBedLb = new Label(0, row, "暂未分配", assignBedFmt);
+                        Label assignBedLb = new Label(0, row, entity.getBedAssign(), assignBedFmt);
                         sheet.addCell(assignBedLb);
                         CellFormat remaningLeaveFmt = sheet.getCell(17, row).getCellFormat();
-                        Label remaningLeaveLb = new Label(17, row, "0.0", remaningLeaveFmt);
+                        Label remaningLeaveLb = new Label(17, row, String.valueOf(entity.getRemaningLeaveValue()), remaningLeaveFmt);
                         sheet.addCell(remaningLeaveLb);
                         CellFormat nameFmt = sheet.getCell(1, row).getCellFormat();
                         Label nameLb = new Label(1, row, entity.getName(), nameFmt);
@@ -592,19 +628,51 @@ public class ScheduleActivity2 extends AppCompatActivity {
                     workbook.close();
                 }
                 Toast.makeText(ScheduleActivity2.this, "导出EXCEL文件成功\n文件目录：" + dir.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(ScheduleActivity2.this, "导出EXCEL文件失败\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                return false;
             }
         } else {
-            PermissionUtils.verifyStoragePermissions(this);
+            XXPermissions.with(this)
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            if(isAll)
+                                shareSchedule2();
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            if (quick) {
+                                Toast.makeText(ScheduleActivity2.this,"已被永久拒绝使用外置存储权限，请手动授予权限",Toast.LENGTH_SHORT).show();
+                                //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                XXPermissions.gotoPermissionSettings(ScheduleActivity2.this);
+                            } else {
+                                Toast.makeText(ScheduleActivity2.this,"您已拒绝使用外置存储权限，不能使用该功能！",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            return false;
         }
     }
 
-    private void getZipFile() {
+    @Nullable
+    private File getZipFile() {
         String excelPath = Environment.getExternalStorageDirectory() + "/IAmLittle/Schedule/";
         File dir = new File(excelPath);
-        File outZipFile = new File(getCacheDir() + "/schedule_" + MyTool.getRandomString(6) + ".zip");
+        File cachePath = getCacheDir();
+        for (File file : cachePath.listFiles()) {
+            if (file.isFile()) {
+                String name = file.getName();
+                if (name.length() > 3)
+                    name = name.substring(name.lastIndexOf("."), name.length());
+                if (".zip".equals(name))
+                    file.delete();
+            }
+        }
+        File outZipFile = new File(cachePath.getAbsolutePath() + "/schedule_" + MyTool.getRandomString(6) + ".zip");
         ZipOutputStream zos = null;
         FileInputStream fis = null;
         try {
@@ -620,9 +688,10 @@ public class ScheduleActivity2 extends AppCompatActivity {
                 }
                 zos.closeEntry();
             }
+            return outZipFile;
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(ScheduleActivity2.this, "生成压缩文件失败\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            return null;
         } finally {
             try {
                 if (fis != null)
@@ -635,15 +704,13 @@ public class ScheduleActivity2 extends AppCompatActivity {
         }
     }
 
-    private void showNote(View view, int x) {
-        ScheduleActivity2ItemEntity entity = list.get(x);
-        String note = entity.getNote();
+    private void showMoreInfo(View view, String s) {
         PopupWindow popupWindow = new PopupWindow(view, 480, RelativeLayout.LayoutParams.WRAP_CONTENT);
         popupWindow.setBackgroundDrawable(new ColorDrawable());
         popupWindow.setOutsideTouchable(true);
         View v = LayoutInflater.from(view.getContext()).inflate(R.layout.popwindow_layout, null);
         TextView textView = v.findViewById(R.id.popwindow_textview);
-        textView.setText(note);
+        textView.setText(s);
         popupWindow.setContentView(v);
         int[] local = new int[2];
         view.getLocationOnScreen(local);
@@ -713,6 +780,8 @@ public class ScheduleActivity2 extends AppCompatActivity {
         showRemaningLeaveSwitch = findViewById(R.id.showRemaningLeaveSwitch);
         weekOfYearTV = findViewById(R.id.schedule_activity2_weekofyear);
         emptyTV = findViewById(R.id.empty_showTV);
+        assignBedTV = findViewById(R.id.assign_bedTV);
+        remaningLeaveTV = findViewById(R.id.remaning_leaveTV);
     }
 
     @Override
@@ -750,7 +819,8 @@ public class ScheduleActivity2 extends AppCompatActivity {
                 TextView tv = (TextView) view;
                 int line = tv.getLineCount();
                 if (line > 1 && tv.getLayout().getEllipsisCount(2) > 0) {
-                    showNote(view, position);
+                    String s = (String)view.getTag();
+                    showMoreInfo(view, s);
                 }
             }
 
@@ -812,6 +882,18 @@ public class ScheduleActivity2 extends AppCompatActivity {
                 if (recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) {
                     leftRLV.scrollBy(dx, dy);
                 }
+            }
+        });
+        assignBedTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                assignBed(calendar.getTimeInMillis());
+            }
+        });
+        remaningLeaveTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                remaningLeaveManage();
             }
         });
         setScheduleTitle(calendar.getTime());

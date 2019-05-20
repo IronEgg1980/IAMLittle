@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,8 @@ import aqth.yzw.iamlittle.Adapters.PersonManageAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityPerson;
 import aqth.yzw.iamlittle.EntityClass.Person;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 public class PersonManageFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -313,6 +316,16 @@ public class PersonManageFragment extends Fragment {
         recyclerView = view.findViewById(R.id.person_list_recyclerview);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState != SCROLL_STATE_IDLE){
+                    if(popupWindow!=null && popupWindow.isShowing())
+                        popupWindow.dismiss();
+                }
+            }
+        });
         return view;
     }
 }

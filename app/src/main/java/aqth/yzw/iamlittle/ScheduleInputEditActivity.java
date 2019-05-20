@@ -1,25 +1,35 @@
 package aqth.yzw.iamlittle;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
@@ -37,6 +47,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import aqth.yzw.iamlittle.Adapters.PersonShiftInputAdapter;
+import aqth.yzw.iamlittle.Adapters.ScheduleItemViewHolder;
 import aqth.yzw.iamlittle.Adapters.ScheduleShowAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityPerson;
@@ -66,6 +77,8 @@ public class ScheduleInputEditActivity extends MyActivity {
     private int mX, mY;
     private AppBarLayout appBarLayout;
     private Button saveBT;
+    private boolean inputFlag;
+
 
     private void setBottomRecyclerViewAdapter(int adapterMode) {
         if (adapterMode == 1) {
@@ -109,6 +122,10 @@ public class ScheduleInputEditActivity extends MyActivity {
                         calendar.setTimeInMillis(c.getTimeInMillis());
                         calendar.add(Calendar.DAY_OF_MONTH, -7);
                         updateList(MyTool.getWeekStartEndString(calendar.getTime()), true);
+                        setBottomRecyclerViewAdapter(1);
+                        adapter.setCurrentCell(0, 0);
+                        mX = 0;
+                        mY = 0;
                         break;
                 }
                 return true;
@@ -553,7 +570,135 @@ public class ScheduleInputEditActivity extends MyActivity {
             finish();
         }
     }
+    private void selectPerson(View view,int position){
+        if(inputFlag) {
+            inputFlag = false;
+            if (mX < 0 || mY != 0) {
+                return;
+            }
+            if (mY == 0) {
+                String name = (String) view.getTag(R.id.tag_text);
+                ItemEntityScheduleInput input = (ItemEntityScheduleInput) list.get(mX);
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(mX);
+                if (viewHolder == null) {
+                    recyclerView.smoothScrollToPosition(mX);
+                    inputFlag = true;
+                }else {
+                    View view1 = getToView(mX, mY);
+                    setAnim(view, view1, input, name, true);
+                }
+            }
+        }
+    }
+    private void selectShift(View view,int position){
+        if(inputFlag) {
+            inputFlag = false;
+            if (mX < 0 || mY < 1 || mY == 8)
+                return;
+            if (mY > 0 && mY < 8) {
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(mX);
+                if (viewHolder == null) {
+                    recyclerView.smoothScrollToPosition(mX);
+                    inputFlag = true;
+                } else {
+                    String name = (String) view.getTag();
+                    ItemEntityScheduleInput input = (ItemEntityScheduleInput) list.get(mX);
+                    View view1 = getToView(mX, mY);
+                    setAnim(view, view1, input, name, false);
+                }
+            }
+        }
+    }
+    private void adapterClick(View view, final int x, int y){
+        int position = adapter.getItemCount() - 1;
+        if (x == position) {
+            ItemEntityScheduleInput input = new ItemEntityScheduleInput();
+            list.add(position, input);
+            adapter.setCurrentCell(position, 0);
+            adapter.notifyItemInserted(position);
+            if (mX > -1) {
+                adapter.notifyItemChanged(mX);
+            }
+            adapter.notifyItemRangeChanged(position, 2);
+            recyclerView.smoothScrollToPosition(position + 1);
+            mY = 0;
+            setBottomRecyclerViewAdapter(1);
+            appBarLayout.setExpanded(false);
+        } else {
+            if (y == 8) {
+                final ItemEntityScheduleInput input = (ItemEntityScheduleInput) list.get(x);
+                String note = input.getValues(y);
+                MyDialogFragmentInput fragmentInput = MyDialogFragmentInput.newInstant(note,"输入备注");
+                fragmentInput.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                    @Override
+                    public void onDissmiss(boolean flag) {
 
+                    }
+
+                    @Override
+                    public void onDissmiss(boolean flag, Object object) {
+                        if (flag) {
+                            input.setValues(8, (String) object);
+                            adapter.notifyItemChanged(x);
+                        }
+                    }
+                });
+                fragmentInput.show(getSupportFragmentManager(), "InputNote");
+            } else if (y == 0) {
+                setBottomRecyclerViewAdapter(1);
+                appBarLayout.setExpanded(false);
+            } else {
+                setBottomRecyclerViewAdapter(2);
+                appBarLayout.setExpanded(false);
+            }
+            mY = y;
+        }
+        mX = x;
+    }
+    private void adapterLongClick(View view, final int x, final int y){
+        if (list.size() == 1 || x == list.size() - 1)
+            return;
+        final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new ColorDrawable());
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setTouchable(true);
+        View v = LayoutInflater.from(view.getContext()).inflate(R.layout.schedule_input_edit_popwindow, null);
+        Button clear = v.findViewById(R.id.schedule_inputedit_popwindow_clear);
+        Button delLine = v.findViewById(R.id.schedule_inputedit_popwindow_delLine);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ItemEntityScheduleInput input = (ItemEntityScheduleInput) list.get(x);
+                input.setValues(y, "");
+                adapter.notifyItemChanged(x);
+                popupWindow.dismiss();
+                fillPersonList();
+                personAdapter.notifyDataSetChanged();
+            }
+        });
+        delLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                list.remove(x);
+                adapter.notifyItemRemoved(x);
+                adapter.notifyItemRangeChanged(x, adapter.getItemCount() - x);
+                popupWindow.dismiss();
+                fillPersonList();
+                personAdapter.notifyDataSetChanged();
+            }
+        });
+        popupWindow.setContentView(v);
+        int[] local = new int[2];
+        view.getLocationOnScreen(local);
+        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, local[0], local[1]);
+        mX = x;
+        mY = y;
+        if (y == 0) {
+            bottomRecyclerView.setAdapter(personAdapter);
+        }
+        if (y > 0 && y < 8)
+            bottomRecyclerView.setAdapter(shiftAdapter);
+    }
     @Override
     public void onBackPressed() {
         exit();
@@ -563,6 +708,7 @@ public class ScheduleInputEditActivity extends MyActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_input_edit);
+        inputFlag = true;
         mX = -1;
         mY = -1;
         c = new GregorianCalendar();
@@ -593,56 +739,18 @@ public class ScheduleInputEditActivity extends MyActivity {
         personAdapter.setItemClickListener(new IItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                if (mX < 0 || mY != 0) {
-                    return;
-                }
-                if (mY == 0) {
-                    String name = (String) view.getTag(R.id.tag_text);
-                    //ItemEntityPerson itemEntityPerson = (ItemEntityPerson) view.getTag(R.id.tag_itemEntityPerson);
-                    ItemEntityScheduleInput input = (ItemEntityScheduleInput) list.get(mX);
-                    input.setValues(mY, name);
-                    hasInputed = true;
-                    adapter.notifyItemChanged(mX);
-                    if (mX < adapter.getItemCount() - 2) {
-                        mX = mX + 1;
-                        adapter.setCurrentCell(mX, 0);
-                        adapter.notifyItemChanged(mX);
-                    }
-                    fillPersonList();
-                    personAdapter.notifyDataSetChanged();
-                    recyclerView.smoothScrollToPosition(mX + 1);
-                }
-
+               selectPerson(view,position);
             }
 
             @Override
             public void onClick(View view, int x, int y) {
-
-
             }
         });
         shiftAdapter = new PersonShiftInputAdapter(ScheduleInputEditActivity.this, shifts);
         shiftAdapter.setItemClickListener(new IItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                if (mX < 0 || mY < 1 || mY == 8)
-                    return;
-                if (mY > 0 && mY < 8) {
-                    String name = (String) view.getTag();
-                    ItemEntityScheduleInput input = (ItemEntityScheduleInput) list.get(mX);
-                    input.setValues(mY, name);
-                    hasInputed = true;
-                    if (mY < 7) {
-                        mY = mY + 1;
-                    } else if (mX < adapter.getItemCount() - 2) {
-                        adapter.notifyItemChanged(mX);
-                        mY = 1;
-                        mX = mX + 1;
-                    }
-                    adapter.setCurrentCell(mX, mY);
-                    adapter.notifyItemChanged(mX);
-                    recyclerView.smoothScrollToPosition(mX + 1);
-                }
+                selectShift(view,position);
             }
 
             @Override
@@ -715,50 +823,7 @@ public class ScheduleInputEditActivity extends MyActivity {
 
             @Override
             public void onClick(View view, final int x, int y) {
-                int position = adapter.getItemCount() - 1;
-                if (x == position) {
-                    ItemEntityScheduleInput input = new ItemEntityScheduleInput();
-                    list.add(position, input);
-                    adapter.setCurrentCell(position, 0);
-                    adapter.notifyItemInserted(position);
-                    if (mX > -1) {
-                        adapter.notifyItemChanged(mX);
-                    }
-                    adapter.notifyItemRangeChanged(position, 2);
-                    recyclerView.smoothScrollToPosition(position + 1);
-                    mY = 0;
-                    setBottomRecyclerViewAdapter(1);
-                    appBarLayout.setExpanded(false);
-                } else {
-                    if (y == 8) {
-                        final ItemEntityScheduleInput input = (ItemEntityScheduleInput) list.get(x);
-                        String note = input.getValues(y);
-                        MyDialogFragmentInput fragmentInput = MyDialogFragmentInput.newInstant(note,"输入备注");
-                        fragmentInput.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
-                            @Override
-                            public void onDissmiss(boolean flag) {
-
-                            }
-
-                            @Override
-                            public void onDissmiss(boolean flag, Object object) {
-                                if (flag) {
-                                    input.setValues(8, (String) object);
-                                    adapter.notifyItemChanged(x);
-                                }
-                            }
-                        });
-                        fragmentInput.show(getSupportFragmentManager(), "InputNote");
-                    } else if (y == 0) {
-                        setBottomRecyclerViewAdapter(1);
-                        appBarLayout.setExpanded(false);
-                    } else {
-                        setBottomRecyclerViewAdapter(2);
-                        appBarLayout.setExpanded(false);
-                    }
-                    mY = y;
-                }
-                mX = x;
+               adapterClick(view,x,y);
             }
         });
         adapter.setItemLongClickListener(new IItemClickListener() {
@@ -769,48 +834,7 @@ public class ScheduleInputEditActivity extends MyActivity {
 
             @Override
             public void onClick(View view, final int x, final int y) {
-                if (list.size() == 1 || x == list.size() - 1)
-                    return;
-                final PopupWindow popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                popupWindow.setBackgroundDrawable(new ColorDrawable());
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setTouchable(true);
-                View v = LayoutInflater.from(view.getContext()).inflate(R.layout.schedule_input_edit_popwindow, null);
-                Button clear = v.findViewById(R.id.schedule_inputedit_popwindow_clear);
-                Button delLine = v.findViewById(R.id.schedule_inputedit_popwindow_delLine);
-                clear.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ItemEntityScheduleInput input = (ItemEntityScheduleInput) list.get(x);
-                        input.setValues(y, "");
-                        adapter.notifyItemChanged(x);
-                        popupWindow.dismiss();
-                        fillPersonList();
-                        personAdapter.notifyDataSetChanged();
-                    }
-                });
-                delLine.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        list.remove(x);
-                        adapter.notifyItemRemoved(x);
-                        adapter.notifyItemRangeChanged(x, adapter.getItemCount() - x);
-                        popupWindow.dismiss();
-                        fillPersonList();
-                        personAdapter.notifyDataSetChanged();
-                    }
-                });
-                popupWindow.setContentView(v);
-                int[] local = new int[2];
-                view.getLocationOnScreen(local);
-                popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, local[0], local[1]);
-                mX = x;
-                mY = y;
-                if (y == 0) {
-                    bottomRecyclerView.setAdapter(personAdapter);
-                }
-                if (y > 0 && y < 8)
-                    bottomRecyclerView.setAdapter(shiftAdapter);
+                adapterLongClick(view,x,y);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -860,6 +884,144 @@ public class ScheduleInputEditActivity extends MyActivity {
             }
         }
     }
+    private View getToView(int x,int y){
+        LinearLayoutManager manager =(LinearLayoutManager) recyclerView.getLayoutManager();
+        int first = manager.findFirstVisibleItemPosition();
+        ScheduleItemViewHolder holder = (ScheduleItemViewHolder) recyclerView.getChildViewHolder(recyclerView.getChildAt(x - first));
+        TextView tv = holder.getTVs()[y];
+        int[] xy = new int[2];
+        tv.getLocationInWindow(xy);
+        return tv;
+    }
+    public void setAnim(View fromView,View toView,ItemEntityScheduleInput input,String name,boolean isPerson) {
+        // TODO Auto-generated method stub
+        int[] start_location = new int[2];// 一个整型数组用来存储按钮在屏幕的X,Y坐标
+        fromView.getLocationInWindow(start_location);// 购买按钮在屏幕中的坐标
+        ImageView imageView = new ImageView(ScheduleInputEditActivity.this);
+        if(isPerson)
+            imageView.setImageResource(R.drawable.person_image);
+        else
+            imageView.setImageResource(R.drawable.shift);
+        setAnim(imageView,toView, start_location,input,name,isPerson);
+    }
+
+    /**
+     * hdh: 创建动画层
+     *
+     * @return
+     */
+    private ViewGroup createAnimLayout() {
+        ViewGroup rootView = (ViewGroup) this.getWindow().getDecorView();// 获得Window界面的最顶层
+//        LinearLayout animLayout = new LinearLayout(this);
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+//        animLayout.setLayoutParams(lp);
+//        //animLayout.setId();
+//        animLayout.setBackgroundResource(android.R.color.transparent);
+//        rootView.addView(animLayout);
+        return rootView;
+    }
+
+    /**
+     * hdh:
+     *
+     * @param vp
+     * @param view
+     * @param location
+     * @return
+     */
+    private View addViewToAnimLayout(final ViewGroup vp, final View view, int[] location) {
+        int x = location[0];
+        int y = location[1];
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.leftMargin = x;
+        lp.topMargin = y;
+        view.setLayoutParams(lp);
+        vp.addView(view);
+        return view;
+    }
+
+    /**
+     * hdh:动画
+     *
+     * @param v
+     * @param start_location
+     */
+    private void setAnim(final View v, View toView, int[] start_location, final ItemEntityScheduleInput input, final String name, final boolean isPerson) {
+        ViewGroup anim_mask_layout = null;
+        anim_mask_layout = createAnimLayout();
+        View view = addViewToAnimLayout(anim_mask_layout, v, start_location);
+        int[] end_location = new int[2];// 存储动画结束位置的X,Y坐标
+        toView.getLocationInWindow(end_location);
+        // 计算位移
+        int endX = end_location[0] - start_location[0];// 动画位移的X坐标
+        int endY = end_location[1] - start_location[1];// 动画位移的y坐标
+        TranslateAnimation translateAnimationX = new TranslateAnimation(0, endX, 0, endY);
+        translateAnimationX.setInterpolator(new LinearInterpolator());// 设置此动画的加速曲线。默认为一个线性插值。
+        translateAnimationX.setRepeatCount(0);// 动画重复的次数
+        translateAnimationX.setFillAfter(true);
+        int temp =(int) Math.sqrt(endX*endX + endY*endY);
+//        TranslateAnimation translateAnimationY = new TranslateAnimation(0, 0, 0, endY);
+//        translateAnimationY.setInterpolator(new AccelerateInterpolator());
+//        translateAnimationY.setRepeatCount(0);// 动画重复次数
+//        translateAnimationY.setFillAfter(true);
+
+        AnimationSet set = new AnimationSet(false);
+        set.setFillAfter(false);
+        set.addAnimation(translateAnimationX);
+//        set.addAnimation(translateAnimationY);
+        set.setDuration(temp/3);
+        set.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+                v.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // TODO Auto-generated method stub
+                v.setVisibility(View.GONE);
+                if(isPerson) {
+                    input.setValues(mY, name);
+                    hasInputed = true;
+                    adapter.notifyItemChanged(mX);
+                    if (mX < adapter.getItemCount() - 2) {
+                        mX = mX + 1;
+                        adapter.setCurrentCell(mX, 0);
+                        adapter.notifyItemChanged(mX);
+                    }
+                    fillPersonList();
+                    personAdapter.notifyDataSetChanged();
+                    recyclerView.smoothScrollToPosition(mX + 1);
+                }else {
+                    input.setValues(mY, name);
+                    hasInputed = true;
+                    if (mY < 7) {
+                        mY = mY + 1;
+                    } else if (mX < adapter.getItemCount() - 2) {
+                        adapter.notifyItemChanged(mX);
+                        mY = 1;
+                        mX = mX + 1;
+                    }
+                    adapter.setCurrentCell(mX, mY);
+                    adapter.notifyItemChanged(mX);
+                    recyclerView.smoothScrollToPosition(mX + 1);
+                }
+                inputFlag = true;
+            }
+        });
+        view.startAnimation(set);
+    }
+
+
+
 
     protected class SaveData extends AsyncTask<Void, Integer, Boolean> {
         private int hasSaved, count;

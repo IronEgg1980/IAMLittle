@@ -26,6 +26,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+
 import org.litepal.LitePal;
 
 import java.io.File;
@@ -39,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -102,8 +107,8 @@ public class ScheduleActivity extends MyActivity {
         if (list.size() == 1 && list.get(0).getType() == ItemType.EMPTY)
             return;
 
-        PermissionUtils.verifyStoragePermissions(this);
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        //PermissionUtils.verifyStoragePermissions(this);
+        if (XXPermissions.isHasPermission(ScheduleActivity.this, Permission.Group.STORAGE)) {
             String outPath = Environment.getExternalStorageDirectory() + "/IAmLittle/Schedule/";
             File dir = new File(outPath);
             try {
@@ -217,8 +222,25 @@ public class ScheduleActivity extends MyActivity {
                 Toast.makeText(ScheduleActivity.this, "导出EXCEL文件失败\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {
-            MyDialogFragmenSingleButton dialogFragment = MyDialogFragmenSingleButton.newInstant("您已拒绝本程序存储文件，不能进行导出操作！", "关闭");
-            dialogFragment.show(getSupportFragmentManager(), "NotAllowWriteSD");
+            XXPermissions.with(this)
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            if(isAll)
+                                getExecelFile();
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            if (quick) {
+                                Toast.makeText(ScheduleActivity.this,"已被永久拒绝使用外置存储权限，请手动授予权限",Toast.LENGTH_SHORT).show();
+                                //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                XXPermissions.gotoPermissionSettings(ScheduleActivity.this);
+                            } else {
+                                Toast.makeText(ScheduleActivity.this,"您已拒绝使用外置存储权限，不能使用该功能！",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
     }
     private void getZipFile(){

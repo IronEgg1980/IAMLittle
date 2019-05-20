@@ -7,8 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityScheduleInput;
@@ -21,7 +25,6 @@ public class ScheduleShowAdapter extends RecyclerView.Adapter {
     private IItemClickListener itemClickListener;
     private IItemClickListener itemLongClickListener;
     private Context mContext;
-
     public void setItemLongClickListener(IItemClickListener itemLongClickListener) {
         this.itemLongClickListener = itemLongClickListener;
     }

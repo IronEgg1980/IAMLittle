@@ -1,5 +1,6 @@
 package aqth.yzw.iamlittle;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -8,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 
 import org.litepal.LitePal;
 
@@ -127,6 +134,11 @@ public class OTPDetailsFragment extends Fragment {
         dialogFragment.show(getFragmentManager(),"DeleData");
     }
     private void shareData() {
+        if (!MyTool.isAppInstall(getContext(), "com.tencent.mm")) {
+            Toast.makeText(getContext(),"您没有安装微信，不能执行该操作！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        MyTool.checkFileUriExposure();
         File sharedFile = getExcelFile();
         if (sharedFile != null) {
             Uri uri = null;
@@ -136,15 +148,17 @@ public class OTPDetailsFragment extends Fragment {
                 uri = Uri.fromFile(sharedFile);
             }
             Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("application/*");
+            intent.setType("*/*");
             intent.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(intent, "加班费表"));
-            ((OTPActivity)getActivity()).setShowDetails(false);
+            intent.setComponent(new ComponentName("com.tencent.mm","com.tencent.mm.ui.tools.ShareImgUI"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(Intent.createChooser(intent, format.format(startDay)+"-"+format.format(endDay)+"加班费"));
         }
+        ((OTPActivity)getActivity()).setShowDetails(false);
     }
+    @Nullable
     private File getExcelFile(){
-        PermissionUtils.verifyStoragePermissions(getActivity());
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        if (XXPermissions.isHasPermission(getContext(), Permission.Group.STORAGE)) {
             if(list.size() == 0){
                 Toast.makeText(getContext(),"当前列表没有数据",Toast.LENGTH_SHORT).show();
                 return null;
@@ -233,8 +247,25 @@ public class OTPDetailsFragment extends Fragment {
                 return null;
             }
         }else{
-            MyDialogFragmenSingleButton dialogFragment = MyDialogFragmenSingleButton.newInstant("您已拒绝本程序存储文件，不能进行分享操作！", "关闭");
-            dialogFragment.show(getFragmentManager(), "NotAllowWriteSD");
+            XXPermissions.with(getActivity())
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            if(isAll)
+                                shareData();
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            if (quick) {
+                                 Toast.makeText(getContext(),"已被永久拒绝使用外置存储权限，请手动授予权限",Toast.LENGTH_SHORT).show();
+                                //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                XXPermissions.gotoPermissionSettings(getActivity());
+                            } else {
+                                Toast.makeText(getContext(),"您已拒绝使用外置存储权限，不能使用该功能！",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
             return null;
         }
     }

@@ -4,14 +4,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+
 import org.litepal.LitePal;
+import org.litepal.LitePalDB;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,14 +27,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Set;
 
 import aqth.yzw.iamlittle.EntityClass.AppSetup;
 
 public class SetupActivity extends MyActivity {
-    private TextView versionTV,contentTV,organizeNameTV,inputOrganizeNameTV;
+    private TextView versionTV,contentTV,organizeNameTV;
     private Button backBT,restoreBT,closeBT;
-    private TextView sendEmailTV;
+    private ImageView sendEmail,inputOrganizeName;
     private SimpleDateFormat format1;
     private Calendar calendar;
     @Override
@@ -41,8 +47,8 @@ public class SetupActivity extends MyActivity {
         versionTV = findViewById(R.id.setup_activity_versionTV);
         versionTV.setText("版本："+MyTool.packageName(SetupActivity.this));
         contentTV = findViewById(R.id.setup_activity_contentTV);
-        sendEmailTV = findViewById(R.id.setup_input_sendEmail);
-        sendEmailTV.setOnClickListener(new View.OnClickListener() {
+        sendEmail = findViewById(R.id.setup_input_sendEmail);
+        sendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -89,8 +95,8 @@ public class SetupActivity extends MyActivity {
             organizeName = appSetup.getValue();
         }
         organizeNameTV.setText(organizeName);
-        inputOrganizeNameTV = findViewById(R.id.setup_input_organizenameTV);
-        inputOrganizeNameTV.setOnClickListener(new View.OnClickListener() {
+        inputOrganizeName = findViewById(R.id.setup_input_organizenameTV);
+        inputOrganizeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 inputOrganizeNameClick();
@@ -167,8 +173,8 @@ public class SetupActivity extends MyActivity {
         input.show(getSupportFragmentManager(),"InputName");
     }
     private void backup(){
-        PermissionUtils.verifyStoragePermissions(this);
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        //PermissionUtils.verifyStoragePermissions(this);
+        if (XXPermissions.isHasPermission(SetupActivity.this, Permission.Group.STORAGE)) {
             File database_file = new File(LitePal.getDatabase().getPath());
             File backUpPath = new File(Environment.getExternalStorageDirectory() + "/IAmLittle/Backup");
             if (!backUpPath.exists()) {
@@ -193,12 +199,29 @@ public class SetupActivity extends MyActivity {
                 Toast.makeText(SetupActivity.this, "备份失败！\n" + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }else{
-            Toast.makeText(SetupActivity.this, "您已拒绝访问外部存储，无法备份！", Toast.LENGTH_SHORT).show();
+            XXPermissions.with(this)
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            if(isAll)
+                                backup();
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            if (quick) {
+                                Toast.makeText(SetupActivity.this,"已被永久拒绝使用外置存储权限，请手动授予权限",Toast.LENGTH_SHORT).show();
+                                //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                XXPermissions.gotoPermissionSettings(SetupActivity.this);
+                            } else {
+                                Toast.makeText(SetupActivity.this,"您已拒绝使用外置存储权限，不能使用该功能！",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
     }
     private void restore(){
-        PermissionUtils.verifyStoragePermissions(this);
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        if (XXPermissions.isHasPermission(SetupActivity.this, Permission.Group.STORAGE)) {
             final File database_file = new File(LitePal.getDatabase().getPath());
             final File backUpPath = new File(Environment.getExternalStorageDirectory() + "/IAmLittle/Backup");
             final File another_file = new File(database_file.getParent() + "/database_iamlittle.db-journal");
@@ -216,41 +239,75 @@ public class SetupActivity extends MyActivity {
                 @Override
                 public void onDissmiss(boolean flag, Object object) {
                     if(flag){
-                        String s = (String)object;
-                        File backFile1 = new File(backUpPath + "/database"+s+".bak");
-                        if (!backFile1.exists()) {
-                            Toast.makeText(SetupActivity.this, "未找到备份文件，不能还原数据库。", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        File backFile = new File(database_file.getParent()+"/database.bak");
-
-                        try {
-                            if(backFile.exists())
-                                backFile.delete();
-                            database_file.renameTo(backFile);
-                            //LitePal.deleteDatabase("database_iamlittle");
-                            if (another_file.exists())
-                                another_file.delete();
-                            InputStream inputStream1 = new FileInputStream(backFile1);
-                            OutputStream outputStream1 = new FileOutputStream(database_file);
-                            byte[] bt = new byte[1024];
-                            int b;
-                            while ((b = inputStream1.read(bt)) > 0) {
-                                outputStream1.write(bt, 0, b);
+                        final String s = (String)object;
+                        MyDialogFragment dialogFragment = MyDialogFragment.newInstant("请确认是否恢复【"+s+"】的备份数据？","取消","确认");
+                        dialogFragment.setOnDialogFragmentDismiss(new OnDialogFragmentDismiss() {
+                            @Override
+                            public void onDissmiss(boolean flag) {
+                                if (flag){
+                                    File backFile1 = new File(backUpPath + "/database"+s+".bak");
+                                    if (!backFile1.exists()) {
+                                        Toast.makeText(SetupActivity.this, "未找到备份文件，不能还原数据库。", Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
+                                    File backFile = new File(database_file.getParent()+"/database.bak");
+                                    try {
+                                        if(backFile.exists())
+                                            backFile.delete();
+                                        database_file.renameTo(backFile);
+                                        //LitePal.deleteDatabase("database_iamlittle");
+                                        if (another_file.exists())
+                                            another_file.delete();
+                                        InputStream inputStream1 = new FileInputStream(backFile1);
+                                        OutputStream outputStream1 = new FileOutputStream(database_file);
+                                        byte[] bt = new byte[1024];
+                                        int b;
+                                        while ((b = inputStream1.read(bt)) > 0) {
+                                            outputStream1.write(bt, 0, b);
+                                        }
+                                        inputStream1.close();
+                                        outputStream1.close();
+                                        backFile.delete();
+                                        LitePal.useDefault();
+                                        Toast.makeText(SetupActivity.this, "还原成功！", Toast.LENGTH_LONG).show();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        backFile.renameTo(database_file);
+                                        Toast.makeText(SetupActivity.this, "还原失败！\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
                             }
-                            inputStream1.close();
-                            outputStream1.close();
-                            backFile.delete();
-                            Toast.makeText(SetupActivity.this, "还原成功！", Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            backFile.renameTo(database_file);
-                            Toast.makeText(SetupActivity.this, "还原失败！\n" + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
+
+                            @Override
+                            public void onDissmiss(boolean flag, Object object) {
+
+                            }
+                        });
+                        dialogFragment.show(getSupportFragmentManager(),"RestoreConfirm");
                     }
                 }
             });
             fragment.show(getSupportFragmentManager(),"SelectRestoreFile");
+        }else{
+            XXPermissions.with(this)
+                    .request(new OnPermission() {
+                        @Override
+                        public void hasPermission(List<String> granted, boolean isAll) {
+                            if(isAll)
+                                restore();
+                        }
+
+                        @Override
+                        public void noPermission(List<String> denied, boolean quick) {
+                            if (quick) {
+                                Toast.makeText(SetupActivity.this,"已被永久拒绝使用外置存储权限，请手动授予权限",Toast.LENGTH_SHORT).show();
+                                //如果是被永久拒绝就跳转到应用权限系统设置页面
+                                XXPermissions.gotoPermissionSettings(SetupActivity.this);
+                            } else {
+                                Toast.makeText(SetupActivity.this,"您已拒绝使用外置存储权限，不能使用该功能！",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
     }
 }

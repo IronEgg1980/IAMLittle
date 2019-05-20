@@ -3,21 +3,15 @@ package aqth.yzw.iamlittle;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 
 import org.litepal.LitePal;
@@ -25,11 +19,12 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-import aqth.yzw.iamlittle.Adapters.ScheduleItemTitleDecoration;
 import aqth.yzw.iamlittle.Adapters.ShiftManageAdapter;
 import aqth.yzw.iamlittle.EntityClass.ItemEntity;
 import aqth.yzw.iamlittle.EntityClass.ItemEntityShift;
 import aqth.yzw.iamlittle.EntityClass.Shift;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 public class ShiftManageActivity extends MyActivity {
     private String TAG = "殷宗旺";
@@ -224,6 +219,16 @@ public class ShiftManageActivity extends MyActivity {
         });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(ShiftManageActivity.this));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState != SCROLL_STATE_IDLE){
+                    if(popupWindow!=null && popupWindow.isShowing())
+                        popupWindow.dismiss();
+                }
+            }
+        });
        // recyclerView.addItemDecoration(new DividerItemDecoration(ShiftManageActivity.this,DividerItemDecoration.VERTICAL));
     }
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.litepal.LitePal;
 
@@ -86,9 +88,20 @@ public class AssignBedDialogFragment extends DialogFragment {
             @Override
             public void onDissmiss(boolean flag, Object object) {
                 if (flag) {
+                    boolean noSame = true;
                     String name = (String) object;
-                    bedAssign.setPersonName(name);
-                    assignBedAdapter.notifyItemChanged(position);
+                    for(BedAssign bedAssign1 : list){
+                        if(name.equals(bedAssign1.getPersonName())){
+                            noSame = false;
+                            break;
+                        }
+                    }
+                    if(noSame) {
+                        bedAssign.setPersonName(name);
+                        assignBedAdapter.notifyItemChanged(position);
+                    }else{
+                        Toast.makeText(getContext(),"人员重复，请重新选择",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -184,6 +197,7 @@ public class AssignBedDialogFragment extends DialogFragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(assignBedAdapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),RecyclerView.VERTICAL));
         clearAll = view.findViewById(R.id.clear_button);
         clearAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,7 +252,7 @@ public class AssignBedDialogFragment extends DialogFragment {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             int width = dm.widthPixels > dm.heightPixels ? (int) (dm.heightPixels * 0.8) : (int) (dm.widthPixels * 0.8);
-            int height = dm.widthPixels > dm.heightPixels ? (int) (dm.widthPixels * 0.6) : (int) (dm.heightPixels * 0.6);
+            int height = dm.widthPixels > dm.heightPixels ? (int) (dm.widthPixels * 0.8) : (int) (dm.heightPixels * 0.8);
             dialog.getWindow().setLayout(width, height);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }

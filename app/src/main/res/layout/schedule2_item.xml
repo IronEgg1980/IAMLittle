@@ -12,6 +12,8 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="分管床位"
+        android:maxLines="3"
+        android:ellipsize="end"
         app:autoSizeMaxTextSize="14sp"
         app:autoSizeMinTextSize="8sp"
         app:autoSizeTextType="uniform" />

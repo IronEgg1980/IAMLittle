@@ -1,13 +1,23 @@
 package aqth.yzw.iamlittle;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.Build;
+import android.os.StrictMode;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -222,6 +232,40 @@ public final class MyTool {
         }
         return dates;
     }
+
+    /**
+     * 检测手机是否安装某个应用
+     *
+     * @param context
+     * @param appPackageName 应用包名
+     * @return true-安装，false-未安装
+     */
+    public static boolean isAppInstall(Context context, String appPackageName) {
+        PackageManager packageManager = context.getPackageManager();// 获取packagemanager
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
+        if (pinfo != null) {
+            for (int i = 0; i < pinfo.size(); i++) {
+                String pn = pinfo.get(i).packageName;
+                if (appPackageName.equals(pn)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 分享前必须执行本代码，主要用于兼容SDK18以上的系统
+     */
+    public static void checkFileUriExposure() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+            builder.detectFileUriExposure();
+        }
+    }
+
+
 
     // 以下为获取农历所需代码
     final private static long[] lunarInfo = new long[]{0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554,

@@ -29,21 +29,21 @@
     <item
         android:id="@+id/edit_schedule"
         android:icon="@drawable/ic_edit_white_24dp"
-        android:title="编辑排班"
+        android:title="调整本周排班"
         app:showAsAction="never" />
     <item
         android:id="@+id/del_schedule"
         android:icon="@drawable/ic_delete_white_24dp"
-        android:title="删除排班"
+        android:title="删除本周排班"
         app:showAsAction="never" />
     <item
         android:id="@+id/share_schedule"
         android:icon="@drawable/ic_share_white_24dp"
-        android:title="分享/打印"
+        android:title="发送/打印"
         app:showAsAction="never" />
     <item
         android:id="@+id/assign_bed"
-        android:title="床位安排"
+        android:title="分管床位安排"
         app:showAsAction="never" />
     <item
         android:id="@+id/leave_manage"
