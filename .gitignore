@@ -12,3 +12,4 @@
 /app/debug
 /app/release
 /app/build
+.idea/gradle.xml
