@@ -144,8 +144,8 @@ public class ScheduleActivity2 extends AppCompatActivity {
     }
 
     private void optionMenuSelect(@Nullable MenuItem menuItem) {
-        Toast toast = Toast.makeText(ScheduleActivity2.this, "正在完善中，敬请期待", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
+//        Toast toast = Toast.makeText(ScheduleActivity2.this, "正在完善中，敬请期待", Toast.LENGTH_SHORT);
+//        toast.setGravity(Gravity.CENTER, 0, 0);
         int id = menuItem.getItemId();
         switch (id) {
             case R.id.pre_week:

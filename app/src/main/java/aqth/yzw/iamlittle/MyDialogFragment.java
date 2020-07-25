@@ -14,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -93,7 +95,7 @@ public class MyDialogFragment extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             int width = dm.widthPixels>dm.heightPixels?(int)(dm.heightPixels*0.75):(int) (dm.widthPixels * 0.75);
 //            int height = dm.widthPixels>dm.heightPixels?(int)(dm.widthPixels*0.3):(int) (dm.heightPixels *0.3);
-            dialog.getWindow().setLayout(width,600);
+            dialog.getWindow().setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT);
         }
     }
 
